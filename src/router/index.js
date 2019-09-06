@@ -6,6 +6,7 @@ import BackIndex from '@/components/backhome/homeIndex.vue'
 import Index from '@/components/backhome/index.vue'
 import page1 from '@/components/backhome/backPage/page/page1.vue'
 import page2 from '@/components/backhome/backPage/page/page2.vue'
+import attribute from '@/components/backhome/backPage/page/attribute.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -36,6 +37,11 @@ export default new Router({
           path: '/page2',
           name: 'page2',
           component: page2
+        },
+        {
+          path: '/attribute',
+          name: 'attribute',
+          component: attribute
         },
       ]
     }

@@ -1,12 +1,21 @@
 <template>
   <div class="index">
-    我是后台首页
+    <div class="cont">欢迎来到aromita管理系统</div>
   </div>
 </template>
 
 <script>
 export default {
-  
+  data () {
+    return {
+
+    }
+  },
+  created(){
+  },
+  methods:{
+
+  }
 }
 </script>
 
