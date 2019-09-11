@@ -7,7 +7,10 @@ import axios from 'axios'
 import ElementUI from 'element-ui'
 import './assets/theme/index.css'
 import $ from 'jquery'
+import qs from 'qs';
 
+
+Vue.prototype.$qs = qs
 Vue.use(ElementUI)
 Vue.prototype.$ajax = axios
 Vue.config.productionTip = false
