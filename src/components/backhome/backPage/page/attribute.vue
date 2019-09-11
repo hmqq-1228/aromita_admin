@@ -1,5 +1,15 @@
 <template>
 <div class="attribute">
+  <div class="heade">
+    <div style="width: 400px;">
+      <el-input placeholder="请输入属性名称" v-model="attrName">
+        <template slot="prepend">属性名称:</template>
+        <el-button slot="append" icon="el-icon-search"></el-button>
+      </el-input>
+    </div>
+    <div><el-button type="primary"><i class="el-icon-plus"></i> 新增</el-button></div>
+  </div>
+  <div style="min-height: 500px">
   <el-table
     :cell-class-name="cellStyle"
     :data="attrList"
@@ -24,20 +34,33 @@
       label="创建时间"
       width="280">
     </el-table-column>
+    <el-table-column
+      prop="updated_at"
+      label="修改时间"
+      width="280">
+    </el-table-column>
     <el-table-column>
     </el-table-column>
     <el-table-column label="操作" width="280">
       <template slot-scope="scope">
         <el-button
           size="mini"
-          @click="closeAttr(scope.row.id)">关闭</el-button>
+          @click="closeAttr(scope)">{{scope.row.attr_status === 1?'关闭': '开启'}}</el-button>
         <el-button
           size="mini"
           type="primary"
-          @click="attrDetail(scope.row.id)">详情</el-button>
+          @click="attrDetail(scope)">详情</el-button>
       </template>
     </el-table-column>
   </el-table>
+  </div>
+  <div class="foot">
+    <el-pagination
+      background
+      layout="total, prev, pager, next, jumper"
+      :total="100">
+    </el-pagination>
+  </div>
 </div>
 </template>
 
@@ -46,6 +69,7 @@ export default {
   name: "attribute",
   data() {
     return {
+      attrName: '',
       attrList: [],
       state: true,
     }
@@ -90,5 +114,13 @@ export default {
 </script>
 
 <style scoped>
-
+.heade{
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+}
+.foot{
+  text-align: right;
+  margin-top: 30px;
+}
 </style>
