@@ -11,12 +11,12 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api':{
+      '/backend':{
         target: 'https://arapi.panduo.com.cn',
         changeOrigin: true,
         secure: true,
         pathRewrite: {
-          '^/api': '/',
+          '^/backend': '/backend',
         },
         emulateJSON: true,
       }

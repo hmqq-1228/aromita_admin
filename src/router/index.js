@@ -1,12 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/login'
+
 //后台首页
 import BackIndex from '@/components/backhome/homeIndex.vue'
 import Index from '@/components/backhome/index.vue'
-import page1 from '@/components/backhome/backPage/page/page1.vue'
-import page2 from '@/components/backhome/backPage/page/page2.vue'
-import attribute from '@/components/backhome/backPage/page/attribute.vue'
+
+// 属性管理
+import attribute from '@/components/backhome/backPage/attribute/attribute.vue'
+import addAttr from '@/components/backhome/backPage/attribute/addAttr.vue'
+
+//分类管理
+import categoryList from '@/components/backhome/backPage/category/categoryList.vue'
+
 Vue.use(Router)
 
 export default new Router({
@@ -28,20 +34,22 @@ export default new Router({
           name: 'Index',
           component: Index
         },
+        //属性管理
         {
-          path: '/page1',
-          name: 'page1',
-          component: page1
-        },
-        {
-          path: '/page2',
-          name: 'page2',
-          component: page2
+          path: '/addAttr',
+          name: 'addAttr',
+          component: addAttr
         },
         {
           path: '/attribute',
           name: 'attribute',
           component: attribute
+        },
+        //分类管理
+        {
+          path: '/categoryList',
+          name: 'categoryList',
+          component: categoryList
         },
       ]
     }

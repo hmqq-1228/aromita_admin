@@ -9,20 +9,41 @@
             class="el-menu-vertical-demo"
             background-color="#545c64"
             text-color="#fff"
-            active-text-color="#ffd04b">
+            active-text-color="#ffd04b"
+            router>
             <el-menu-item index="index" @click="routerLink('index')">
-              <i class="el-icon-menu"></i>
+              <i class="el-icon-house"></i>
               <span slot="title">首页</span>
             </el-menu-item>
-            <el-submenu index="2">
+            <!-- <el-submenu index="2">
               <template slot="title">
                 <i class="el-icon-user"></i>
                 <span>用户管理</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="page1" @click="routerLink('page1')">用户管理</el-menu-item>
-                <el-menu-item index="1-2">角色管理</el-menu-item>
-                <el-menu-item index="1-3">权限管理</el-menu-item>
+                <el-menu-item index="page1">用户管理</el-menu-item>
+                <el-menu-item index="">角色管理</el-menu-item>
+                <el-menu-item index="">权限管理</el-menu-item>
+              </el-menu-item-group>
+            </el-submenu> -->
+            <el-submenu index="1">
+              <template slot="title">
+                <i class="el-icon-s-grid"></i>
+                <span>属性管理</span>
+              </template>
+              <el-menu-item-group>
+                <el-menu-item index="/attribute">属性列表</el-menu-item>
+                <el-menu-item index="/page1">属性值管理</el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
+            <el-submenu index="2">
+              <template slot="title">
+                <i class="el-icon-files"></i>
+                <span>分类管理</span>
+              </template>
+              <el-menu-item-group>
+                <el-menu-item index="/categoryList">分类列表</el-menu-item>
+                <el-menu-item index="/page1">属性值管理</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="3">
@@ -31,23 +52,11 @@
                 <span>商品管理</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="page2" @click="routerLink('page2')">SPU管理</el-menu-item>
-                <el-menu-item index="1-2">SKU管理</el-menu-item>
-                <el-menu-item index="1-3">商品分类</el-menu-item>
-                <el-menu-item index="attribute" @click="routerLink('attribute')">属性管理</el-menu-item>
-                <el-menu-item index="1-5">属性值管理</el-menu-item>
-                <el-menu-item index="1-6">利润系数</el-menu-item>
-                <el-menu-item index="1-7">分类对应关系</el-menu-item>
+                <el-menu-item index="/page2">SPU管理</el-menu-item>
+                <el-menu-item index="/page1">SKU管理</el-menu-item>
+                <el-menu-item index="/page1">商品分类</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
-            <el-menu-item index="4">
-              <i class="el-icon-shopping-bag-1"></i>
-              <span slot="title">导航三</span>
-            </el-menu-item>
-            <el-menu-item index="5">
-              <i class="el-icon-edit-outline"></i>
-              <span slot="title">导航四</span>
-            </el-menu-item>
           </el-menu>
         </el-aside>
         <el-main class="cont" :style="'height:' + height + 'px' ">
@@ -79,30 +88,16 @@ export default {
       var pathName = path[1]
       console.log('kkkkk', pathName)
       this.activeRoute = pathName
-    },
-    routerLink:function (name) {
-      var that = this
-      switch (name) {
-        case 'index':
-          that.$router.push('/index')
-          break
-        case 'page1':
-          that.$router.push('/page1')
-          break
-        case 'page2':
-          that.$router.push('/page2')
-          break
-        case 'attribute':
-          that.$router.push('/attribute')
-          break
-      }
     }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
+.heade{
+  margin-bottom: 20px;
+}
 .backIndex{
     display: flex;
 }
@@ -122,7 +117,6 @@ export default {
 
 .el-main {
   color: #333;
-  text-align: center;
 }
 
 body > .el-container {

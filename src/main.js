@@ -11,8 +11,8 @@ import qs from 'qs';
 
 
 Vue.prototype.$qs = qs
-Vue.use(ElementUI)
-Vue.prototype.$ajax = axios
+Vue.use(ElementUI, { size: 'small', zIndex: 3000 });
+Vue.prototype.$axios = axios
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
