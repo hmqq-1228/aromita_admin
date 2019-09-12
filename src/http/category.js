@@ -6,3 +6,6 @@ export const categoryList = params =>get("backend/product/category",params);
 export const attrList = params =>get("/backend/product/category/getCategoryAttributeList",params)
 //新增分类
 export const addCategory = params =>post("/backend/product/category",params)
+
+// 分类对应关系
+export const classlist = params =>get("/backend/product/webCategory",params)

@@ -12,6 +12,7 @@ import addAttr from '@/components/backhome/backPage/attribute/addAttr.vue'
 import coefficient from '@/components/backhome/backPage/attribute/coefficient.vue'
 //分类管理
 import categoryList from '@/components/backhome/backPage/category/categoryList.vue'
+import classification from '@/components/backhome/backPage/category/classification.vue'
 
 Vue.use(Router)
 
@@ -56,6 +57,12 @@ export default new Router({
           name: 'categoryList',
           component: categoryList
         },
+        //分类对应关系列表
+        {
+          path: '/classification',
+          name: 'classification',
+          component: classification
+        }
       ]
     }
   ]

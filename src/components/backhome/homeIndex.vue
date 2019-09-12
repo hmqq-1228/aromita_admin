@@ -43,6 +43,7 @@
               </template>
               <el-menu-item-group>
                 <el-menu-item index="/categoryList">分类列表</el-menu-item>
+                <el-menu-item index="/classification">分类对应关系列表</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="3">
@@ -120,5 +121,9 @@ export default {
 
 body > .el-container {
   margin-bottom: 40px;
+}
+.foot{
+  margin-top: 20px;
+  text-align: right;
 }
 </style>
