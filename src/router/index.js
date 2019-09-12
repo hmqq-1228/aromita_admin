@@ -9,7 +9,7 @@ import Index from '@/components/backhome/index.vue'
 // 属性管理
 import attribute from '@/components/backhome/backPage/attribute/attribute.vue'
 import addAttr from '@/components/backhome/backPage/attribute/addAttr.vue'
-
+import coefficient from '@/components/backhome/backPage/attribute/coefficient.vue'
 //分类管理
 import categoryList from '@/components/backhome/backPage/category/categoryList.vue'
 
@@ -44,6 +44,11 @@ export default new Router({
           path: '/attribute',
           name: 'attribute',
           component: attribute
+        },
+        {
+          path: '/coefficient',
+          name: 'coefficient',
+          component: coefficient
         },
         //分类管理
         {
