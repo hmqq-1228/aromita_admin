@@ -1,7 +1,7 @@
 <template>
   <div class="addAttr">
     <div class="heade">
-      <h3>新增属性和属性值</h3> 
+      <h3>新增属性和属性值</h3>
     </div>
     <div class="addAttrCenter">
       <el-form label-width="120px">
@@ -22,7 +22,7 @@
           </div>
         </el-form-item>
         <el-form-item>
-          <el-button @click="subAttr()">提 交</el-button>
+          <el-button type="success" @click="subAttr()">提 交</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -53,7 +53,7 @@ export default {
       this.attrFrom.attr_value.push("")
       console.log(this.attrFrom.attr_value)
     },
-    //删除属性值 
+    //删除属性值
     delValue(dex){
       this.attrFrom.attr_value.splice(dex,1);
       console.log(this.attrFrom.attr_value)
