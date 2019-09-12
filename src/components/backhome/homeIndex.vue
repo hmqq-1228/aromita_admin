@@ -43,7 +43,6 @@
               </template>
               <el-menu-item-group>
                 <el-menu-item index="/categoryList">分类列表</el-menu-item>
-                <el-menu-item index="/page1">属性值管理</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="3">
