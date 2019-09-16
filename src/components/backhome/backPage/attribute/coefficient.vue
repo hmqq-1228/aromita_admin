@@ -92,6 +92,7 @@
   <div class="foot">
     <el-pagination
       background
+      :page-size="15"
       @current-change="currentPage($event)"
       layout="total, prev, pager, next, jumper"
       :total="totalNum">

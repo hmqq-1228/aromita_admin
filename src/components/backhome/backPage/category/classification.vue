@@ -4,7 +4,7 @@
             <h3>分类对应关系列表</h3>
             <el-button type="primary" @click="addcategory()"><i class="el-icon-plus"></i> 新增对应关系 </el-button>
         </div>
-        <el-table :data="List" border style="width: 100%" max-height="700">	
+        <el-table :data="List" border style="width: 100%" max-height="700">
             <el-table-column prop="erp_cat_id" label="ERP分类ID"></el-table-column>
             <el-table-column prop="erp_cat_name" label="ERP分类名称"></el-table-column>
             <el-table-column prop="web_first_name" label="网站一级分类名称"></el-table-column>
@@ -17,7 +17,7 @@
             <el-table-column label="操作">
                 <template slot-scope="scope">
                     <el-button type="primary" @click="editList(scope.row.id,scope.row.erp_cat_id,scope.row.erp_cat_name,scope.row.web_sec_id)">编 辑</el-button>
-                    <el-button type="danger" @click="delList(scope.row.id)">删 除</el-button>
+                    <el-button @click="delList(scope.row.id)">删 除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -106,12 +106,12 @@ export default {
                     }
                     this.getList()
                 })
-                
+
             }).catch(() => {
                 this.$message({
                     type: 'info',
                     message: '已取消删除'
-                });          
+                });
             });
         },
         //获取二级类目
@@ -176,6 +176,7 @@ export default {
 .heade{
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 .heade h3{
     margin-right: 20px;

@@ -57,6 +57,16 @@
                 <el-menu-item index="/page1">商品分类</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
+            <el-submenu index="4">
+              <template slot="title">
+                <i class="el-icon-user"></i>
+                <span>客户管理</span>
+              </template>
+              <el-menu-item-group>
+                <el-menu-item index="/customerList">客户列表</el-menu-item>
+                <el-menu-item index="/pointsDetail">积分明细</el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
           </el-menu>
         </el-aside>
         <el-main class="cont" :style="'height:' + height + 'px' ">

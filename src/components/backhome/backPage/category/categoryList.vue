@@ -19,13 +19,12 @@
                     <span class="node_name">{{node.label}}</span>
                     <span class="node_edit">
                         <el-button
-                            type="info"
+                            type="primary"
                             size="mini"
                             @click="() => view(2,data.id)">
                             查看/编辑
                         </el-button>
                         <el-button
-                            type="danger"
                             size="mini"
                             @click="() => remove(data.id)">
                             删除
@@ -55,14 +54,14 @@
                             <el-input v-model="form.cate_name"></el-input>
                         </el-form-item>
                         <el-form-item label="是否展示：">
-                            <el-switch 
+                            <el-switch
                                 v-model="form.cate_status"
                                 :active-value="1"
                                 :inactive-value="0">
                             </el-switch>
                         </el-form-item>
                         <el-form-item label="是否启用：">
-                            <el-switch 
+                            <el-switch
                                 v-model="form.is_show"
                                 :active-value="1"
                                 :inactive-value="0">
@@ -72,7 +71,7 @@
                             <el-input v-model="form.sort"></el-input>
                         </el-form-item>
                         <el-form-item label="分类属性：" v-if="form.parent_id!=0">
-                            <el-checkbox-group 
+                            <el-checkbox-group
                                 v-model="form.cate_attrs"
                                 :min="1">
                                 <el-checkbox v-for="item in cate_attrsList" :label="item.attrStr" :key="item.id">{{item.attr_name}}</el-checkbox>
