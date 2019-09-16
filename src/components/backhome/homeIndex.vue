@@ -55,6 +55,7 @@
                 <el-menu-item index="/commodityhand">已上货商品管理</el-menu-item>
                 <el-menu-item index="/addsku">新增SKU</el-menu-item>
                 <el-menu-item index="/addSpu">新增SPU</el-menu-item>
+                <el-menu-item index="/coefficient">利润系数</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="4">

@@ -53,3 +53,6 @@ table { border-collapse: collapse; border-spacing: 0; }
   width: 250px !important;
   text-align: left !important;
 }
+.el-menu-item-group__title{
+  padding: 0 !important;
+}
