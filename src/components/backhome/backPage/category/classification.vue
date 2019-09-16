@@ -15,7 +15,7 @@
             <el-table-column prop="updated_at" label="操作时间"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button type="primary">编 辑</el-button>
+                    <el-button type="primary" @click="editList(scope.row.erp_cat_id,scope.row.erp_cat_name,scope.row.web_sec_id)">编 辑</el-button>
                     <el-button type="danger" @click="delList(scope.row.id)">删 除</el-button>
                 </template>
             </el-table-column>
@@ -27,6 +27,24 @@
                 :total="100">
             </el-pagination>
         </div>
+        <!-- 对应关系弹框 -->
+        <el-dialog
+            :title="box_title"
+            :visible.sync="categoryVisible"
+            width="600px">
+            <div class="categoryBox">
+                <el-form :label-position="labelPosition" label-width="140px" :model="form">
+                    <el-form-item label="ERP分类名称:">
+                        <el-input v-model="form.erp_cat_name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="网站二级分类名称:">
+                        <el-select>
+                            
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -35,7 +53,15 @@ import qs from 'qs'
 export default {
     data(){
         return{
-            List:[]
+            List:[],
+            categoryVisible:false,
+            box_title:'',
+            form:{
+                erp_cat_id:'',
+                erp_cat_name:'',
+                web_sec_id:'',
+            },
+            catList:[]
         }
     },
     created(){
@@ -71,7 +97,19 @@ export default {
                     message: '已取消删除'
                 });          
             });
+        },
+        //编辑对应关系
+        editList(id1,str,id2){
+            this.form.erp_cat_id = id1
+            this.form.erp_cat_name = str
+            this.form.web_sec_id = id2
+            this.categoryVisible = true
         }
     }
 }
 </script>
+<style>
+    .categoryBox .el-input{
+        width: 220px;
+    }
+</style>
