@@ -11,7 +11,7 @@
             text-color="#fff"
             active-text-color="#ffd04b"
             router>
-            <el-menu-item index="index" @click="routerLink('index')">
+            <el-menu-item index="index">
               <i class="el-icon-house"></i>
               <span slot="title">首页</span>
             </el-menu-item>
@@ -87,7 +87,7 @@ export default {
       var path = this.$route.path.split('/')
       var pathName = path[1]
       console.log('kkkkk', pathName)
-      this.activeRoute = pathName
+      this.activeRoute = '/' + pathName
     }
   }
 }
