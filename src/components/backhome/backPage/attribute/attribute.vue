@@ -5,12 +5,12 @@
       <template slot="prepend">属性名称:</template>
       <el-button slot="append" icon="el-icon-search" @click="searchList()"></el-button>
     </el-input>
-    <el-button type="success" @click="addAttr()"><i class="el-icon-plus"></i>新增</el-button>
+    <el-button type="primary" @click="addAttr()"><i class="el-icon-plus"></i>新增</el-button>
   </div>
   <div style="min-height: 500px">
     <el-table :data="List" border style="width: 100%" height="700">
       <el-table-column prop="attr_name" label="属性名"></el-table-column>
-      <el-table-column label="属性状态">
+      <el-table-column label="属性状态" width="100">
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.attr_status"
@@ -22,7 +22,7 @@
       </el-table-column>
       <el-table-column label="属性值">
         <template slot-scope="scope">
-          <el-table :data="scope.row.values" border max-height="240">
+          <el-table :data="scope.row.values" border max-height="200">
             <el-table-column prop="attr_value" label="属性值名称"></el-table-column>
             <el-table-column label="属性值状态">
               <template slot-scope="scope">
@@ -39,6 +39,18 @@
       </el-table-column>
       <el-table-column prop="created_at" label="创建时间"></el-table-column>
       <el-table-column prop="updated_at" label="修改时间"></el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="primary"
+            icon="el-icon-plus"
+            @click="addAttrVal(scope.row.id)">属性值</el-button>
+          <el-button
+            size="mini"
+            @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+        </template>
+      </el-table-column>
     </el-table>
   </div>
   <div class="foot">
@@ -71,12 +83,24 @@ export default {
     this.getProjectList()
   },
   methods: {
-    cellStyle: function ({row, column, rowIndex, columnIndex}) {
-      if (columnIndex === 2 && row.attr_status === 1) {
-        return 'stateStyle'
-      } else if (columnIndex === 2 && row.attr_status === 0) {
-        return 'stateStyle1'
-      }
+    // cellStyle: function ({row, column, rowIndex, columnIndex}) {
+    //   if (columnIndex === 2 && row.attr_status === 1) {
+    //     return 'stateStyle'
+    //   } else if (columnIndex === 2 && row.attr_status === 0) {
+    //     return 'stateStyle1'
+    //   }
+    // },
+    addAttrVal (id) {
+      console.log('id', id)
+      // this.$axios.put(`backend/product/attr/attrVal/${id}`,{}).then((res)=>{
+      //   if(res.data.code === 200){
+      //     this.$message({
+      //       message: '属性值添加成功',
+      //       type: 'success'
+      //     });
+      //   }
+      //   this.getProjectList()
+      // })
     },
     //查询列表
     searchList(){
@@ -126,6 +150,10 @@ export default {
 <style scoped>
 .el-input{
   width: 400px;
+}
+.heade{
+  display: flex;
+  justify-content: space-between;
 }
 .foot{
   text-align: right;
