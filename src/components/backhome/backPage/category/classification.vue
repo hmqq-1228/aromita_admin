@@ -2,6 +2,7 @@
     <div class="classification">
         <div class="heade">
             <h3>分类对应关系列表</h3>
+            <el-button type="primary" @click="addcategory()"><i class="el-icon-plus"></i> 新增对应关系 </el-button>
         </div>
         <el-table :data="List" border style="width: 100%" max-height="700">	
             <el-table-column prop="erp_cat_id" label="ERP分类ID"></el-table-column>
@@ -15,7 +16,7 @@
             <el-table-column prop="updated_at" label="操作时间"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button type="primary" @click="editList(scope.row.erp_cat_id,scope.row.erp_cat_name,scope.row.web_sec_id)">编 辑</el-button>
+                    <el-button type="primary" @click="editList(scope.row.id,scope.row.erp_cat_id,scope.row.erp_cat_name,scope.row.web_sec_id)">编 辑</el-button>
                     <el-button type="danger" @click="delList(scope.row.id)">删 除</el-button>
                 </template>
             </el-table-column>
@@ -24,44 +25,58 @@
             <el-pagination
                 background
                 layout="total, prev, pager, next, jumper"
-                :total="100">
+                :total="total">
             </el-pagination>
         </div>
         <!-- 对应关系弹框 -->
         <el-dialog
-            :title="box_title"
+            title="对应关系"
             :visible.sync="categoryVisible"
             width="600px">
             <div class="categoryBox">
-                <el-form :label-position="labelPosition" label-width="140px" :model="form">
+                <el-form label-width="140px" :model="form">
+                    <el-form-item label="ERP分类ID:">
+                        <el-input v-model="form.erp_cat_id"></el-input>
+                    </el-form-item>
                     <el-form-item label="ERP分类名称:">
                         <el-input v-model="form.erp_cat_name"></el-input>
                     </el-form-item>
                     <el-form-item label="网站二级分类名称:">
-                        <el-select>
-                            
+                        <el-select v-model="form.web_sec_id" placeholder="请选择">
+                            <el-option
+                                v-for="item in ClassIIList"
+                                :key="item.id"
+                                :label="item.cate_name"
+                                :value="item.id">
+                            </el-option>
                         </el-select>
                     </el-form-item>
                 </el-form>
+                <el-button type="primary" @click="editcategory()" class="editBtn" v-if="btnShow == true">修 改</el-button>
+                <el-button type="primary" @click="addcategorySub()" class="editBtn" v-if="btnShow == false">创 建</el-button>
             </div>
         </el-dialog>
     </div>
 </template>
 <script>
-import {classlist} from '@/http/category.js'
+import {classlist,ClassII,addCategorylist} from '@/http/category.js'
 import qs from 'qs'
 export default {
     data(){
         return{
+            total:0,
             List:[],
             categoryVisible:false,
-            box_title:'',
             form:{
                 erp_cat_id:'',
                 erp_cat_name:'',
                 web_sec_id:'',
             },
-            catList:[]
+            btnShow:true,
+            catList:[],
+            ClassIIList:[],//二级分类列表
+            cateId:'',//二级分类id
+            cat_id:'',//编辑对应关系对应id
         }
     },
     created(){
@@ -72,6 +87,7 @@ export default {
         getList(){
             classlist().then((res)=>{
                 this.List = res.data.data.data
+                this.total = res.data.data.total
             })
         },
         //删除列表
@@ -98,18 +114,82 @@ export default {
                 });          
             });
         },
+        //获取二级类目
+        getClassII(){
+            ClassII().then((res)=>{
+                this.ClassIIList = res.data.data
+            })
+        },
         //编辑对应关系
-        editList(id1,str,id2){
+        editList(id,id1,str,id2){
+            this.cat_id = id
             this.form.erp_cat_id = id1
             this.form.erp_cat_name = str
             this.form.web_sec_id = id2
             this.categoryVisible = true
+            this.btnShow = true
+            this.getClassII()
+        },
+        //编辑对应关系提交
+        editcategory(){
+            this.$axios.put(`/backend/product/webCategory/${this.cat_id}`,qs.stringify(this.form)).then((res)=>{
+                if(res.data.code == 200){
+                    this.$message({
+                        type: 'success',
+                        message: '修改成功!'
+                    });
+                }
+                this.categoryVisible = false
+                this.getList()
+            })
+        },
+        //新增对应关系
+        addcategory(){
+            this.form.erp_cat_id = ''
+            this.form.erp_cat_name = ''
+            this.form.web_sec_id = ''
+            this.getClassII()
+            this.btnShow = false
+            this.categoryVisible = true
+        },
+        addcategorySub(){
+            addCategorylist(this.form).then((res)=>{
+                if(res.data.code == 200){
+                    this.$message({
+                        type: 'success',
+                        message: '创建成功!'
+                    });
+                    this.categoryVisible = false
+                    this.getList()
+                }else{
+                    this.$message({
+                        type: 'error',
+                        message: res.data.msg
+                    });
+                }
+            })
         }
     }
 }
 </script>
 <style>
-    .categoryBox .el-input{
-        width: 220px;
-    }
+.heade{
+    display: flex;
+    align-items: center;
+}
+.heade h3{
+    margin-right: 20px;
+}
+.categoryBox{
+    min-height: 400px;
+    position: relative;
+}
+.categoryBox .el-input{
+    width: 220px;
+}
+.editBtn{
+    position: absolute;
+    bottom:20px;
+    right:20px;
+}
 </style>
