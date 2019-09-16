@@ -16,8 +16,13 @@ import classification from '@/components/backhome/backPage/category/classificati
 import customerList from '@/components/backhome/backPage/customer/customerList.vue'
 import pointsDetail from '@/components/backhome/backPage/customer/pointsDetail.vue'
 
-Vue.use(Router)
+//商品管理
+import commodity from '@/components/backhome/backPage/commodity/commodity.vue'
+import commodityhand from '@/components/backhome/backPage/commodity/commodityhand.vue'
+import addsku from '@/components/backhome/backPage/commodity/addSku.vue'
+import addSpu from '@/components/backhome/backPage/commodity/addSpu.vue'
 
+Vue.use(Router)
 export default new Router({
   routes: [
     //登陆页
@@ -65,7 +70,7 @@ export default new Router({
           name: 'classification',
           component: classification
         },
-        {
+ {
           path: '/customerList',
           name: 'customerList',
           component: customerList
@@ -74,7 +79,28 @@ export default new Router({
           path: '/pointsDetail',
           name: 'pointsDetail',
           component: pointsDetail
-        }
+        },
+        //带上货商品管理
+        {
+          path: '/commodity',
+          name: 'commodity',
+          component: commodity
+        },
+        {
+          path: '/commodityhand',
+          name: 'commodityhand',
+          component: commodityhand
+        },
+        {
+          path: '/addSku',
+          name: 'addsku',
+          component: addsku
+        },
+        {
+          path: '/addSpu',
+          name: 'addSpu',
+          component: addSpu
+        },
       ]
     }
   ]

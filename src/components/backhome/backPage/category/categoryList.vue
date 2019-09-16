@@ -232,16 +232,16 @@ export default {
     /* border:1px solid #e5e5e5; */
 }
 .el-tree-node__content{
-    height: 40px;
+    height: 40px!important;
 }
 .custom-tree-node{
-    width: 1200px;
+    width: 1200px!important;
 }
 .node_name{
     display: inline-block;
     min-width: 800px;
 }
 .categoryBox .el-input{
-    width: 200px;
+    width: 200px!important;
 }
 </style>

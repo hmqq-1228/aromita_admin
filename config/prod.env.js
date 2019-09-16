@@ -1,5 +1,5 @@
 'use strict'
 module.exports = {
   NODE_ENV: '"production"',
-  API_ROOT: '"https://aromita.panduo.com.cn"'
+  API_ROOT: '"https://aradmin.panduo.com.cn"'
 }

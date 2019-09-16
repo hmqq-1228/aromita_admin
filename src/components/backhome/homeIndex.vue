@@ -51,10 +51,10 @@
                 <span>商品管理</span>
               </template>
               <el-menu-item-group>
-                <el-menu-item index="/page2">SPU管理</el-menu-item>
-                <el-menu-item index="/page1">SKU管理</el-menu-item>
-                <el-menu-item index="/coefficient">利润系数</el-menu-item>
-                <el-menu-item index="/page1">商品分类</el-menu-item>
+                <el-menu-item index="/commodity">待上货商品管理</el-menu-item>
+                <el-menu-item index="/commodityhand">已上货商品管理</el-menu-item>
+                <el-menu-item index="/addsku">新增SKU</el-menu-item>
+                <el-menu-item index="/addSpu">新增SPU</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="4">
@@ -123,7 +123,6 @@ export default {
   color: #333;
   text-align: center;
 }
-
 .el-main {
   color: #333;
 }
