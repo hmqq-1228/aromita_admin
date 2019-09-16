@@ -33,7 +33,6 @@
               </template>
               <el-menu-item-group>
                 <el-menu-item index="/attribute">属性列表</el-menu-item>
-                <el-menu-item index="/coefficient">利润系数</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-submenu index="2">
@@ -54,6 +53,7 @@
               <el-menu-item-group>
                 <el-menu-item index="/page2">SPU管理</el-menu-item>
                 <el-menu-item index="/page1">SKU管理</el-menu-item>
+                <el-menu-item index="/coefficient">利润系数</el-menu-item>
                 <el-menu-item index="/page1">商品分类</el-menu-item>
               </el-menu-item-group>
             </el-submenu>

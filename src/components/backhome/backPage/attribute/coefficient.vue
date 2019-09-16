@@ -92,6 +92,7 @@
   <div class="foot">
     <el-pagination
       background
+      @current-change="currentPage($event)"
       layout="total, prev, pager, next, jumper"
       :total="totalNum">
     </el-pagination>
@@ -101,6 +102,7 @@
 
 <script>
 import qs from 'qs'
+import {coefficient} from "@/http/category.js"
 export default {
   name: "coefficient",
   data() {
@@ -112,6 +114,7 @@ export default {
       minPrice: 0,
       maxPrice: 0,
       stepNum: 0,
+      pageNum: 1,
       minPriceEdit: 0,
       maxPriceEdit: 0,
       stepNumEdit: 0,
@@ -154,15 +157,31 @@ export default {
     this.coefficientList()
   },
   methods:{
+    currentPage (e) {
+      var that = this
+      console.log('size', e)
+      that.pageNum = e
+      that.coefficientList()
+    },
     // 列表
     coefficientList () {
       var that = this
-      that.$axios.get("backend/product/profitCoefficient", {}).then((res)=>{
+      var obj = {
+        perPage: 15,
+        page: that.pageNum
+      }
+      coefficient(obj).then((res)=>{
         if(res.data.code === 200){
           that.tableData = res.data.data.data
           that.totalNum = res.data.data.total
         }
       })
+      // that.$axios.get("backend/product/profitCoefficient", obj).then((res)=>{
+      //   if(res.data.code === 200){
+      //     that.tableData = res.data.data.data
+      //     that.totalNum = res.data.data.total
+      //   }
+      // })
     },
     // 删除
     handleDelete(id){

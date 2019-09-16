@@ -15,3 +15,5 @@ export const ClassII = params =>get("/backend/product/category/ajaxSecondCategor
 
 //创建对应关系
 export const addCategorylist = params => post("/backend/product/webCategory",params)
+
+export const coefficient = params =>get("/backend/product/profitCoefficient",params)

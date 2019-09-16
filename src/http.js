@@ -32,6 +32,7 @@ export const post = (url, params, config = {}) => {
 }
 
 export const get = (url,params,config = {}) => {
+  console.log('88888888', params)
     return axios({
         method: 'get',
         url: url,
