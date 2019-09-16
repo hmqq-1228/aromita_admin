@@ -64,7 +64,6 @@
               </template>
               <el-menu-item-group>
                 <el-menu-item index="/customerList">客户列表</el-menu-item>
-                <el-menu-item index="/pointsDetail">积分明细</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
           </el-menu>

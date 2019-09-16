@@ -5,7 +5,6 @@ import Login from '@/components/login'
 //后台首页
 import BackIndex from '@/components/backhome/homeIndex.vue'
 import Index from '@/components/backhome/index.vue'
-
 // 属性管理
 import attribute from '@/components/backhome/backPage/attribute/attribute.vue'
 import addAttr from '@/components/backhome/backPage/attribute/addAttr.vue'
@@ -13,6 +12,9 @@ import coefficient from '@/components/backhome/backPage/attribute/coefficient.vu
 //分类管理
 import categoryList from '@/components/backhome/backPage/category/categoryList.vue'
 import classification from '@/components/backhome/backPage/category/classification.vue'
+// 客户管理
+import customerList from '@/components/backhome/backPage/customer/customerList.vue'
+import pointsDetail from '@/components/backhome/backPage/customer/pointsDetail.vue'
 
 Vue.use(Router)
 
@@ -62,6 +64,16 @@ export default new Router({
           path: '/classification',
           name: 'classification',
           component: classification
+        },
+        {
+          path: '/customerList',
+          name: 'customerList',
+          component: customerList
+        },
+        {
+          path: '/pointsDetail',
+          name: 'pointsDetail',
+          component: pointsDetail
         }
       ]
     }
