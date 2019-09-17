@@ -107,6 +107,12 @@ export default {
 <style>
 .heade{
   margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.heade h3{
+    margin-right: 20px;
 }
 .backIndex{
     display: flex;
