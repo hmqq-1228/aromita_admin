@@ -3,7 +3,7 @@
     <el-container>
       <el-header>Aromita 后台管理系统</el-header>
       <el-container>
-        <el-aside width="250px">
+        <el-aside width="200px">
           <el-menu
             :default-active="activeRoute"
             class="el-menu-vertical-demo"
@@ -93,10 +93,9 @@ export default {
   },
   methods:{
     getScreenHeight:function () {
-      this.height = $(window).height() - 60
+      this.height = $(window).height() - 40
       var path = this.$route.path.split('/')
       var pathName = path[1]
-      console.log('kkkkk', pathName)
       this.activeRoute = '/' + pathName
     }
   }
@@ -117,12 +116,13 @@ export default {
 .backIndex{
     display: flex;
 }
-.el-header, .el-footer {
+.el-header {
   background-color: #3c4752;
   color: #fff;
-  font-size: 24px;
+  font-size: 16px;
   font-weight: bold;
-  line-height: 60px;
+  height: 40px!important;
+  line-height:40px;
 }
 
 .el-aside {

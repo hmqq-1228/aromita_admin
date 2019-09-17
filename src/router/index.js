@@ -21,6 +21,7 @@ import commodity from '@/components/backhome/backPage/commodity/commodity.vue'
 import commodityhand from '@/components/backhome/backPage/commodity/commodityhand.vue'
 import addsku from '@/components/backhome/backPage/commodity/addSku.vue'
 import addSpu from '@/components/backhome/backPage/commodity/addSpu.vue'
+import skuDetail from '@/components/backhome/backPage/commodity/skuDetail.vue'
 
 Vue.use(Router)
 export default new Router({
@@ -70,7 +71,7 @@ export default new Router({
           name: 'classification',
           component: classification
         },
- {
+        {
           path: '/customerList',
           name: 'customerList',
           component: customerList
@@ -101,6 +102,12 @@ export default new Router({
           name: 'addSpu',
           component: addSpu
         },
+        //sku详情
+        {
+          path: '/skuDetail',
+          name: 'skuDetail',
+          component: skuDetail
+        }
       ]
     }
   ]
