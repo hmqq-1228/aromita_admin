@@ -4,32 +4,33 @@
             <h3>SKU详情</h3>
         </div>
         <div class="sku_detail" v-if="detail">
-            <p>商品编号：{{detail.sku_no}}</p>
-            <p>商品名称：{{detail.sku_name}}</p>
-            <!-- <p>商品主图：{{detail.sku_image}}</p> -->
-            <p>商品主图：
+            <p><b>商品编号：</b>{{detail.sku_no}}</p>
+            <p><b>商品名称：</b><span class="name">{{detail.sku_name}}</span></p>
+            <p><b>商品主图：</b> 
                 <img :src="detail.sku_image" alt="">
             </p>
-            <p>商品副图：
+            <p><b>商品副图：</b> 
                 <img v-for="(item,index) in detail.thumbnail_images" :src="item" alt="" :key="index">
             </p>
-            <p>优先级：{{detail.sort}}</p>
-            <p>类别名称：{{detail.second_category.cate_name}}</p>
-            <p>推荐售价：{{detail.recommend_price}}</p>
-            <p>最终售价：{{detail.sku_price}}</p>
-            <p>库存：{{detail.inventory}}</p>
-            <p>上货后销售状态：{{detail.sku_status_cn}}</p>
-            <div>商品属性和属性值：
-                <p v-for="(item,index) in attr" :key="index">
-                    <span>{{item.attr_name}}</span>：{{item.value.attr_value}}
-                </p>
+            <p><b>优先级：</b>{{detail.sort}}</p>
+            <p><b>类别名称：</b>{{detail.second_category.cate_name}}</p>
+            <p><b>推荐售价：</b>{{detail.recommend_price}}</p>
+            <p><b>最终售价：</b>{{detail.sku_price}}</p>
+            <p><b>库存：</b>{{detail.inventory}}</p>
+            <p><b>上货后销售状态：</b>{{detail.sku_status_cn}}</p>
+            <div class="attrList">
+                <b>商品属性和属性值：</b>
+                <div class="list">
+                    <div v-for="(item,index) in attr" :key="index">
+                        <span>{{item.attr_name}}</span>：{{item.value.attr_value}}
+                    </div>
+                </div>
             </div>
-            <p>商品卖点：{{detail.main_feature}}</p>
+            <p><b>商品卖点：</b>{{detail.main_feature}}</p>
         </div>
     </div>
 </template>
 <script>
-import {} from '@/http/'
 export default {
     data(){
         return{
@@ -62,5 +63,31 @@ export default {
         width: 100px;
         height: 100px;
         border:1px solid #e5e5e5;
+        margin:5px;
+    }
+    .sku_detail p{
+        display: flex;
+        line-height:40px;
+        font-size: 16px;
+    }
+    .sku_detail p b{
+        display: inline-block;
+        min-width: 130px;
+        text-align: right;
+        margin-right: 10px;
+    }
+    .sku_detail p span{
+        width: 800px;
+        display: inline-block;
+        overflow: hidden;
+    }
+    .attrList{
+        overflow: hidden;
+    }
+    .attrList b{
+        float: left;
+    }
+    .attrList .list{
+        float: left;
     }
 </style>

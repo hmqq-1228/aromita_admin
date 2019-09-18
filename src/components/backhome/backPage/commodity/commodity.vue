@@ -29,7 +29,9 @@
                             <el-button type="primary">批量新建</el-button>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary">新 建</el-button>
+                            <router-link to="/addSku">
+                                <el-button type="primary">新 建</el-button>
+                            </router-link>
                         </el-form-item>
                         <el-form-item>
                             <el-button type="warning">导入商品</el-button>
