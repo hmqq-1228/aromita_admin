@@ -64,8 +64,7 @@
                     </el-form-item>
                     <el-form-item label="二级类别名称：" prop="name">
                         <el-select v-model="skuform.second_cate_id" filterable placeholder="请输入二级类目">
-                            <el-option label="区域一" value="shanghai"></el-option>
-                            <el-option label="区域二" value="beijing"></el-option>
+                            <el-option v-for="(item,index) in secondList" :key="index" :label="item.cate_name" :value="item.id"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="上货价：" prop="name">
@@ -78,9 +77,10 @@
                         <el-input v-model="skuform.sku_price"></el-input>
                     </el-form-item>
                     <el-form-item label="商品状态：" prop="name">
-                        <el-select v-model="skuform.sku_no" filterable placeholder="请选择商品状态">
-                            <el-option label="区域一" value="shanghai"></el-option>
-                            <el-option label="区域二" value="beijing"></el-option>
+                        <el-select v-model="skuform.sku_status" filterable placeholder="请选择商品状态">
+                            <el-option label="下架" :value='0'></el-option>
+                            <el-option label="正常销售" :value='1'></el-option>
+                            <el-option label="补货中" :value='2'></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="库存：" prop="name">
@@ -91,7 +91,16 @@
                         <el-radio v-model="skuform.inventory_allow_update" :label='0'>否</el-radio>
                     </el-form-item>
                     <el-form-item label="属性和属性值：" prop="name">
-
+                        <el-checkbox-group v-model="checkList">
+                            <div v-for="(item,index) in attrEditionList" :key="index">
+                                <div><el-checkbox :label="item.attr_name"></el-checkbox></div>
+                                <div class="radioGroup">
+                                    <el-radio-group v-model="Attribute_value[index]">
+                                        <el-radio v-for="(item1,index1) in item.values" :key="index1" :label="item1.attr_value"></el-radio>
+                                    </el-radio-group>
+                                </div>
+                            </div>
+                        </el-checkbox-group>
                     </el-form-item>
                     <el-form-item label="商品卖点：" prop="name">
                         <el-input
@@ -111,21 +120,23 @@
     </div>
 </template>
 <script>
-import {uploadUrl,skunoList,skuerp} from '@/http/commodity.js'
-import {categoryList,attrList,addCategory} from "@/http/category.js"
+import {uploadUrl,skunoList,skuerp,attrEdition} from '@/http/commodity.js'
+import {categoryList,attrList,addCategory,Classlinkage} from "@/http/category.js"
 export default {
     data(){
         return{
             //sku远程搜索
             restaurants: [],
             firstList:[],//一级类目
+            secondList:[],//二级类目
             //上传图片
             uploadUrl:uploadUrl,
             sku_no:'',//sku编码
             skuform:null,
-            rules:{
-
-            },
+            rules:{},
+            attrEditionList:[],//属性列表
+            checkList:[],//绑定的属性列表
+            Attribute_value:[],//绑定的属性值列表
             imageUrl: '',//商品主图
             mainType:{
                 type:'main'
@@ -140,7 +151,7 @@ export default {
         }
     },
     created(){
-
+        this.getAttrEdition()
     },
     methods:{
         //sku远程搜索
@@ -157,6 +168,7 @@ export default {
                 console.log(error);
             });
         },
+        //选择远程搜索值
         handleSelect(item) {
             this.sku_no = item.value
             this.getSkuErp()
@@ -174,6 +186,8 @@ export default {
                     }
                     this.skuform.thumbnail_images = urlList
                     this.getFirstList()
+                    this.changeClassI(this.skuform.first_cate_id)
+                    
                 }else{
                     this.$message.error(res.data.msg);
                 }
@@ -185,10 +199,21 @@ export default {
                 this.firstList = res.data.data
             })
         },
+        //选择一级类目,更新二级类目
+        changeClassI(par_id){
+            Classlinkage({parent_id:par_id}).then((res)=>{
+                this.secondList = res.data.data
+            })
+        },
+        //获取属性和属性值
+        getAttrEdition(){
+            attrEdition().then((res)=>{
+                this.attrEditionList = res.data.data
+            })
+        },
         //商品主图
         handleAvatarSuccess(res, file) {
             this.imageUrl = URL.createObjectURL(file.raw);
-            console.log(file)
         },
         beforeAvatarUpload(file) {
             const isJPG = file.type === 'image/jpeg';
@@ -241,5 +266,8 @@ export default {
 }
 .el-textarea__inner{
     width: 340px!important;
+}
+.radioGroup{
+    padding-left:20px;
 }
 </style>

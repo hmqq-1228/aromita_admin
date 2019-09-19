@@ -13,7 +13,11 @@ export const classlist = params =>get("/backend/product/webCategory",params)
 //获取分类的一级类目
 export const ClassII = params =>get("/backend/product/category/ajaxSecondCategory",params)
 
+//由一级类目获取二级类目
+export const Classlinkage = params =>get("/backend/product/category/getAjaxCategoryByParentId",params)
+
 //创建对应关系
 export const addCategorylist = params => post("/backend/product/webCategory",params)
 
+//利润关系
 export const coefficient = params =>get("/backend/product/profitCoefficient",params)

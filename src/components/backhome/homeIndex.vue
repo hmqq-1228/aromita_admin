@@ -60,6 +60,15 @@
             </el-submenu>
             <el-submenu index="4">
               <template slot="title">
+                <i class="el-icon-shopping-bag-1"></i>
+                <span>订单管理</span>
+              </template>
+              <el-menu-item-group>
+                <el-menu-item index="/orderList">订单列表</el-menu-item>
+              </el-menu-item-group>
+            </el-submenu>
+            <el-submenu index="5">
+              <template slot="title">
                 <i class="el-icon-user"></i>
                 <span>客户管理</span>
               </template>

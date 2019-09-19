@@ -15,13 +15,15 @@ import classification from '@/components/backhome/backPage/category/classificati
 // 客户管理
 import customerList from '@/components/backhome/backPage/customer/customerList.vue'
 import pointsDetail from '@/components/backhome/backPage/customer/pointsDetail.vue'
-
 //商品管理
 import commodity from '@/components/backhome/backPage/commodity/commodity.vue'
 import commodityhand from '@/components/backhome/backPage/commodity/commodityhand.vue'
 import addsku from '@/components/backhome/backPage/commodity/addSku.vue'
 import addSpu from '@/components/backhome/backPage/commodity/addSpu.vue'
 import skuDetail from '@/components/backhome/backPage/commodity/skuDetail.vue'
+//订单管理
+import orderList from '@/components/backhome/backPage/order/orderList.vue'
+import orderDetail from '@/components/backhome/backPage/order/orderDetail.vue'
 
 Vue.use(Router)
 export default new Router({
@@ -81,16 +83,11 @@ export default new Router({
           name: 'pointsDetail',
           component: pointsDetail
         },
-        //带上货商品管理
+        //待上货商品管理
         {
           path: '/commodity',
           name: 'commodity',
           component: commodity
-        },
-        {
-          path: '/commodityhand',
-          name: 'commodityhand',
-          component: commodityhand
         },
         {
           path: '/addSku',
@@ -102,11 +99,27 @@ export default new Router({
           name: 'addSpu',
           component: addSpu
         },
-        //sku详情
         {
           path: '/skuDetail',
           name: 'skuDetail',
           component: skuDetail
+        },
+        //已上货商品管理
+        {
+          path: '/commodityhand',
+          name: 'commodityhand',
+          component: commodityhand
+        },
+        //订单管理模块 
+        {
+          path: '/orderList',
+          name: 'orderList',
+          component: orderList
+        },
+        {
+          path: '/orderDetail',
+          name: 'orderDetail',
+          component: orderDetail
         }
       ]
     }

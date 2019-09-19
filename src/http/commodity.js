@@ -10,3 +10,5 @@ export const spuList = params =>get("backend/product/",params)
 export const skuerp = params =>get("backend/product/sku/skuQuery",params)
 //sku_no 智能匹配
 export const skunoList = params =>get("backend/product/sku/skuNoQuery",params)
+//获取属性属性值列表 （sku创建用）
+export const attrEdition = params =>get("/backend/product/attr/skuAttributeList",params)

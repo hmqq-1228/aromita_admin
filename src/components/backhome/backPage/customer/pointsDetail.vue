@@ -1,69 +1,64 @@
 <template>
   <div class="pointsDetail">
-    <div class="title">积分明细</div>
+    <div class="heade">
+        <h3>客户积分明细</h3>
+        <router-link to="/customerList">
+            <el-button type="info">返回客户列表</el-button>
+        </router-link>
+    </div>
     <div class="count">
       <el-table
         border
-        :data="tableData"
+        :data="pointsTable"
         style="width: 100%">
         <el-table-column
-          prop="date"
-          label="积分点数"
-          width="180">
+          prop="score"
+          label="积分点数">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="source"
           label="积分收支">
         </el-table-column>
         <el-table-column
-          prop="address"
+          prop="created_at"
           label="时间">
         </el-table-column>
       </el-table>
-    </div>
-    <div class="foot">
-      <el-pagination
-        background
-        layout="total, prev, pager, next, jumper"
-        :total="100">
-      </el-pagination>
     </div>
   </div>
 </template>
 
 <script>
+import {scoreDetail} from '@/http/customer.js'
 export default {
   name: "pointsDetail",
   data() {
     return {
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }]
+      pointsTable: [],
+      customerId:'',//客户ID
+    }
+  },
+  created(){
+    this.customerId = this.$route.query.id
+    if(this.customerId){
+      this.getList()
+    }
+  },
+  methods:{
+    getList(){
+      scoreDetail({id:this.customerId}).then((res)=>{
+          this.pointsTable = res.data.data
+      }) 
     }
   }
 }
 </script>
-
 <style scoped>
 .title{
   font-size: 18px;
   font-weight: bold;
 }
-  .count{
-    margin-top: 20px;
-  }
+.count{
+  margin-top: 20px;
+}
 </style>
