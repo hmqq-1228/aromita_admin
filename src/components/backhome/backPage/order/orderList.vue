@@ -62,7 +62,7 @@
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button type="primary" @click="orderDetail(scope.row.id)">详情</el-button>
-                        <el-button type="warning">编辑</el-button>
+                        <el-button type="warning" @click="Edit(scope.row)">编辑</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -75,10 +75,42 @@
                 :page-size="20">
             </el-pagination>
         </div>
+        <!-- 编辑订单状态弹框-->
+        <el-dialog
+            title="修改订单状态"
+            :visible.sync="orderVisible"
+            width="40%">
+            <el-form :model="orderDetailForm" class="demo-form-inline" label-width="100px">
+                <el-form-item label="订单ID:">
+                    <el-input v-model="orderDetailForm.ID" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="订单号:">
+                    <el-input v-model="orderDetailForm.orders_number" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="客户ID:">
+                    <el-input v-model="orderDetailForm.customers_id" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="订单金额:">
+                    <el-input v-model="orderDetailForm.order_total" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="运输方式:">
+                    <el-input v-model="orderDetailForm.shipping_method" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="订单状态:">
+                    <el-select v-model="orderDetailForm.orders_status" clearable placeholder="订单状态">
+                        <el-option v-for="(item,index) in order_statusList" :key="index" :label="item.label" :value="Number(item.value)"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="warning" @click="editorderSub()">修 改</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
     </div>
 </template>
 <script>
-import {orderList} from '@/http/order.js'
+import {orderList,orderUpdate,orderEdit} from '@/http/order.js'
+import { stringify } from 'querystring'
 export default {
     data(){
        return{
@@ -112,6 +144,15 @@ export default {
                 '60':"pending"
             },
             orderTable:[],//订单列表
+            orderVisible:false,
+            orderDetailForm:{
+                id:'',//订单id
+                orders_number:'',
+                customers_id:'',
+                order_total:'',
+                shipping_method:'',
+                orders_status:0,
+            }
        } 
     },
     created(){
@@ -140,6 +181,34 @@ export default {
         //订单详情
         orderDetail(id){
             this.$router.push({ path: 'orderDetail', query: { id: id }})
+        },
+        //订单编辑
+        Edit(obj){
+            this.orderVisible = true;
+            this.orderDetailForm = JSON.parse(JSON.stringify(obj))
+            console.log(this.orderDetailForm,'000')
+        },
+        //修改订单状态提交
+        editorderSub(){
+            let pre={
+                id:this.orderDetailForm.id,
+                orders_status:this.orderDetailForm.orders_status
+            }
+            orderEdit(pre).then((res)=>{
+                if(res.data.code == 200){
+                    this.$message({
+                        message: '修改成功！',
+                        type: 'success'
+                    });
+                    this.orderVisible = false;
+                    this.getorderList()
+                }else{
+                    this.$message({
+                        message:res.data.msg,
+                        type: 'error'
+                    });
+                }
+            })
         }
     }
 }

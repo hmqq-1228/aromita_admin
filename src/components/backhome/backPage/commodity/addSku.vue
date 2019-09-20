@@ -10,7 +10,8 @@
                         v-model="sku_no"
                         :fetch-suggestions="querySearchAsync"
                         placeholder="请输入SKU编码"
-                        @select="handleSelect">
+                        @select="handleSelect"
+                        @blur="handleChange">
                     </el-autocomplete>
                 </el-form-item>
                 <div v-if="this.skuform!=null">
@@ -58,12 +59,12 @@
                         <el-input v-model="skuform.sort"></el-input>
                     </el-form-item>
                     <el-form-item label="一级类别名称：" prop="name">
-                        <el-select v-model="skuform.first_cate_id" filterable placeholder="请输入一级类目">
+                        <el-select v-model="skuform.first_cate_id" filterable placeholder="请输入一级类目" @change="changeClassI(skuform.first_cate_id)">
                             <el-option v-for="(item,index) in firstList" :key="index" :label="item.cate_name" :value="item.id"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="二级类别名称：" prop="name">
-                        <el-select v-model="skuform.second_cate_id" filterable placeholder="请输入二级类目">
+                        <el-select v-model="skuform.second_cate_id" filterable placeholder="请输入二级类目" @change="changeClassII(skuform.second_cate_id)">
                             <el-option v-for="(item,index) in secondList" :key="index" :label="item.cate_name" :value="item.id"></el-option>
                         </el-select>
                     </el-form-item>
@@ -93,9 +94,9 @@
                     <el-form-item label="属性和属性值：" prop="name">
                         <el-checkbox-group v-model="checkList">
                             <div v-for="(item,index) in attrEditionList" :key="index">
-                                <div><el-checkbox :label="item.attr_name"></el-checkbox></div>
-                                <div class="radioGroup">
-                                    <el-radio-group v-model="Attribute_value[index]">
+                                <div><el-checkbox :label="item.id">{{item.attr_name}}</el-checkbox></div>
+                                <div class="radioGroup" v-if="checkList.find(n =>n == Number(item.id))">
+                                    <el-radio-group>
                                         <el-radio v-for="(item1,index1) in item.values" :key="index1" :label="item1.attr_value"></el-radio>
                                     </el-radio-group>
                                 </div>
@@ -121,7 +122,7 @@
 </template>
 <script>
 import {uploadUrl,skunoList,skuerp,attrEdition} from '@/http/commodity.js'
-import {categoryList,attrList,addCategory,Classlinkage} from "@/http/category.js"
+import {categoryList,Classlinkage} from "@/http/category.js"
 export default {
     data(){
         return{
@@ -173,6 +174,11 @@ export default {
             this.sku_no = item.value
             this.getSkuErp()
         },
+        //用户输入sku编码
+        handleChange(){
+            this.skuform = null
+            this.getSkuErp()
+        },
         //输入skuNum获取erp信息
         getSkuErp(){
             skuerp({sku_no:this.sku_no}).then((res)=>{
@@ -186,8 +192,7 @@ export default {
                     }
                     this.skuform.thumbnail_images = urlList
                     this.getFirstList()
-                    this.changeClassI(this.skuform.first_cate_id)
-                    
+                    this.defaultClassII(this.skuform.first_cate_id)
                 }else{
                     this.$message.error(res.data.msg);
                 }
@@ -199,11 +204,32 @@ export default {
                 this.firstList = res.data.data
             })
         },
-        //选择一级类目,更新二级类目
-        changeClassI(par_id){
+        //获取默认的二级类目列表
+        defaultClassII(par_id){
             Classlinkage({parent_id:par_id}).then((res)=>{
                 this.secondList = res.data.data
+                this.changeClassII(this.skuform.second_cate_id)
             })
+        },
+        //改变一级类目,更新二级类目
+        changeClassI(par_id){
+            Classlinkage({parent_id:par_id}).then((res)=>{
+                this.skuform.second_cate_id = ''
+                this.secondList = res.data.data
+            })
+        },
+        //选择二级类目,获取该类目下的属性
+        changeClassII(secondId){
+            //该二级类目下的属性列表
+            var secondAttrList = this.secondList.find(n=>n.id == secondId).cate_attrs
+            var attrDefaultCheack = []
+            for(var i=0;i<secondAttrList.length;i++){
+                var num = Number(secondAttrList[i].attr_id)
+                attrDefaultCheack.push(num)
+            }
+            //复选框绑定默认值
+            this.checkList = attrDefaultCheack
+            console.log(this.checkList)
         },
         //获取属性和属性值
         getAttrEdition(){

@@ -89,7 +89,7 @@
     </div>
 </template>
 <script>
-import {categoryList,attrList,addCategory} from "@/http/category.js"
+import {categoryList,categoryAttrList,addCategory} from "@/http/category.js"
 import qs from 'qs'
 export default {
     data(){
@@ -138,7 +138,7 @@ export default {
         },
         //获取全部分类属性
         getAttrList(){
-            attrList().then((res)=>{
+            categoryAttrList().then((res)=>{
                 var list = res.data.data
                 for(var i=0;i<list.length;i++){
                     this.$set(list[i],'attrStr',`${list[i].id}:${list[i].attr_name}`)

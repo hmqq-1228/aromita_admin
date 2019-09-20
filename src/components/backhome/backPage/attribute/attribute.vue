@@ -57,10 +57,6 @@
     <el-form :model="form" :rules="rules" ref="form" >
       <el-form-item label="属性名" label-width="100px">
         <el-input v-model="form.name" autocomplete="off" style="width: 193px;" readonly></el-input>
-        <!--<el-select v-model="form.name" placeholder="请选择活动区域">-->
-          <!--<el-option label="区域一" value="shanghai"></el-option>-->
-          <!--<el-option label="区域二" value="beijing"></el-option>-->
-        <!--</el-select>-->
       </el-form-item>
       <el-form-item label="属性值" label-width="100px" prop="value">
         <el-input v-model="form.value" autocomplete="off" style="width: 193px;"></el-input>
