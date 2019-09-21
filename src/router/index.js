@@ -21,6 +21,8 @@ import commodityhand from '@/components/backhome/backPage/commodity/commodityhan
 import addsku from '@/components/backhome/backPage/commodity/addSku.vue'
 import addSpu from '@/components/backhome/backPage/commodity/addSpu.vue'
 import skuDetail from '@/components/backhome/backPage/commodity/skuDetail.vue'
+import spuskulist from '@/components/backhome/backPage/commodity/spuskulist.vue'
+
 //订单管理
 import orderList from '@/components/backhome/backPage/order/orderList.vue'
 import orderDetail from '@/components/backhome/backPage/order/orderDetail.vue'
@@ -103,6 +105,11 @@ export default new Router({
           path: '/skuDetail',
           name: 'skuDetail',
           component: skuDetail
+        },
+        {
+          path: '/spuskulist',
+          name: 'spuskulist',
+          component: spuskulist
         },
         //已上货商品管理
         {

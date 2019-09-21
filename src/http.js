@@ -31,6 +31,14 @@ export const post = (url, params, config = {}) => {
     })
 }
 
+export const put = (url, params, config = {}) => {
+    return axios({
+        method: 'put',
+        url: url,
+        data: qs.stringify(params)
+    })
+} 
+
 export const get = (url,params,config = {}) => {
     return axios({
         method: 'get',
