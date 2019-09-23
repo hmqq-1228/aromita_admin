@@ -45,6 +45,7 @@ table { border-collapse: collapse; border-spacing: 0; }
 .ks-clear, .clear {
   *zoom: 1;
 }
+<<<<<<< HEAD
 .el-menu-item{
   width: 250px !important;
   text-align: left !important;
@@ -59,3 +60,5 @@ table { border-collapse: collapse; border-spacing: 0; }
 .el-table td, .el-table th{
   text-align: center !important;
 }
+=======
+>>>>>>> 893cc2d6acaab4c720320d1d6b612fc624507711
