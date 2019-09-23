@@ -1,15 +1,15 @@
 <template>
   <div class="hello">
     <div class="login_form">
-        <el-form label-width="80px" :model="formLabelAlign">
-          <el-form-item label="用户名：">
+        <el-form label-width="80px" :model="formLabelAlign" :rules="rules" ref="formLabelAlign">
+          <el-form-item label="用户名:" prop="name">
             <el-input v-model="formLabelAlign.name"></el-input>
           </el-form-item>
-          <el-form-item label="密码：">
-            <el-input v-model="formLabelAlign.password"></el-input>
+          <el-form-item label="密码:" prop="password">
+            <el-input type="password" show-password v-model="formLabelAlign.password"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="login()">登陆</el-button>
+            <el-button type="primary" @click="submitForm('formLabelAlign')">立即创建</el-button>
           </el-form-item>
         </el-form>
     </div>
@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import {userLogin} from '@/http/order.js'
 export default {
   name: 'HelloWorld',
   data () {
@@ -24,14 +25,42 @@ export default {
       formLabelAlign:{
         name:'',
         password:''
+      },
+      rules:{
+        name: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+        ],
+        password: [
+          { required: true, message: '请输入登陆密码', trigger: 'blur' },
+          // { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ]
       }
     }
   },
   methods:{
-    login(){
-      this.$router.push({
-        path:'/homeIndex'
-      })
+    submitForm(formName){
+      var pre = {
+        username: this.formLabelAlign.name,
+        password: this.formLabelAlign.password
+      }
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          userLogin(pre).then((res)=>{
+            console.log('kkkkk', res)
+            if (res.data.code === 200) {
+              this.$message.success(res.data.msg)
+              this.$router.push({
+                path:'/homeIndex'
+              })
+            } else{
+              this.$message.warning(res.data.msg)
+            }
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     }
   }
 }

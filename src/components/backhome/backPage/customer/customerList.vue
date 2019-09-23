@@ -67,7 +67,9 @@
     <div class="foot">
       <el-pagination
         background
-        layout="prev, pager, next"
+        @current-change="currentPage($event)"
+        layout="total, prev, pager, next, jumper"
+        :page-size="20"
         :total="total">
       </el-pagination>
     </div>
@@ -122,6 +124,10 @@ export default {
     this.getList()
   },
   methods:{
+    currentPage(num) {
+      this.page = num
+      this.getList()
+    },
     //客户列表
     getList(){
       if(this.registerDate.length!=0){
@@ -134,6 +140,7 @@ export default {
       }
       let pre={
         email:this.email,
+        page: this.page,
         firstname:this.firstname,
         created_at_start:this.created_at_start,
         created_at_stop:this.created_at_stop,

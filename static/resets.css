@@ -45,14 +45,14 @@ table { border-collapse: collapse; border-spacing: 0; }
 .ks-clear, .clear {
   *zoom: 1;
 }
-.el-menu-item{
-  width: 250px !important;
-  text-align: left !important;
-}
-.el-submenu{
-  width: 250px !important;
-  text-align: left !important;
-}
+/*.el-menu-item{*/
+  /*width: 250px !important;*/
+  /*text-align: left !important;*/
+/*}*/
+/*.el-submenu{*/
+  /*width: 250px !important;*/
+  /*text-align: left !important;*/
+/*}*/
 .el-menu-item-group__title{
   padding: 0 !important;
 }

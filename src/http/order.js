@@ -11,3 +11,6 @@ export const orderUpdate = params =>post("/backend/order/update",params)
 
 //修改订单状态
 export const orderEdit = params =>post("/backend/order/edit",params)
+
+// 登陆
+export const userLogin = params =>post("/backend/admin/login",params)
