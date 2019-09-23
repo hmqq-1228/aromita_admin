@@ -126,7 +126,7 @@
                         </el-table-column>
                         <el-table-column prop="date" label="操作">
                             <template slot-scope="scope">
-                                <el-button type="warning" v-if="scope.row.hasAttr == 'HAS_COLOR'">设置图片</el-button>
+                                <el-button type="warning" v-if="scope.row.hasAttr == 'HAS_COLOR'" @click="setImages(scope.row.id)">设置图片</el-button>
                                 <el-button type="primary" @click="editSpuList(scope.row.id)">编辑</el-button>
                                 <el-button type="success" v-if="scope.row.imageIsSet == false" disabled="disabled">上货</el-button>
                                 <el-button type="success" v-if="scope.row.imageIsSet == true" @click="goodsSpu(scope.row.id)">上货</el-button>
@@ -452,9 +452,13 @@ export default {
         viewSkuList(id){
             this.$router.push({ path:'/spuskulist', query: { id: id }}) 
         },
+        //设置图片
+        setImages(id){
+            this.$router.push({ path:'/setpictures', query: { id: id }}) 
+        },
         //编辑sku
-        editorAddSku(){
-
+        editorAddSku(id){
+            this.$router.push({ path:'/addSku', query: { id: id }}) 
         }
     }
 }

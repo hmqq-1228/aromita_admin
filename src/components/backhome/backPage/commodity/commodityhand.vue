@@ -45,9 +45,9 @@
                         <el-form-item v-if="this.skuStatus == 1">
                             <el-button type="danger" @click="batchUpperOrLower(0)">批量下架</el-button>
                         </el-form-item>
-                        <el-form-item>
+                        <!-- <el-form-item>
                             <el-button type="info">库存同步(未开发)</el-button>
-                        </el-form-item>
+                        </el-form-item> -->
                     </el-form>
                     <el-table
                         :data="skuTable"
@@ -117,7 +117,7 @@
                         </el-table-column>
                         <el-table-column prop="date" label="操作">
                             <template slot-scope="scope">
-                                <el-button type="warning" v-if="scope.row.hasAttr == 'HAS_COLOR'">设置图片</el-button>
+                                <el-button type="warning" v-if="scope.row.hasAttr == 'HAS_COLOR'" @click="setImages(scope.row.id)">设置图片</el-button>
                                 <el-button type="primary" @click="editSpuList(scope.row.id)">编辑</el-button>
                                 <el-button type="primary" @click="viewSkuList(scope.row.id)">详情</el-button>
                                 <el-button type="danger" @click="deleteSpu(scope.row.id)">删除</el-button>
@@ -441,9 +441,13 @@ export default {
         viewSkuList(id){
             this.$router.push({ path:'/spuskulist', query: { id: id }}) 
         },
+        //设置图片
+        setImages(id){
+            this.$router.push({ path:'/setpictures', query: { id: id }}) 
+        },
         //编辑sku
-        editorAddSku(){
-
+        editorAddSku(id){
+            this.$router.push({ path:'/addSku', query: { id: id }}) 
         }
     }
 }
