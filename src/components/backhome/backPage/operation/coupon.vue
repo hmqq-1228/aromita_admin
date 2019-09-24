@@ -45,6 +45,15 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <div class="pagination">
+                <el-pagination
+                    background
+                    layout="prev, pager, next"
+                    :page-size="pageSize"
+                    :total="total"
+                    @current-change="changePage">
+                </el-pagination>
+            </div>
         </div>
     </div>
 </template>
@@ -52,14 +61,17 @@
 export default {
     data(){
         return{
-
+            total:0,
+            pageSize:50
         }
     },
     created(){
 
     },
     methods:{
-
+        changePage(){
+            
+        }
     }
 }
 </script>
