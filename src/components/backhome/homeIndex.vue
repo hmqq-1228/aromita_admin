@@ -41,8 +41,6 @@
                 <el-menu-item-group>
                   <el-menu-item index="/commodity">待上货商品管理</el-menu-item>
                   <el-menu-item index="/commodityhand">已上货商品管理</el-menu-item>
-                  <!-- <el-menu-item index="/addsku">新增SKU</el-menu-item>
-                  <el-menu-item index="/addSpu">新增SPU</el-menu-item> -->
                   <el-menu-item index="/coefficient">利润系数</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
@@ -75,6 +73,16 @@
                   <el-menu-item index="/bestSeller">Best Seller设置</el-menu-item>
                   <el-menu-item index="/hotstyle">New Arrivals设置</el-menu-item>
                   <el-menu-item index="/newArrivals">Hot Style设置</el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
+              <el-submenu index="7">
+                <template slot="title">
+                  <i class="el-icon-s-ticket"></i>
+                  <span>运营活动</span>
+                </template>
+                <el-menu-item-group>
+                  <el-menu-item index="/coupon">优惠券列表</el-menu-item>
+                  <el-menu-item index="/addcoupon">新建优惠券</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
             </el-menu>

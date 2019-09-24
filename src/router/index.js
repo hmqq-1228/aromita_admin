@@ -35,6 +35,10 @@ import bestSeller from '@/components/backhome/backPage/homeManagement/bestSeller
 import hotstyle from '@/components/backhome/backPage/homeManagement/hotstyle.vue'
 import newArrivals from '@/components/backhome/backPage/homeManagement/newArrivals.vue'
 
+//运营活动
+import coupon from '@/components/backhome/backPage/operation/coupon.vue'
+import addcoupon from '@/components/backhome/backPage/operation/addcoupon.vue'
+
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -168,6 +172,17 @@ export default new Router({
           name: 'newArrivals',
           component: newArrivals
         },
+        //运营活动
+        {
+          path: '/coupon',
+          name: 'coupon',
+          component: coupon
+        },
+        {
+          path: '/addcoupon',
+          name: 'addcoupon',
+          component: addcoupon
+        }
       ]
     }
   ]
