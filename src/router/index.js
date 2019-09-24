@@ -114,7 +114,7 @@ export default new Router({
         },
         //设置图片
         {
-          path:'/setpictures',
+          path:'/setPictures',
           name:'setPictures',
           component:setPictures
         },
