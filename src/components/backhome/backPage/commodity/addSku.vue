@@ -416,12 +416,13 @@ export default {
         },
         //商品副图上传成功
         thumbnailSuccess(res,file,fileList){
-            if(res.data.code == 200){
+            if(res.code == 200){
                 this.skuform.thumbnail_images.push({"url":res.data[0]})
             }
         },
         thumbnailError(file, fileList){
-
+            console.log(file)
+            console.log(fileList)
         }
     }
 }

@@ -22,7 +22,7 @@ import addsku from '@/components/backhome/backPage/commodity/addSku.vue'
 import addSpu from '@/components/backhome/backPage/commodity/addSpu.vue'
 import skuDetail from '@/components/backhome/backPage/commodity/skuDetail.vue'
 import spuskulist from '@/components/backhome/backPage/commodity/spuskulist.vue'
-import setPictures from '@/components/backhome/backPage/commodity/setpictures.vue'
+import setPictures from '@/components/backhome/backPage/commodity/setPictures.vue'
 
 //订单管理
 import orderList from '@/components/backhome/backPage/order/orderList.vue'
