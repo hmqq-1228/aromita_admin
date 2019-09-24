@@ -22,7 +22,7 @@ import addsku from '@/components/backhome/backPage/commodity/addSku.vue'
 import addSpu from '@/components/backhome/backPage/commodity/addSpu.vue'
 import skuDetail from '@/components/backhome/backPage/commodity/skuDetail.vue'
 import spuskulist from '@/components/backhome/backPage/commodity/spuskulist.vue'
-import setpictures from '@/components/backhome/backPage/commodity/setpictures.vue'
+import setPictures from '@/components/backhome/backPage/commodity/setpictures.vue'
 
 //订单管理
 import orderList from '@/components/backhome/backPage/order/orderList.vue'
@@ -115,8 +115,8 @@ export default new Router({
         //设置图片
         {
           path:'/setpictures',
-          name:'setpictures',
-          component:setpictures
+          name:'setPictures',
+          component:setPictures
         },
         //已上货商品管理
         {
