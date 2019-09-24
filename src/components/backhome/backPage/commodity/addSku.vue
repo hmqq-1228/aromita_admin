@@ -45,7 +45,8 @@
                             :on-preview="handlePictureCardPreview"
                             :on-remove="handleRemove"
                             :before-upload="beforeAvatarUpload"
-                            :on-success="thumbnailSuccess">
+                            :on-success="thumbnailSuccess"
+                            :on-error="thumbnailError">
                             <i class="el-icon-plus"></i>
                         </el-upload>
                         <el-dialog :visible.sync="dialogVisible">
@@ -418,6 +419,9 @@ export default {
             if(res.data.code == 200){
                 this.skuform.thumbnail_images.push({"url":res.data[0]})
             }
+        },
+        thumbnailError(file, fileList){
+
         }
     }
 }
