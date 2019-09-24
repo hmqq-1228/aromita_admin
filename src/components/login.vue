@@ -9,7 +9,7 @@
             <el-input type="password" show-password v-model="formLabelAlign.password"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('formLabelAlign')">立即创建</el-button>
+            <el-button type="primary" @click="submitForm('formLabelAlign')">立即登录</el-button>
           </el-form-item>
         </el-form>
     </div>

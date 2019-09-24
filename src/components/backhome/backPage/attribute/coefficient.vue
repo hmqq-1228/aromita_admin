@@ -66,9 +66,9 @@
     :visible.sync="centerDialogVisible"
     width="400px">
     <div>
-      <div class="item"><div class="name">上货价区间开始($):</div><el-input-number v-model="minPrice" controls-position="right" :min="0"></el-input-number></div>
-      <div class="item"><div class="name">上货价区间结束($):</div><el-input-number v-model="maxPrice" controls-position="right" :min="0"></el-input-number></div>
-      <div class="item"><div class="name">利润系数:</div><el-input-number v-model="stepNum" controls-position="right" :min="0"></el-input-number></div>
+      <div class="item"><div class="name">上货价区间开始($):</div><el-input-number v-model="minPrice" controls-position="right" :min="0"></el-input-number> <i v-if="minPriceShow">*</i></div>
+      <div class="item"><div class="name">上货价区间结束($):</div><el-input-number v-model="maxPrice" controls-position="right" :min="0"></el-input-number> <i v-if="maxPriceShow">*</i></div>
+      <div class="item"><div class="name">利润系数:</div><el-input-number v-model="stepNum" controls-position="right" :min="0"></el-input-number> <i v-if="stepNumShow">*</i></div>
     </div>
     <span slot="footer" class="dialog-footer">
     <el-button @click="centerDialogVisible = false">取 消</el-button>
@@ -80,9 +80,9 @@
     :visible.sync="editVisible"
     width="400px">
     <div>
-      <div class="item"><div class="name">上货价区间开始($):</div><el-input-number v-model="minPriceEdit" controls-position="right" :min="0"></el-input-number></div>
-      <div class="item"><div class="name">上货价区间结束($):</div><el-input-number v-model="maxPriceEdit" controls-position="right" :min="0"></el-input-number></div>
-      <div class="item"><div class="name">利润系数:</div><el-input-number v-model="stepNumEdit" controls-position="right" :min="0"></el-input-number></div>
+      <div class="item"><div class="name">上货价区间开始($):</div><el-input-number v-model="minPriceEdit" controls-position="right" :min="0"></el-input-number> <i v-if="minPriceEditShow">*</i></div>
+      <div class="item"><div class="name">上货价区间结束($):</div><el-input-number v-model="maxPriceEdit" controls-position="right" :min="0"></el-input-number> <i v-if="maxPriceEditShow">*</i></div>
+      <div class="item"><div class="name">利润系数:</div><el-input-number v-model="stepNumEdit" controls-position="right" :min="0"></el-input-number> <i v-if="stepNumEditShow">*</i></div>
     </div>
     <span slot="footer" class="dialog-footer">
     <el-button @click="editVisible = false">取 消</el-button>
@@ -119,11 +119,60 @@ export default {
       minPriceEdit: 0,
       maxPriceEdit: 0,
       stepNumEdit: 0,
+      stepNumShow: false,
+      minPriceEditShow: false,
+      maxPriceEditShow: false,
+      stepNumEditShow: false,
+      minPriceShow: false,
+      maxPriceShow: false,
       editVisible: false,
       centerDialogVisible: false
     }
   },
   watch:{
+    minPrice:function (val,oV) {
+      if (val>=0) {
+        this.minPriceShow = false
+      } else {
+        this.minPriceShow = true
+      }
+    },
+    maxPrice:function (val,oV) {
+      if (val>=0) {
+        this.maxPriceShow = false
+      } else {
+        this.maxPriceShow = true
+      }
+    },
+    stepNum:function (val,oV) {
+      if (val>=0) {
+        this.stepNumShow = false
+      } else {
+        this.stepNumShow = true
+      }
+    },
+    minPriceEdit:function (val,oV) {
+      console.log('hhhh', val)
+      if (val>=0) {
+        this.minPriceEditShow = false
+      } else {
+        this.minPriceEditShow = true
+      }
+    },
+    maxPriceEdit:function (val,oV) {
+      if (val>=0) {
+        this.maxPriceEditShow = false
+      } else {
+        this.maxPriceEditShow = true
+      }
+    },
+    stepNumEdit:function (val,oV) {
+      if (val>=0) {
+        this.stepNumEditShow = false
+      } else {
+        this.stepNumEditShow = true
+      }
+    },
     centerDialogVisible: function (val, ov) {
       if (!val) {
         this.minPrice = 0
@@ -189,28 +238,32 @@ export default {
     },
     subCoefficient(){
       var that = this
-      if (that.maxPrice <= that.minPrice) {
-        that.$message.warning('区间结束值应大于开始值！')
-      } else {
-        if (that.stepNum > 0) {
-          var obj = qs.stringify({
-            price_min: that.minPrice,
-            price_max: that.maxPrice,
-            price_coefficient: that.stepNum
-          })
-          that.$axios.post("backend/product/profitCoefficient", obj).then((res)=>{
-            if(res.data.code === 200){
-              this.$message({
-                message: '添加成功',
-                type: 'success'
-              });
-              that.centerDialogVisible = false
-              that.coefficientList()
-            }
-          })
+      if (that.maxPrice && that.minPrice) {
+        if (that.maxPrice <= that.minPrice) {
+          that.$message.warning('区间结束值应大于开始值！')
         } else {
-          that.$message.warning('利润系数应大于0！')
+          if (that.stepNum > 0) {
+            var obj = qs.stringify({
+              price_min: that.minPrice,
+              price_max: that.maxPrice,
+              price_coefficient: that.stepNum
+            })
+            that.$axios.post("backend/product/profitCoefficient", obj).then((res)=>{
+              if(res.data.code === 200){
+                this.$message({
+                  message: '添加成功',
+                  type: 'success'
+                });
+                that.centerDialogVisible = false
+                that.coefficientList()
+              }
+            })
+          } else {
+            that.$message.warning('利润系数应大于0！')
+          }
         }
+      } else {
+        that.$message.warning('请输入区间的开始值和结束值')
       }
     },
     editeData(id, min, max, num){
@@ -265,6 +318,9 @@ export default {
     display: flex;
     justify-content: start;
     margin-bottom: 10px;
+  }
+  .item i{
+    color: #C51015;
   }
   .name{
     width: 135px;
