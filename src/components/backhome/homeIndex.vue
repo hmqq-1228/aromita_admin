@@ -64,6 +64,19 @@
                   <el-menu-item index="/customerList">客户列表</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
+              <el-submenu index="6">
+                <template slot="title">
+                  <i class="el-icon-picture-outline"></i>
+                  <span>首页管理</span>
+                </template>
+                <el-menu-item-group>
+                  <el-menu-item index="/banner">Banner设置</el-menu-item>
+                  <el-menu-item index="/collections">Collections设置</el-menu-item>
+                  <el-menu-item index="/bestSeller">Best Seller设置</el-menu-item>
+                  <el-menu-item index="/hotstyle">New Arrivals设置</el-menu-item>
+                  <el-menu-item index="/newArrivals">Hot Style设置</el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
             </el-menu>
           </el-aside>
         </div>

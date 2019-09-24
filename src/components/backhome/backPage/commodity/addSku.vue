@@ -1,7 +1,12 @@
 <template>
-    <div class="addsku">
+    <div 
+        class="addsku" 
+        v-loading="loading"
+        element-loading-text="拼命加载中"
+        element-loading-spinner="el-icon-loading">
         <div class="heade">
-            <h3>新建SKU</h3>
+            <h3 v-if="!this.editSkuId">新建SKU</h3>
+            <h3 v-if="this.editSkuId">编辑SKU</h3>
         </div>
         <div class="addSkuDetail">
             <el-form :model="skuform" :rules="rules" label-width="140px" class="demo-ruleForm">
@@ -17,115 +22,115 @@
                 <el-form-item label="商品编号：" v-if="this.editSkuId">
                     <span>{{sku_no}}</span>
                 </el-form-item>
-                <div v-if="this.skuform!=null">
-                    <el-form-item label="商品名称：">
-                        <el-input v-model="skuform.sku_name" width="400px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="商品主图：">
-                        <el-upload
-                            class="avatar-uploader"
-                            :action="uploadUrl"
-                            :data="mainType"
-                            name="image"
-                            accept=".jpg,.jpeg,.png,.JPG,.JPEG"
-                            :show-file-list="false"
-                            :on-success="handleAvatarSuccess"
-                            :before-upload="beforeAvatarUpload">
-                            <img v-if="skuform.sku_image" :src="skuform.sku_image" class="avatar">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload>
-                    </el-form-item>
-                    <el-form-item label="商品副图：">
-                        <el-upload
-                            :action="uploadUrl"
-                            :file-list="skuform.thumbnail_images"
-                            list-type="picture-card"
-                            :data="thumbType"
-                            name="image[]"
-                            :on-preview="handlePictureCardPreview"
-                            :on-remove="handleRemove"
-                            :before-upload="beforeAvatarUpload"
-                            :on-success="thumbnailSuccess"
-                            :on-error="thumbnailError">
-                            <i class="el-icon-plus"></i>
-                        </el-upload>
-                        <el-dialog :visible.sync="dialogVisible">
-                            <img width="100%" :src="dialogImageUrl" alt="">
-                        </el-dialog>
-                    </el-form-item>
-                    <el-form-item>
-                        <b class="imgTips">商品图片大小不能超过500kb，商品图片宽高必须是1024*1024</b>
-                    </el-form-item>
-                    <el-form-item label="SKU单位：">
-                        <span>{{skuform.sku_unit}}</span>
-                    </el-form-item>
-                    <el-form-item label="净重：">
-                        <span>{{skuform.net_weight}}</span>
-                    </el-form-item>
-                    <el-form-item label="体积重：">
-                        <span>{{skuform.heavy_volume}}</span>
-                    </el-form-item>
-                    <el-form-item label="优先级：">
-                        <el-input v-model="skuform.sort"></el-input>
-                    </el-form-item>
-                    <el-form-item label="一级类别名称：">
-                        <el-select v-model="skuform.first_cate_id" filterable placeholder="请输入一级类目" @change="changeClassI(skuform.first_cate_id)">
-                            <el-option v-for="(item,index) in firstList" :key="index" :label="item.cate_name" :value="item.id"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="二级类别名称：">
-                        <el-select v-model="skuform.second_cate_id" filterable placeholder="请输入二级类目" @change="changeClassII(skuform.second_cate_id)">
-                            <el-option v-for="(item,index) in secondList" :key="index" :label="item.cate_name" :value="item.id"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="上货价：">
-                        <span>{{skuform.goods_price}}</span>
-                    </el-form-item>
-                    <el-form-item label="推荐售价：">
-                        <span>{{skuform.recommend_price}}</span>
-                    </el-form-item>
-                    <el-form-item label="最终售价：">
-                        <el-input v-model="skuform.sku_price"></el-input>
-                    </el-form-item>
-                    <el-form-item label="商品状态：">
-                        <el-select v-model="skuform.sku_status" filterable placeholder="请选择商品状态">
-                            <el-option label="下架" :value='0'></el-option>
-                            <el-option label="正常销售" :value='1'></el-option>
-                            <el-option label="补货中" :value='2'></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="库存：">
-                        <span>{{skuform.inventory}}</span>
-                    </el-form-item>
-                    <el-form-item label="是否允许刷新库存：">
-                        <el-radio v-model="skuform.inventory_allow_update" :label='1'>是</el-radio>
-                        <el-radio v-model="skuform.inventory_allow_update" :label='0'>否</el-radio>
-                    </el-form-item>
-                    <el-form-item label="属性和属性值：">
-                        <el-checkbox-group v-model="checkList">
-                            <div v-for="(item,index) in attrEditionList" :key="index">
-                                <div><el-checkbox :label="item.id">{{item.attr_name}}</el-checkbox></div>
-                                <div class="radioGroup" v-if="checkList.find(n =>n == Number(item.id))">
-                                    <el-radio-group v-model="item.radioId">
-                                        <el-radio v-for="(item1,index1) in item.values" :key="index1" :label="item1.id">{{item1.attr_value}}</el-radio>
-                                    </el-radio-group>
+                <div>
+                    <div v-if="this.skuform!=null">
+                        <el-form-item label="商品名称：">
+                            <el-input v-model="skuform.sku_name" width="400px"></el-input>
+                        </el-form-item>
+                        <el-form-item label="商品主图：">
+                            <el-upload
+                                class="avatar-uploader"
+                                :action="uploadUrl"
+                                :data="mainType"
+                                name="image"
+                                accept=".jpg,.jpeg,.png,.JPG,.JPEG"
+                                :show-file-list="false"
+                                :on-success="handleAvatarSuccess"
+                                :before-upload="beforeAvatarUpload">
+                                <img v-if="skuform.sku_image" :src="skuform.sku_image" class="avatar">
+                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                            </el-upload>
+                        </el-form-item>
+                        <el-form-item label="商品副图：">
+                            <el-upload
+                                :action="uploadUrl"
+                                :file-list="skuform.thumbnail_images"
+                                list-type="picture-card"
+                                :data="thumbType"
+                                name="image[]"
+                                :on-preview="handlePictureCardPreview"
+                                :on-remove="handleRemove"
+                                :before-upload="beforeAvatarUpload"
+                                :on-success="thumbnailSuccess">
+                                <i class="el-icon-plus"></i>
+                            </el-upload>
+                            <el-dialog :visible.sync="dialogVisible">
+                                <img width="100%" :src="dialogImageUrl" alt="">
+                            </el-dialog>
+                        </el-form-item>
+                        <el-form-item>
+                            <b class="imgTips">商品图片大小不能超过500kb，商品图片宽高必须是1024*1024</b>
+                        </el-form-item>
+                        <el-form-item label="SKU单位：">
+                            <span>{{skuform.sku_unit}}</span>
+                        </el-form-item>
+                        <el-form-item label="净重：">
+                            <span>{{skuform.net_weight}}</span>
+                        </el-form-item>
+                        <el-form-item label="体积重：">
+                            <span>{{skuform.heavy_volume}}</span>
+                        </el-form-item>
+                        <el-form-item label="优先级：">
+                            <el-input v-model="skuform.sort"></el-input>
+                        </el-form-item>
+                        <el-form-item label="一级类别名称：">
+                            <el-select v-model="skuform.first_cate_id" filterable placeholder="请输入一级类目" @change="changeClassI(skuform.first_cate_id)">
+                                <el-option v-for="(item,index) in firstList" :key="index" :label="item.cate_name" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="二级类别名称：">
+                            <el-select v-model="skuform.second_cate_id" filterable placeholder="请输入二级类目" @change="changeClassII(skuform.second_cate_id)">
+                                <el-option v-for="(item,index) in secondList" :key="index" :label="item.cate_name" :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="上货价：">
+                            <span>{{skuform.goods_price}}</span>
+                        </el-form-item>
+                        <el-form-item label="推荐售价：">
+                            <span>{{skuform.recommend_price}}</span>
+                        </el-form-item>
+                        <el-form-item label="最终售价：">
+                            <el-input v-model="skuform.sku_price"></el-input>
+                        </el-form-item>
+                        <el-form-item label="商品状态：">
+                            <el-select v-model="skuform.sku_status" filterable placeholder="请选择商品状态">
+                                <el-option label="下架" :value='0'></el-option>
+                                <el-option label="正常销售" :value='1'></el-option>
+                                <el-option label="补货中" :value='2'></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="库存：">
+                            <span>{{skuform.inventory}}</span>
+                        </el-form-item>
+                        <el-form-item label="是否允许刷新库存：">
+                            <el-radio v-model="skuform.inventory_allow_update" :label='1'>是</el-radio>
+                            <el-radio v-model="skuform.inventory_allow_update" :label='0'>否</el-radio>
+                        </el-form-item>
+                        <el-form-item label="属性和属性值：">
+                            <el-checkbox-group v-model="checkList">
+                                <div v-for="(item,index) in attrEditionList" :key="index">
+                                    <div><el-checkbox :label="item.id">{{item.attr_name}}</el-checkbox></div>
+                                    <div class="radioGroup" v-if="checkList.find(n =>n == Number(item.id))">
+                                        <el-radio-group v-model="item.radioId">
+                                            <el-radio v-for="(item1,index1) in item.values" :key="index1" :label="item1.id">{{item1.attr_value}}</el-radio>
+                                        </el-radio-group>
+                                    </div>
                                 </div>
-                            </div>
-                        </el-checkbox-group>
-                    </el-form-item>
-                    <el-form-item label="商品卖点：">
-                        <el-input
-                            type="textarea"
-                            :rows="4"
-                            placeholder="请输入内容"
-                            v-model="skuform.main_feature">
-                        </el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="addSkuSub()" v-if="!this.editSkuId">新 建</el-button>
-                        <el-button type="primary" @click="addSkuSub()" v-if="this.editSkuId">修 改</el-button>
-                        <!-- <el-button type="info">取 消</el-button> -->
-                    </el-form-item>
+                            </el-checkbox-group>
+                        </el-form-item>
+                        <el-form-item label="商品卖点：">
+                            <el-input
+                                type="textarea"
+                                :rows="4"
+                                placeholder="请输入内容"
+                                v-model="skuform.main_feature">
+                            </el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="addSkuSub()" v-if="!this.editSkuId">新 建</el-button>
+                            <el-button type="primary" @click="addSkuSub()" v-if="this.editSkuId">修 改</el-button>
+                        </el-form-item>
+                    </div>
                 </div>
             </el-form>
         </div>
@@ -138,6 +143,7 @@ import qs from 'qs'
 export default {
     data(){
         return{
+            loading:false,
             editSkuId:'',//编辑用skuID
             //sku远程搜索
             restaurants: [],
@@ -166,18 +172,20 @@ export default {
         }
     },
     created(){
+        this.getAttrEdition()
+        this.getFirstList()
         this.editSkuId = this.$route.query.id
         if(this.editSkuId){
             this.skuDetail()
         }
-        this.getAttrEdition()
-        this.getFirstList()
     },
     methods:{
         //编辑用sku详情
         skuDetail(){
+            this.loading = true
             this.$axios.get(`backend/product/sku/${this.editSkuId}`,{}).then((res)=>{
                 if(res.data.code === 200){
+                    this.loading = false
                     this.skuform = res.data.data
                     this.sku_no = res.data.data.sku_no
                     var thumbnail_images = res.data.data.thumbnail_images
@@ -197,10 +205,12 @@ export default {
                     }
                     this.checkList = attrDefaultCheack
                     //单选框绑定默认值
-                    for(var i=0;i<this.attrEditionList.length;i++){
-                        for(var j=0;j<attr.length;j++){
-                            if(this.attrEditionList[i].values.find(n=>n.id == attr[j].value.id)){
-                                this.attrEditionList[i].radioId = attr[j].value.id
+                    if(this.attrEditionList.length!=0){
+                        for(var i=0;i<this.attrEditionList.length;i++){
+                            for(var j=0;j<attr.length;j++){
+                                if(this.attrEditionList[i].values.find(n=>n.id == attr[j].value.id)){
+                                    this.attrEditionList[i].radioId = attr[j].value.id
+                                }
                             }
                         }
                     }
@@ -209,17 +219,21 @@ export default {
         },
         //sku远程搜索
         querySearchAsync(queryString, cb) {
-            var list = [];
-            skunoList({sku_no:queryString}).then((res)=>{
-                var skulist = res.data.data
-                for(var i=0;i<skulist.length;i++){
-                    var obj = {"value":skulist[i]}
-                    list.push(obj)
-                }
-                cb(list);
-            }).catch((error)=>{
-                console.log(error);
-            });
+            if(!queryString){
+                return false
+            }else{
+                var list = [];
+                skunoList({sku_no:queryString}).then((res)=>{
+                    var skulist = res.data.data
+                    for(var i=0;i<skulist.length;i++){
+                        var obj = {"value":skulist[i]}
+                        list.push(obj)
+                    }
+                    cb(list);
+                }).catch((error)=>{
+                    console.log(error);
+                });
+            }
         },
         //选择远程搜索值
         handleSelect(item) {
@@ -233,8 +247,10 @@ export default {
         },
         //输入skuNum获取erp信息
         getSkuErp(){
+            this.loading = true
             skuerp({sku_no:this.sku_no}).then((res)=>{
                 if(res.data.code == 200){
+                    this.loading = false
                     this.skuform = res.data.data
                     var thumbnail_images = res.data.data.thumbnail_images
                     var urlList = []
@@ -326,14 +342,12 @@ export default {
             var imgattr = []
             for(var i=0;i<thumbnail_images.length;i++){
                 var imgStr = thumbnail_images[i].url
-                console.log(imgStr)
                 imgattr.push(imgStr)
             }
             myForm.thumbnail_images = imgattr
             //添加属性数据
             this.$set(myForm,'attrs',attrs1)
             this.$set(myForm,'sku_no',this.sku_no)
-            console.log(myForm)
             //请求接口
             if(!this.editSkuId){
                 //请求新增接口
@@ -372,11 +386,14 @@ export default {
         },
         //商品主图
         handleAvatarSuccess(res, file) {
-            this.skuform.sku_image = res.data
+            if(res.code == 200){
+                this.skuform.sku_image = res.data
+            }else{
+                return false
+            }
         },
         //商品图片上传之前限制
         beforeAvatarUpload(file) {
-            console.log(file)
             //const isJPG = file.type === 'image/png,image/jpg,image/jpeg';
             const isLt2M = file.size / 1024 < 500 ;
             // if (!isJPG) {
@@ -400,7 +417,7 @@ export default {
                 return file;
             }, () => {
                 _this.$message.error('商品图片宽高必须是1024*1024!');
-                return Promise.reject();
+                return false
             });
 
             return isSize && isLt2M;
@@ -418,16 +435,18 @@ export default {
         thumbnailSuccess(res,file,fileList){
             if(res.code == 200){
                 this.skuform.thumbnail_images.push({"url":res.data[0]})
+            }else{
+                this.skuform.thumbnail_images = JSON.parse(JSON.stringify(this.skuform.thumbnail_images))
+                return false
             }
-        },
-        thumbnailError(file, fileList){
-            console.log(file)
-            console.log(fileList)
         }
     }
 }
 </script>
 <style>
+.addsku{
+    min-height:90vh;
+}
 .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
@@ -459,6 +478,9 @@ export default {
 }
 .radioGroup{
     padding-left:20px;
+}
+.skubox{
+
 }
 /* 图片上传规格说明 */
 .imgTips{

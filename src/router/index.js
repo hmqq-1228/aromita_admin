@@ -27,6 +27,13 @@ import setPictures from '@/components/backhome/backPage/commodity/setPictures.vu
 //订单管理
 import orderList from '@/components/backhome/backPage/order/orderList.vue'
 import orderDetail from '@/components/backhome/backPage/order/orderDetail.vue'
+ 
+//首页管理 
+import banner from '@/components/backhome/backPage/homeManagement/banner.vue'
+import collections from '@/components/backhome/backPage/homeManagement/collections.vue'
+import bestSeller from '@/components/backhome/backPage/homeManagement/bestSeller.vue'
+import hotstyle from '@/components/backhome/backPage/homeManagement/hotstyle.vue'
+import newArrivals from '@/components/backhome/backPage/homeManagement/newArrivals.vue'
 
 Vue.use(Router)
 export default new Router({
@@ -134,7 +141,33 @@ export default new Router({
           path: '/orderDetail',
           name: 'orderDetail',
           component: orderDetail
-        }
+        },
+        //首页管理     
+        {
+          path: '/banner',
+          name: 'banner',
+          component: banner
+        },
+        {
+          path: '/collections',
+          name: 'collections',
+          component: collections
+        },
+        {
+          path: '/bestSeller',
+          name: 'bestSeller',
+          component: bestSeller
+        },
+        {
+          path: '/hotstyle',
+          name: 'hotstyle',
+          component: hotstyle
+        },
+        {
+          path: '/newArrivals',
+          name: 'newArrivals',
+          component: newArrivals
+        },
       ]
     }
   ]
