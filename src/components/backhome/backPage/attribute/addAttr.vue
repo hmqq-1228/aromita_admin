@@ -5,7 +5,7 @@
     </div>
     <div class="addAttrCenter">
       <el-form label-width="120px">
-        <el-form-item label="属性名称：">
+        <el-form-item label="属性名称：" required>
           <el-input v-model="attrFrom.attr_name"></el-input>
         </el-form-item>
         <el-form-item label="属性值：">
@@ -65,6 +65,12 @@ export default {
             this.$message({
               message: '创建成功',
               type: 'success'
+            });
+            this.$router.push({ path:'/attribute'}) 
+          }else{
+            this.$message({
+              message:res.data.msg,
+              type: 'error'
             });
           }
       })

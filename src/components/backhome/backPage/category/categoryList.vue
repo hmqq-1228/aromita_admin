@@ -38,42 +38,41 @@
                 :visible.sync="categoryVisible"
                 width="600px">
                 <div class="categoryBox">
-                    <el-form ref="form" :model="form" label-width="140px" >
-                        <el-form-item label="分类级别：" v-if="type == 1">
+                    <el-form :rules="rules" :model="form" label-width="140px" >
+                        <el-form-item label="分类级别：" v-if="type == 1" prop="radio">
                             <el-radio-group v-model="radio" @change="changeType()">
                                 <el-radio label="1">一级分类</el-radio>
                                 <el-radio label="2">二级分类</el-radio>
                             </el-radio-group>
                         </el-form-item>
-                        <el-form-item label="父级类别：" v-if="form.parent_id!=0 || this.radio ==2">
+                        <el-form-item label="父级类别：" v-if="form.parent_id!=0 || this.radio ==2" prop="parent_id">
                             <el-select v-model="form.parent_id" placeholder="请选择父级">
                                 <el-option v-for="item in firstList" :label="item.cate_name" :value="item.id" :key="item.id"></el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="分类名称：">
+                        <el-form-item label="分类名称：" prop="cate_name">
                             <el-input v-model="form.cate_name"></el-input>
                         </el-form-item>
-                        <el-form-item label="是否展示：">
+                        <el-form-item label="是否展示：" prop="cate_status">
                             <el-switch
                                 v-model="form.cate_status"
                                 :active-value="1"
                                 :inactive-value="0">
                             </el-switch>
                         </el-form-item>
-                        <el-form-item label="是否启用：">
+                        <el-form-item label="是否启用：" prop="is_show">
                             <el-switch
                                 v-model="form.is_show"
                                 :active-value="1"
                                 :inactive-value="0">
                             </el-switch>
                         </el-form-item>
-                        <el-form-item label="排序：">
+                        <el-form-item label="排序：" prop="sort">
                             <el-input v-model="form.sort"></el-input>
                         </el-form-item>
-                        <el-form-item label="分类属性：" v-if="form.parent_id!=0">
+                        <el-form-item label="分类属性：" v-if="form.parent_id!=0" prop="cate_attrs">
                             <el-checkbox-group
-                                v-model="form.cate_attrs"
-                                :min="1">
+                                v-model="form.cate_attrs">
                                 <el-checkbox v-for="item in cate_attrsList" :label="item.attrStr" :key="item.id">{{item.attr_name}}</el-checkbox>
                             </el-checkbox-group>
                         </el-form-item>
@@ -110,9 +109,17 @@ export default {
                 parent_id:'',
                 cate_name: '',
                 cate_status:0,
-                is_show:0,
-                sort:0,
+                is_show:1,
+                sort:100,
                 cate_attrs: [],
+            },
+            rules: {
+                cate_name: [
+                    {required: true, message: '请输入分类名称', trigger: 'blur'},
+                ],
+                sort: [
+                    {required: true, message: '请输入排序值', trigger: 'blur'}
+                ]
             },
             cate_attrsList:[],//分类数组列表
         }
@@ -157,6 +164,11 @@ export default {
                     this.getAttrList()
                     this.categoryVisible = true
                     this.form = res.data.data
+                }else{
+                    this.$message({
+                        message:res.data.msg,
+                        type: 'error'
+                    });
                 }
             })
         },
@@ -164,20 +176,32 @@ export default {
         subCategory(){
             this.$axios.put(`backend/product/category/${this.cat_id}`,qs.stringify(this.form)).then((res)=>{
                 if(res.data.code == 200){
-                     this.$message({
+                    this.$message({
                         message: '修改成功',
                         type: 'success'
                     });
                     this.categoryVisible = false
                     this.getList()
+                }else{
+                    this.$message({
+                        message:res.data.msg,
+                        type: 'error'
+                    });
                 }
             })
         },
         //新增分类弹框
         append(type) {
             this.type = type
-            this.box_title = "新增分类"
+            this.box_title = "新增分类" 
+            this.form.parent_id = ''
+            this.form.cate_name =  ''
+            this.form.cate_status = 0
+            this.form.is_show = 1
+            this.form.sort = 100
+            this.form.cate_attrs = []    
             this.categoryVisible = true
+            // this.$refs['formbox'].resetFields();
         },
         //新增分类提交
         _addCategory(){
@@ -192,6 +216,11 @@ export default {
                     });
                     this.categoryVisible = false
                     this.getList()
+                }else{
+                    this.$message({
+                        message:res.data.msg,
+                        type: 'error'
+                    });
                 }
             })
         },

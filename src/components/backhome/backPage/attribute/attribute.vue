@@ -1,6 +1,7 @@
 <template>
 <div class="attribute">
   <div class="heade">
+    <h3>属性管理</h3>
     <el-input placeholder="请输入属性名称" v-model="attrName">
       <template slot="prepend">属性名称:</template>
       <el-button slot="append" icon="el-icon-search" @click="searchList()"></el-button>
@@ -8,7 +9,7 @@
     <el-button type="primary" @click="addAttr()"><i class="el-icon-plus"></i>新增</el-button>
   </div>
   <div style="min-height: 500px">
-    <el-table :data="List" border style="width: 100%" height="700">
+    <el-table :data="List" border style="width: 100%" max-height="760">
       <el-table-column prop="attr_name" label="属性名"></el-table-column>
       <el-table-column label="属性状态" width="150">
         <template slot-scope="scope">
@@ -54,17 +55,19 @@
     title="添加属性值"
     :visible.sync="dialogVisible"
     width="400px">
-    <el-form :model="form" :rules="rules" ref="form" >
-      <el-form-item label="属性名" label-width="100px">
-        <el-input v-model="form.name" autocomplete="off" style="width: 193px;" readonly></el-input>
-      </el-form-item>
-      <el-form-item label="属性值" label-width="100px" prop="value">
-        <el-input v-model="form.value" autocomplete="off" style="width: 193px;"></el-input>
-      </el-form-item>
-      <el-form-item label="属性状态" label-width="100px">
-        <el-switch v-model="form.state"></el-switch>
-      </el-form-item>
-    </el-form>
+    <div class="addAttrBox">
+      <el-form :model="form" :rules="rules" ref="form" >
+        <el-form-item label="属性名" label-width="100px">
+          <el-input v-model="form.name" autocomplete="off" readonly></el-input>
+        </el-form-item>
+        <el-form-item label="属性值" label-width="100px" prop="value">
+          <el-input v-model="form.value" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="属性状态" label-width="100px">
+          <el-switch v-model="form.state"></el-switch>
+        </el-form-item>
+      </el-form>
+    </div>
     <span slot="footer" class="dialog-footer">
     <el-button @click="concelForm('form')">取 消</el-button>
     <el-button type="primary" @click="subFormData('form')">确 定</el-button>
@@ -245,5 +248,8 @@ export default {
 .foot{
   text-align: right;
   margin-top: 30px;
+}
+.addAttrBox .el-input{
+  width: 240px!important;
 }
 </style>

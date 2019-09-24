@@ -10,9 +10,9 @@
                         v-model="sku_no"
                         :fetch-suggestions="querySearchAsync"
                         placeholder="请输入SKU编码"
-                        @select="handleSelect"
-                        @change="handleChange">
+                        @select="handleSelect">
                     </el-autocomplete>
+                    <el-button @click="handleChange" type="primary">搜 索</el-button>
                 </el-form-item>
                 <el-form-item label="商品编号：" v-if="this.editSkuId">
                     <span>{{sku_no}}</span>
@@ -27,6 +27,7 @@
                             :action="uploadUrl"
                             :data="mainType"
                             name="image"
+                            accept=".jpg,.jpeg,.png,.JPG,.JPEG"
                             :show-file-list="false"
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload">
@@ -43,13 +44,16 @@
                             name="image[]"
                             :on-preview="handlePictureCardPreview"
                             :on-remove="handleRemove"
-                            :before-upload="thumbnailBefore"
+                            :before-upload="beforeAvatarUpload"
                             :on-success="thumbnailSuccess">
                             <i class="el-icon-plus"></i>
                         </el-upload>
                         <el-dialog :visible.sync="dialogVisible">
                             <img width="100%" :src="dialogImageUrl" alt="">
                         </el-dialog>
+                    </el-form-item>
+                    <el-form-item>
+                        <b class="imgTips">商品图片大小不能超过500kb，商品图片宽高必须是1024*1024</b>
                     </el-form-item>
                     <el-form-item label="SKU单位：">
                         <span>{{skuform.sku_unit}}</span>
@@ -369,32 +373,51 @@ export default {
         handleAvatarSuccess(res, file) {
             this.skuform.sku_image = res.data
         },
+        //商品图片上传之前限制
         beforeAvatarUpload(file) {
-            const isJPG = file.type === 'image/jpeg';
-            const isLt2M = file.size / 1024 / 1024 < 2;
-            if (!isJPG) {
-                this.$message.error('上传头像图片只能是 JPG 格式!');
-            }
+            console.log(file)
+            //const isJPG = file.type === 'image/png,image/jpg,image/jpeg';
+            const isLt2M = file.size / 1024 < 500 ;
+            // if (!isJPG) {
+            //     this.$message.error('商品图片只能是 JPG 、PNG 格式!');
+            // }
             if (!isLt2M) {
-                this.$message.error('上传头像图片大小不能超过 2MB!');
+                this.$message.error('商品图片大小不能超过500kb!');
             }
-            return isJPG && isLt2M;
+            var _this = this;
+            const isSize = new Promise(function(resolve, reject) {
+                let width = 1024;
+                let height = 1024;
+                let _URL = window.URL || window.webkitURL;
+                let img = new Image();
+                img.onload = function() {
+                    let valid = img.width == width && img.height == height;
+                    valid ? resolve() : reject();
+                }
+                img.src = _URL.createObjectURL(file);
+            }).then(() => {
+                return file;
+            }, () => {
+                _this.$message.error('商品图片宽高必须是1024*1024!');
+                return Promise.reject();
+            });
+
+            return isSize && isLt2M;
         },
-        //商品副图
+        //商品副图移除
         handleRemove(file, fileList) {
             console.log(fileList);
         },
+        //商品副图查看
         handlePictureCardPreview(file) {
             this.dialogImageUrl = file.url;
             this.dialogVisible = true;
         },
-        thumbnailBefore(){
-
-        },
+        //商品副图上传成功
         thumbnailSuccess(res,file,fileList){
-            this.skuform.thumbnail_images.push({"url":res.data[0]})
-            console.log(this.skuform.thumbnail_images)
-            // console.log(fileList)
+            if(res.data.code == 200){
+                this.skuform.thumbnail_images.push({"url":res.data[0]})
+            }
         }
     }
 }
@@ -431,5 +454,10 @@ export default {
 }
 .radioGroup{
     padding-left:20px;
+}
+/* 图片上传规格说明 */
+.imgTips{
+    color:#F56C6C;
+    font-size: 12px;
 }
 </style>

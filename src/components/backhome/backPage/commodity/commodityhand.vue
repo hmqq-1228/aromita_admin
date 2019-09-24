@@ -89,6 +89,15 @@
                         </el-table-column>
                     </el-table>
                 </div>
+                <div class="pagination">
+                    <el-pagination
+                        background
+                        layout="prev, pager, next"
+                        :page-size="pageSize"
+                        :total="skutotal"
+                        @current-change="changeSkuPage">
+                    </el-pagination>
+                </div>
             </el-tab-pane>
             <el-tab-pane label="SPU管理" name="second">
                 <div class="skuCenter">
@@ -125,6 +134,15 @@
                         </el-table-column>
                     </el-table>
                 </div>
+                <div class="pagination">
+                    <el-pagination
+                        background
+                        layout="prev, pager, next"
+                        :page-size="pageSize"
+                        :total="sputotal"
+                        @current-change="changeSpuPage">
+                    </el-pagination>
+                </div>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -135,9 +153,14 @@ import {categoryList,ClassII} from '@/http/category.js'
 export default {
     data(){
         return{
+            pageSize:50,
+            skutotal:0,//总量
+            spupage:1,
+            sputotal:0,//总量
             activeName:'',
             skuTable:[],//sku列表
             skusearchForm:{//sku列表搜索条件
+                page:1,
                 has_spu:'',
                 product_no:'',
                 sku_name:'',
@@ -171,6 +194,16 @@ export default {
         this.getClassII()      
     },
     methods:{
+        //sku列表分页器
+        changeSkuPage(val){
+            this.skusearchForm.page = val
+            this.getskuList()
+        },
+        //spu列表分页器
+        changeSpuPage(val){
+            this.spupage = val
+            this.getspuList()
+        },
         //tab切换
         handleClick(tab, event){
             localStorage.setItem('commodityName', tab.name)
@@ -201,6 +234,7 @@ export default {
         getskuList(){
             skuList(this.skusearchForm).then((res)=>{
                 var list = res.data.data.data
+                this.skutotal = res.data.data.total
                 for(var i=0;i<list.length;i++){
                     //一级类目
                     var str = this.firstList.find(n => n.id == list[i].first_cate_id)
@@ -226,8 +260,9 @@ export default {
         },
         //spu列表
         getspuList(){
-            spuList({product_no:this.spu_no,product_status:1}).then((res)=>{
+            spuList({page:this.spupage,product_no:this.spu_no,product_status:1}).then((res)=>{
                 this.spuTable = res.data.data.data
+                this.sputotal = res.data.data.total
             })
         },
         //sku单个上下架

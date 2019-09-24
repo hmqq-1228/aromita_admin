@@ -132,9 +132,9 @@ export default {
 .backIndex{
     display: flex;
 }
-
-.foot{
-  margin-top: 20px;
+/* 分页样式 */
+.pagination{
+  margin:20px 0 0 0;
   text-align: right;
 }
 </style>

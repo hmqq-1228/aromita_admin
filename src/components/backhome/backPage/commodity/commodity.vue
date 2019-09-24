@@ -52,7 +52,8 @@
                     <el-table
                         :data="skuTable"
                         style="width: 100%"
-                        max-height="700px"
+                        max-height="680px"
+                        v-loading="skuLoading"
                         @selection-change="handleSelectionChange">
                         <el-table-column type="selection" width="45"></el-table-column>
                         <el-table-column prop="date" label="商品" width="280px">
@@ -90,6 +91,15 @@
                         </el-table-column>
                     </el-table>
                 </div>
+                <div class="pagination">
+                    <el-pagination
+                        background
+                        layout="prev, pager, next"
+                        :page-size="pageSize"
+                        :total="skutotal"
+                        @current-change="changeSkuPage">
+                    </el-pagination>
+                </div>
             </el-tab-pane>
             <el-tab-pane label="SPU管理" name="second">
                 <div class="skuCenter">
@@ -115,7 +125,7 @@
                     <el-table
                         :data="spuTable"
                         style="width: 100%"
-                        max-height="700px"
+                        max-height="680px"
                         @selection-change="handleSelectionChangespu">
                         <el-table-column type="selection" width="45"></el-table-column>
                         <el-table-column prop="product_no" label="SPU编号"></el-table-column>
@@ -136,6 +146,15 @@
                         </el-table-column>
                     </el-table>
                 </div>
+                <div class="pagination">
+                    <el-pagination
+                        background
+                        layout="prev, pager, next"
+                        :page-size="pageSize"
+                        :total="sputotal"
+                        @current-change="changeSpuPage()">
+                    </el-pagination>
+                </div>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -146,9 +165,15 @@ import {categoryList,ClassII} from '@/http/category.js'
 export default {
     data(){
         return{
+            skuLoading:false,
+            pageSize:50,
+            skutotal:0,//总量
+            spupage:1,
+            sputotal:0,//总量
             activeName:'',
             skuTable:[],//sku列表
             skusearchForm:{//sku列表搜索条件
+                page:1,
                 has_spu:'',
                 product_no:'',
                 sku_name:'',
@@ -182,6 +207,16 @@ export default {
         this.getClassII()      
     },
     methods:{
+        //sku列表分页器
+        changeSkuPage(val){
+            this.skusearchForm.page = val
+            this.getskuList()
+        },
+        //spu列表分页器
+        changeSpuPage(val){
+            this.spupage = val
+            this.getspuList()
+        },
         //tab切换
         handleClick(tab, event){
             localStorage.setItem('commodityName', tab.name)
@@ -210,25 +245,30 @@ export default {
         },
         //sku列表
         getskuList(){
+            this.skuLoading = true
             skuList(this.skusearchForm).then((res)=>{
-                var list = res.data.data.data
-                for(var i=0;i<list.length;i++){
-                    //一级类目
-                    var str = this.firstList.find(n => n.id == list[i].first_cate_id)
-                    var name = ""
-                    if(str){
-                        name= str.cate_name
+                if(res.data.data){
+                    this.skuLoading = false
+                    this.skutotal = res.data.data.total
+                    var list = res.data.data.data
+                    for(var i=0;i<list.length;i++){
+                        //一级类目
+                        var str = this.firstList.find(n => n.id == list[i].first_cate_id)
+                        var name = ""
+                        if(str){
+                            name= str.cate_name
+                        }
+                        this.$set(list[i],'fristName',name)
+                        //二级类目
+                        var str2 = this.ClassIIList.find(n => n.id == list[i].second_cate_id)
+                        var name2 = ""
+                        if(str){
+                            name2= str.cate_name
+                        }
+                        this.$set(list[i],'secondName',name2)
                     }
-                    this.$set(list[i],'fristName',name)
-                    //二级类目
-                    var str2 = this.ClassIIList.find(n => n.id == list[i].second_cate_id)
-                    var name2 = ""
-                    if(str){
-                        name2= str.cate_name
-                    }
-                    this.$set(list[i],'secondName',name2)
+                    this.skuTable = list
                 }
-                this.skuTable = list
             })
         },
         //搜索spu列表
@@ -237,8 +277,9 @@ export default {
         },
         //spu列表
         getspuList(){
-            spuList({product_no:this.spu_no,product_status:0}).then((res)=>{
+            spuList({page:this.spupage,product_no:this.spu_no,product_status:0}).then((res)=>{
                 this.spuTable = res.data.data.data
+                this.sputotal = res.data.data.total
             })
         },
         //sku单个上下架
