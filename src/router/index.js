@@ -22,11 +22,22 @@ import addsku from '@/components/backhome/backPage/commodity/addSku.vue'
 import addSpu from '@/components/backhome/backPage/commodity/addSpu.vue'
 import skuDetail from '@/components/backhome/backPage/commodity/skuDetail.vue'
 import spuskulist from '@/components/backhome/backPage/commodity/spuskulist.vue'
-import setpictures from '@/components/backhome/backPage/commodity/setpictures.vue'
+import setPictures from '@/components/backhome/backPage/commodity/setPictures.vue'
 
 //订单管理
 import orderList from '@/components/backhome/backPage/order/orderList.vue'
 import orderDetail from '@/components/backhome/backPage/order/orderDetail.vue'
+ 
+//首页管理 
+import banner from '@/components/backhome/backPage/homeManagement/banner.vue'
+import collections from '@/components/backhome/backPage/homeManagement/collections.vue'
+import bestSeller from '@/components/backhome/backPage/homeManagement/bestSeller.vue'
+import hotstyle from '@/components/backhome/backPage/homeManagement/hotstyle.vue'
+import newArrivals from '@/components/backhome/backPage/homeManagement/newArrivals.vue'
+
+//运营活动
+import coupon from '@/components/backhome/backPage/operation/coupon.vue'
+import addcoupon from '@/components/backhome/backPage/operation/addcoupon.vue'
 
 Vue.use(Router)
 export default new Router({
@@ -114,9 +125,9 @@ export default new Router({
         },
         //设置图片
         {
-          path:'/setpictures',
-          name:'setpictures',
-          component:setpictures
+          path:'/setPictures',
+          name:'setPictures',
+          component:setPictures
         },
         //已上货商品管理
         {
@@ -134,6 +145,43 @@ export default new Router({
           path: '/orderDetail',
           name: 'orderDetail',
           component: orderDetail
+        },
+        //首页管理     
+        {
+          path: '/banner',
+          name: 'banner',
+          component: banner
+        },
+        {
+          path: '/collections',
+          name: 'collections',
+          component: collections
+        },
+        {
+          path: '/bestSeller',
+          name: 'bestSeller',
+          component: bestSeller
+        },
+        {
+          path: '/hotstyle',
+          name: 'hotstyle',
+          component: hotstyle
+        },
+        {
+          path: '/newArrivals',
+          name: 'newArrivals',
+          component: newArrivals
+        },
+        //运营活动
+        {
+          path: '/coupon',
+          name: 'coupon',
+          component: coupon
+        },
+        {
+          path: '/addcoupon',
+          name: 'addcoupon',
+          component: addcoupon
         }
       ]
     }

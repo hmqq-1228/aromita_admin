@@ -1,7 +1,7 @@
 <template>
     <div class="setpictures">
         <div class="heade">
-            <h3>颜色属性图片设置管理</h3>
+            <h3>颜色图片设置管理</h3>
         </div>
         <div class="setpicCenter">
             <el-form :inline="true">
