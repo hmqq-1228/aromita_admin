@@ -48,7 +48,7 @@
               </el-submenu>
               <el-submenu index="4">
                 <template slot="title">
-                  <i class="el-icon-shopping-bag-1"></i>
+                  <i class="el-icon-s-order"></i>
                   <span>订单管理</span>
                 </template>
                 <el-menu-item-group>

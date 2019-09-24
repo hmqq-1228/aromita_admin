@@ -68,7 +68,7 @@ export default {
         this.SpuId = this.$route.query.id
         if(this.SpuId){
             this.getFirstList()
-            this.getClassII()  
+            this.getClassII()
             this.getSpuDetail()
         }
     },
@@ -114,7 +114,7 @@ export default {
     }
 }
 </script>
-<style scope>
+<style scoped>
 h4{
     height: 50px;
     line-height: 50px;

@@ -6,10 +6,10 @@
         <div class="sku_detail" v-if="detail">
             <p><b>商品编号：</b>{{detail.sku_no}}</p>
             <p><b>商品名称：</b><span class="name">{{detail.sku_name}}</span></p>
-            <p><b>商品主图：</b> 
+            <p><b>商品主图：</b>
                 <img :src="detail.sku_image" alt="">
             </p>
-            <p><b>商品副图：</b> 
+            <p><b>商品副图：</b>
                 <img v-for="(item,index) in detail.thumbnail_images" :src="item" alt="" :key="index">
             </p>
             <p><b>优先级：</b>{{detail.sort}}</p>
@@ -58,7 +58,7 @@ export default {
     }
 }
 </script>
-<style>
+<style scoped>
     .sku_detail img{
         width: 100px;
         height: 100px;

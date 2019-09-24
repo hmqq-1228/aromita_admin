@@ -80,8 +80,8 @@
     :visible.sync="editVisible"
     width="400px">
     <div>
-      <div class="item"><div class="name">上货价区间开始($):</div><el-input-number v-model="minPriceEdit" @change="minChange" controls-position="right" :min="0"></el-input-number></div>
-      <div class="item"><div class="name">上货价区间结束($):</div><el-input-number v-model="maxPriceEdit" @change="maxChange" controls-position="right" :min="0"></el-input-number></div>
+      <div class="item"><div class="name">上货价区间开始($):</div><el-input-number v-model="minPriceEdit" controls-position="right" :min="0"></el-input-number></div>
+      <div class="item"><div class="name">上货价区间结束($):</div><el-input-number v-model="maxPriceEdit" controls-position="right" :min="0"></el-input-number></div>
       <div class="item"><div class="name">利润系数:</div><el-input-number v-model="stepNumEdit" controls-position="right" :min="0"></el-input-number></div>
     </div>
     <span slot="footer" class="dialog-footer">
@@ -124,21 +124,6 @@ export default {
     }
   },
   watch:{
-    minPrice: function (val, ov) {
-      if (val > this.maxPrice) {
-        this.maxPrice = val
-      }
-    },
-    maxPrice: function (val, ov) {
-      if (val < this.minPrice) {
-        this.minPrice = val
-      }
-    },
-    // minPriceEdit: function (val, ov) {
-    //   if (val > this.maxPriceEdit) {
-    //     this.maxPriceEdit = val
-    //   }
-    // },
     centerDialogVisible: function (val, ov) {
       if (!val) {
         this.minPrice = 0
@@ -204,21 +189,29 @@ export default {
     },
     subCoefficient(){
       var that = this
-      var obj = qs.stringify({
-        price_min: that.minPrice,
-        price_max: that.maxPrice,
-        price_coefficient: that.stepNum
-      })
-      that.$axios.post("backend/product/profitCoefficient", obj).then((res)=>{
-        if(res.data.code === 200){
-          this.$message({
-            message: '添加成功',
-            type: 'success'
-          });
-          that.centerDialogVisible = false
-          that.coefficientList()
+      if (that.maxPrice <= that.minPrice) {
+        that.$message.warning('区间结束值应大于开始值！')
+      } else {
+        if (that.stepNum > 0) {
+          var obj = qs.stringify({
+            price_min: that.minPrice,
+            price_max: that.maxPrice,
+            price_coefficient: that.stepNum
+          })
+          that.$axios.post("backend/product/profitCoefficient", obj).then((res)=>{
+            if(res.data.code === 200){
+              this.$message({
+                message: '添加成功',
+                type: 'success'
+              });
+              that.centerDialogVisible = false
+              that.coefficientList()
+            }
+          })
+        } else {
+          that.$message.warning('利润系数应大于0！')
         }
-      })
+      }
     },
     editeData(id, min, max, num){
       var that = this
@@ -229,33 +222,31 @@ export default {
       that.maxPriceEdit = max
       that.stepNumEdit = num
     },
-    minChange(num){
-      if (num > this.maxPriceEdit) {
-        this.maxPriceEdit = num
-      }
-    },
-    maxChange(num){
-      if (num < this.minPriceEdit) {
-        this.minPriceEdit = num
-      }
-    },
     editCoefficient(){
       var that = this
-      var obj = qs.stringify({
-        price_min: that.minPriceEdit,
-        price_max: that.maxPriceEdit,
-        price_coefficient: that.stepNumEdit
-      })
-      that.$axios.put("backend/product/profitCoefficient/" + that.coeffId, obj).then((res)=>{
-        if(res.data.code === 200){
-          this.$message({
-            message: '修改成功',
-            type: 'success'
-          });
-          that.editVisible = false
-          that.coefficientList()
+      if (that.minPriceEdit >= that.maxPriceEdit) {
+        that.$message.warning('区间结束值应大于开始值！')
+      } else {
+        if (that.stepNumEdit > 0) {
+          var obj = qs.stringify({
+            price_min: that.minPriceEdit,
+            price_max: that.maxPriceEdit,
+            price_coefficient: that.stepNumEdit
+          })
+          that.$axios.put("backend/product/profitCoefficient/" + that.coeffId, obj).then((res)=>{
+            if(res.data.code === 200){
+              this.$message({
+                message: '修改成功',
+                type: 'success'
+              });
+              that.editVisible = false
+              that.coefficientList()
+            }
+          })
+        } else {
+          that.$message.warning('利润系数应大于0！')
         }
-      })
+      }
     }
   }
 }

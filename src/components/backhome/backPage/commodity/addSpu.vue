@@ -92,11 +92,11 @@ export default {
     }
 }
 </script>
-<style>
+<style scoped>
 .addspuCenter{
     width: 600px;
 }
-.el-input{
+.addspu .el-input{
     width: 300px!important;
 }
 </style>
