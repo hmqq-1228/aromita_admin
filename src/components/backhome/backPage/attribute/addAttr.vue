@@ -4,8 +4,8 @@
       <h3>新增属性和属性值</h3>
     </div>
     <div class="addAttrCenter">
-      <el-form label-width="120px">
-        <el-form-item label="属性名称：" required>
+      <el-form label-width="120px" :rules="rules">
+        <el-form-item label="属性名称：" prop="attr_name">
           <el-input v-model="attrFrom.attr_name"></el-input>
         </el-form-item>
         <el-form-item label="属性值：">
@@ -37,6 +37,11 @@ export default {
       attrFrom:{
         attr_name:'',
         attr_value:[""]
+      },
+      rules:{
+        attr_name:[
+          { required: true, message: '属性名称不能为空',trigger: 'blur'}
+        ]
       },
       attrid:'',
     }

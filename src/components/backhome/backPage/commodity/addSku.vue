@@ -84,13 +84,13 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="上货价：">
-                            <span>{{skuform.goods_price}}</span>
+                            <span>$ {{skuform.goods_price}}</span>
                         </el-form-item>
                         <el-form-item label="推荐售价：">
-                            <span>{{skuform.recommend_price}}</span>
+                            <span>$ {{skuform.recommend_price}}</span>
                         </el-form-item>
                         <el-form-item label="最终售价：">
-                            <el-input v-model="skuform.sku_price"></el-input>
+                            <span> $ </span><el-input v-model="skuform.sku_price"></el-input>
                         </el-form-item>
                         <el-form-item label="商品状态：">
                             <el-select v-model="skuform.sku_status" filterable placeholder="请选择商品状态">
@@ -267,6 +267,7 @@ export default {
                     }
                     this.defaultClassII(this.skuform.first_cate_id)
                 }else{
+                    this.loading = false
                     this.$message.error(res.data.msg);
                 }
             })
@@ -357,6 +358,7 @@ export default {
                             message: '创建成功',
                             type: 'success'
                         });
+                        this.$router.go(-1)
                     }else{
                         this.$message({
                             message:res.data.msg,
@@ -375,6 +377,7 @@ export default {
                             message: '修改成功',
                             type: 'success'
                         });
+                        this.$router.go(-1)
                     }else{
                         this.$message({
                             message:res.data.msg,

@@ -46,9 +46,9 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           userLogin(pre).then((res)=>{
-            console.log('kkkkk', res)
             if (res.data.code === 200) {
               this.$message.success(res.data.msg)
+              localStorage.setItem('username',res.data.data)
               this.$router.push({
                 path:'/homeIndex'
               })
