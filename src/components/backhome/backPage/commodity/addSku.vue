@@ -165,7 +165,6 @@ export default {
                 type:'main'
             },
             //商品副图
-            //fileList:[],
             thumbType:{
                 type:'thumbnail'
             },
@@ -263,18 +262,12 @@ export default {
                     }
                     this.skuform.thumbnail_images = urlList
                     //一级类目
-                    console.log(this.firstList)
                     if(res.data.data.first_cate_id == 0 && this.firstList){
                         this.skuform.first_cate_id = this.firstList[0].id
                         this.defaultClassII(this.firstList[0].id)
                     }else{
                         this.defaultClassII(this.skuform.first_cate_id)
                     }
-                    //二级类目
-                    
-                    // if(res.data.data.second_cate_id == 0){
-                    //     this.skuform.second_cate_id = ''
-                    // }
                     
                 }else{
                     this.loading = false
@@ -305,8 +298,8 @@ export default {
         //改变一级类目,更新二级类目
         changeClassI(par_id){
             Classlinkage({parent_id:par_id}).then((res)=>{
-                this.skuform.second_cate_id = ''
                 this.secondList = res.data.data
+                this.skuform.second_cate_id = this.secondList[0].id
             })
         },
         //选择二级类目,获取该类目下的属性
@@ -442,7 +435,14 @@ export default {
         },
         //商品副图移除
         handleRemove(file, fileList) {
-            console.log(fileList);
+            var arr = this.skuform.thumbnail_images
+            var Brr = []
+            arr.forEach((value,index,arr)=>{
+                if(value != file){
+                    Brr.push(value)
+                }  
+            })
+            this.skuform.thumbnail_images = Brr
         },
         //商品副图查看
         handlePictureCardPreview(file) {

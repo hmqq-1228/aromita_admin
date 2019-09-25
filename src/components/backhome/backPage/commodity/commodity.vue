@@ -132,7 +132,7 @@
                         <el-table-column prop="product_no" label="SPU编号"></el-table-column>
                         <el-table-column label="SPU属性">
                             <template slot-scope="scope">
-                                <p v-for="(item,key) in scope.row.attrs" :key="key">{{key}}:{{item}}</p>
+                                <span style="margin:0 10px" v-for="(item,key) in scope.row.attrs" :key="key">{{key}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column prop="date" label="操作">
