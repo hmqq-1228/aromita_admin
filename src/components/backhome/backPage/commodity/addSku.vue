@@ -84,13 +84,13 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="上货价：">
-                            <span>{{skuform.goods_price}}</span>
+                            <span>$ {{skuform.goods_price}}</span>
                         </el-form-item>
                         <el-form-item label="推荐售价：">
-                            <span>{{skuform.recommend_price}}</span>
+                            <span>$ {{skuform.recommend_price}}</span>
                         </el-form-item>
                         <el-form-item label="最终售价：">
-                            <el-input v-model="skuform.sku_price"></el-input>
+                            <span> $ </span><el-input v-model="skuform.sku_price"></el-input>
                         </el-form-item>
                         <el-form-item label="商品状态：">
                             <el-select v-model="skuform.sku_status" filterable placeholder="请选择商品状态">
@@ -123,6 +123,8 @@
                                 type="textarea"
                                 :rows="4"
                                 placeholder="请输入内容"
+                                maxlength="400"
+                                show-word-limit
                                 v-model="skuform.main_feature">
                             </el-input>
                         </el-form-item>
@@ -163,7 +165,6 @@ export default {
                 type:'main'
             },
             //商品副图
-            //fileList:[],
             thumbType:{
                 type:'thumbnail'
             },
@@ -252,6 +253,7 @@ export default {
                 if(res.data.code == 200){
                     this.loading = false
                     this.skuform = res.data.data
+                    //商品副图数据格式更改
                     var thumbnail_images = res.data.data.thumbnail_images
                     var urlList = []
                     for(var i=0;i<thumbnail_images.length;i++){
@@ -259,14 +261,16 @@ export default {
                         urlList.push(urlStr)
                     }
                     this.skuform.thumbnail_images = urlList
-                    if(res.data.data.first_cate_id == 0){
-                        this.skuform.first_cate_id = ''
+                    //一级类目
+                    if(res.data.data.first_cate_id == 0 && this.firstList){
+                        this.skuform.first_cate_id = this.firstList[0].id
+                        this.defaultClassII(this.firstList[0].id)
+                    }else{
+                        this.defaultClassII(this.skuform.first_cate_id)
                     }
-                    if(res.data.data.second_cate_id == 0){
-                        this.skuform.second_cate_id = ''
-                    }
-                    this.defaultClassII(this.skuform.first_cate_id)
+                    
                 }else{
+                    this.loading = false
                     this.$message.error(res.data.msg);
                 }
             })
@@ -280,17 +284,22 @@ export default {
         //获取默认的二级类目列表
         defaultClassII(par_id){
             Classlinkage({parent_id:par_id}).then((res)=>{
-                this.secondList = res.data.data
+                if(res.data.data){
+                    this.secondList = res.data.data
+                }
                 if(this.skuform.second_cate_id!=0){
                     this.changeClassII(this.skuform.second_cate_id)
+                }else{
+                    console.log(this.secondList)
+                    this.skuform.second_cate_id = this.secondList[0].id
                 }
             })
         },
         //改变一级类目,更新二级类目
         changeClassI(par_id){
             Classlinkage({parent_id:par_id}).then((res)=>{
-                this.skuform.second_cate_id = ''
                 this.secondList = res.data.data
+                this.skuform.second_cate_id = this.secondList[0].id
             })
         },
         //选择二级类目,获取该类目下的属性
@@ -357,6 +366,7 @@ export default {
                             message: '创建成功',
                             type: 'success'
                         });
+                        this.$router.go(-1)
                     }else{
                         this.$message({
                             message:res.data.msg,
@@ -375,6 +385,7 @@ export default {
                             message: '修改成功',
                             type: 'success'
                         });
+                        this.$router.go(-1)
                     }else{
                         this.$message({
                             message:res.data.msg,
@@ -424,7 +435,14 @@ export default {
         },
         //商品副图移除
         handleRemove(file, fileList) {
-            console.log(fileList);
+            var arr = this.skuform.thumbnail_images
+            var Brr = []
+            arr.forEach((value,index,arr)=>{
+                if(value != file){
+                    Brr.push(value)
+                }  
+            })
+            this.skuform.thumbnail_images = Brr
         },
         //商品副图查看
         handlePictureCardPreview(file) {
@@ -473,14 +491,14 @@ export default {
 .addSkuDetail .el-input{
     width: 340px!important;
 }
+.addSkuDetail .el-textarea{
+    width: 340px!important;
+}
 .el-textarea__inner{
     width: 340px!important;
 }
 .radioGroup{
     padding-left:20px;
-}
-.skubox{
-
 }
 /* 图片上传规格说明 */
 .imgTips{

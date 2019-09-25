@@ -3,7 +3,7 @@
         <div class="heade">
             <h3>SPU详情</h3>
         </div>
-        <div class="spudetailCenter" v-if="detail">
+        <div class="spudetailCenter" v-if="detail!=null">
             <div class="detailCenter">
                <div class="list"><b>SPU编码：</b>{{detail.product_no}}</div>
                <div class="list">
@@ -48,7 +48,7 @@
             </el-table>
 
             <h4>SPU描述</h4>
-            <div>{{detail.detail.product_detail}}</div>
+            <div v-if="detail.detail!=null">{{detail.detail.product_detail}}</div>
         </div>
     </div>
 </template>
@@ -90,6 +90,7 @@ export default {
             this.$axios.get(`/backend/product/${this.SpuId}`,{}).then((res)=>{
                 if(res.data.data){
                     this.detail = res.data.data
+                    console.log(this.detail)
                     var list = res.data.data.pskus
                     for(var i=0;i<list.length;i++){
                         //一级类目

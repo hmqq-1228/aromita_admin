@@ -152,10 +152,14 @@ export default {
                 order_total:'',
                 shipping_method:'',
                 orders_status:0,
-            }
+            },
+            username:'',//用户名
        } 
     },
     created(){
+        if(localStorage.getItem('username')){
+            this.username = localStorage.getItem('username')
+        }
         this.getorderList()
     },
     methods:{
@@ -186,18 +190,18 @@ export default {
         Edit(obj){
             this.orderVisible = true;
             this.orderDetailForm = JSON.parse(JSON.stringify(obj))
-            console.log(this.orderDetailForm,'000')
         },
         //修改订单状态提交
         editorderSub(){
             let pre={
                 id:this.orderDetailForm.id,
-                orders_status:this.orderDetailForm.orders_status
+                orders_status:this.orderDetailForm.orders_status,
+                username:this.username
             }
             orderEdit(pre).then((res)=>{
                 if(res.data.code == 200){
                     this.$message({
-                        message: '修改成功！',
+                        message: '修改成功!',
                         type: 'success'
                     });
                     this.orderVisible = false;

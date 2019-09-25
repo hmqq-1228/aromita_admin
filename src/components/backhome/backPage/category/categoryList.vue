@@ -18,6 +18,7 @@
                 <span class="custom-tree-node" slot-scope="{ node, data }">
                     <span class="node_name">{{node.label}}</span>
                     <span class="node_edit">
+                        <el-tag>{{is_show[data.is_show]}}</el-tag>
                         <el-button
                             type="primary"
                             size="mini"
@@ -26,6 +27,7 @@
                         </el-button>
                         <el-button
                             size="mini"
+                            type="danger"
                             @click="() => remove(data.id)">
                             删除
                         </el-button>
@@ -122,6 +124,10 @@ export default {
                 ]
             },
             cate_attrsList:[],//分类数组列表
+            is_show:{
+                '1':"展示",
+                '0':"关闭"
+            }
         }
     },
     created(){
@@ -240,6 +246,11 @@ export default {
                         type: 'success'
                     });
                     this.getList()
+                }else{
+                    this.$message({
+                        message:res.data.msg,
+                        type: 'error'
+                    });
                 }
             })
         }

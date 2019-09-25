@@ -21,10 +21,11 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div class="foot">
+        <div class="pagination">
             <el-pagination
                 background
-                layout="total, prev, pager, next, jumper"
+                layout="prev, pager, next"
+                :page-size="pageSize"
                 :total="total">
             </el-pagination>
         </div>
@@ -34,14 +35,14 @@
             :visible.sync="categoryVisible"
             width="600px">
             <div class="categoryBox">
-                <el-form label-width="140px" :model="form">
-                    <el-form-item label="ERP分类ID:">
+                <el-form label-width="160px" :model="form" :rules="rules" ref="form">
+                    <el-form-item label="ERP分类ID:" prop="erp_cat_id">
                         <el-input v-model="form.erp_cat_id"></el-input>
                     </el-form-item>
-                    <el-form-item label="ERP分类名称:">
+                    <el-form-item label="ERP分类名称:" prop="erp_cat_name">
                         <el-input v-model="form.erp_cat_name"></el-input>
                     </el-form-item>
-                    <el-form-item label="网站二级分类名称:">
+                    <el-form-item label="网站二级分类名称:" prop="web_sec_id">
                         <el-select v-model="form.web_sec_id" placeholder="请选择">
                             <el-option
                                 v-for="item in ClassIIList"
@@ -53,7 +54,7 @@
                     </el-form-item>
                 </el-form>
                 <el-button type="primary" @click="editcategory()" class="editBtn" v-if="btnShow == true">修 改</el-button>
-                <el-button type="primary" @click="addcategorySub()" class="editBtn" v-if="btnShow == false">创 建</el-button>
+                <el-button type="primary" @click="addcategorySub('form')" class="editBtn" v-if="btnShow == false">创 建</el-button>
             </div>
         </el-dialog>
     </div>
@@ -77,6 +78,17 @@ export default {
             ClassIIList:[],//二级分类列表
             cateId:'',//二级分类id
             cat_id:'',//编辑对应关系对应id
+            rules:{
+                erp_cat_id:[
+                    { required: true, message: 'ERP分类ID必填', trigger: 'blur' }
+                ],
+                erp_cat_name:[
+                    {required: true, message: 'ERP分类名称必填', trigger: 'blur'}
+                ],
+                web_sec_id:[
+                    {required: true, message: '网站二级分类必选', trigger: 'blur'}
+                ]
+            }
         }
     },
     created(){
@@ -152,22 +164,30 @@ export default {
             this.btnShow = false
             this.categoryVisible = true
         },
-        addcategorySub(){
-            addCategorylist(this.form).then((res)=>{
-                if(res.data.code == 200){
-                    this.$message({
-                        type: 'success',
-                        message: '创建成功!'
-                    });
-                    this.categoryVisible = false
-                    this.getList()
+        addcategorySub(formName){
+            this.$refs[formName].validate((valid) => {
+                if (valid) {
+                    addCategorylist(this.form).then((res)=>{
+                        if(res.data.code == 200){
+                            this.$message({
+                                type: 'success',
+                                message: '创建成功!'
+                            });
+                            this.categoryVisible = false
+                            this.getList()
+                        }else{
+                            this.$message({
+                                type: 'error',
+                                message: res.data.msg
+                            });
+                        }
+                    })
                 }else{
-                    this.$message({
-                        type: 'error',
-                        message: res.data.msg
-                    });
+                    return false
                 }
             })
+                
+            
         }
     }
 }
