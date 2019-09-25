@@ -263,14 +263,19 @@ export default {
                     }
                     this.skuform.thumbnail_images = urlList
                     //一级类目
-                    if(res.data.data.first_cate_id == 0){
-                        this.skuform.first_cate_id = ''
+                    console.log(this.firstList)
+                    if(res.data.data.first_cate_id == 0 && this.firstList){
+                        this.skuform.first_cate_id = this.firstList[0].id
+                        this.defaultClassII(this.firstList[0].id)
+                    }else{
+                        this.defaultClassII(this.skuform.first_cate_id)
                     }
                     //二级类目
-                    if(res.data.data.second_cate_id == 0){
-                        this.skuform.second_cate_id = ''
-                    }
-                    this.defaultClassII(this.skuform.first_cate_id)
+                    
+                    // if(res.data.data.second_cate_id == 0){
+                    //     this.skuform.second_cate_id = ''
+                    // }
+                    
                 }else{
                     this.loading = false
                     this.$message.error(res.data.msg);
@@ -286,9 +291,14 @@ export default {
         //获取默认的二级类目列表
         defaultClassII(par_id){
             Classlinkage({parent_id:par_id}).then((res)=>{
-                this.secondList = res.data.data
+                if(res.data.data){
+                    this.secondList = res.data.data
+                }
                 if(this.skuform.second_cate_id!=0){
                     this.changeClassII(this.skuform.second_cate_id)
+                }else{
+                    console.log(this.secondList)
+                    this.skuform.second_cate_id = this.secondList[0].id
                 }
             })
         },
