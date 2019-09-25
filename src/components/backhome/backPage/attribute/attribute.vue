@@ -23,7 +23,7 @@
       </el-table-column>
       <el-table-column label="属性值">
         <template slot-scope="scope">
-          <el-table :data="scope.row.values" border max-height="200">
+          <el-table :data="scope.row.values_list" border max-height="200">
             <el-table-column prop="attr_value" label="属性值名称"></el-table-column>
             <el-table-column label="属性值状态">
               <template slot-scope="scope">
