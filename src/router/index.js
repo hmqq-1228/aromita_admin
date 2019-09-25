@@ -27,8 +27,8 @@ import setPictures from '@/components/backhome/backPage/commodity/setPictures.vu
 //订单管理
 import orderList from '@/components/backhome/backPage/order/orderList.vue'
 import orderDetail from '@/components/backhome/backPage/order/orderDetail.vue'
- 
-//首页管理 
+
+//首页管理
 import banner from '@/components/backhome/backPage/homeManagement/banner.vue'
 import collections from '@/components/backhome/backPage/homeManagement/collections.vue'
 import bestSeller from '@/components/backhome/backPage/homeManagement/bestSeller.vue'
@@ -135,7 +135,7 @@ export default new Router({
           name: 'commodityhand',
           component: commodityhand
         },
-        //订单管理模块 
+        //订单管理模块
         {
           path: '/orderList',
           name: 'orderList',
@@ -146,7 +146,7 @@ export default new Router({
           name: 'orderDetail',
           component: orderDetail
         },
-        //首页管理     
+        //首页管理
         {
           path: '/banner',
           name: 'banner',

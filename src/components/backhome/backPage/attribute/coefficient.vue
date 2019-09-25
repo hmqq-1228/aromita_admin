@@ -152,7 +152,6 @@ export default {
       }
     },
     minPriceEdit:function (val,oV) {
-      console.log('hhhh', val)
       if (val>=0) {
         this.minPriceEditShow = false
       } else {

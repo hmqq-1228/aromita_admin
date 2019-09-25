@@ -1,6 +1,6 @@
 <template>
-    <div 
-        class="addsku" 
+    <div
+        class="addsku"
         v-loading="loading"
         element-loading-text="拼命加载中"
         element-loading-spinner="el-icon-loading">
@@ -466,7 +466,7 @@ export default {
     text-align: center;
 }
 .avatar {
-    width: 178px;   
+    width: 178px;
     height: 178px;
     display: block;
 }
