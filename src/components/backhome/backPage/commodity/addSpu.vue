@@ -63,11 +63,10 @@ export default {
                         arr.push(skunos)
                     }
                     this.addspuform.sku_nos = arr.join(',')
-                    // this.detail = res.data.data
-                    // this.attr = JSON.parse(this.detail.sku_attrs)
                 }
             })
         },
+        //新建spu
         addspuSub(){
             var nos = this.foo(this.addspuform.sku_nos)
             let pre={
@@ -80,7 +79,7 @@ export default {
                         message: '新建SPU成功',
                         type: 'success'
                     });
-                    this.getskuList()
+                    this.$router.go(-1)
                 }else{
                     this.$message({
                         message: res.data.msg,

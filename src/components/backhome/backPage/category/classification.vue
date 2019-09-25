@@ -21,10 +21,11 @@
                 </template>
             </el-table-column>
         </el-table>
-        <div class="foot">
+        <div class="pagination">
             <el-pagination
                 background
-                layout="total, prev, pager, next, jumper"
+                layout="prev, pager, next"
+                :page-size="pageSize"
                 :total="total">
             </el-pagination>
         </div>

@@ -123,6 +123,8 @@
                                 type="textarea"
                                 :rows="4"
                                 placeholder="请输入内容"
+                                maxlength="400"
+                                show-word-limit
                                 v-model="skuform.main_feature">
                             </el-input>
                         </el-form-item>
@@ -252,6 +254,7 @@ export default {
                 if(res.data.code == 200){
                     this.loading = false
                     this.skuform = res.data.data
+                    //商品副图数据格式更改
                     var thumbnail_images = res.data.data.thumbnail_images
                     var urlList = []
                     for(var i=0;i<thumbnail_images.length;i++){
@@ -259,9 +262,11 @@ export default {
                         urlList.push(urlStr)
                     }
                     this.skuform.thumbnail_images = urlList
+                    //一级类目
                     if(res.data.data.first_cate_id == 0){
                         this.skuform.first_cate_id = ''
                     }
+                    //二级类目
                     if(res.data.data.second_cate_id == 0){
                         this.skuform.second_cate_id = ''
                     }
@@ -476,14 +481,14 @@ export default {
 .addSkuDetail .el-input{
     width: 340px!important;
 }
+.addSkuDetail .el-textarea{
+    width: 340px!important;
+}
 .el-textarea__inner{
     width: 340px!important;
 }
 .radioGroup{
     padding-left:20px;
-}
-.skubox{
-
 }
 /* 图片上传规格说明 */
 .imgTips{
