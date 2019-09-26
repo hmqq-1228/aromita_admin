@@ -55,14 +55,14 @@
                         <el-form-item label="分类名称：" prop="cate_name">
                             <el-input v-model="form.cate_name"></el-input>
                         </el-form-item>
-                        <el-form-item label="是否展示：" prop="cate_status">
+                        <el-form-item label="是否展示：" prop="is_show">
                             <el-switch
                                 v-model="form.is_show"
                                 :active-value="1"
                                 :inactive-value="0">
                             </el-switch>
                         </el-form-item>
-                        <el-form-item label="是否启用：" prop="is_show">
+                        <el-form-item label="是否启用：" prop="cate_status">
                             <el-switch
                                 v-model="form.cate_status"
                                 :active-value="1"
@@ -110,8 +110,8 @@ export default {
             form:{
                 parent_id:'',
                 cate_name: '',
-                cate_status:0,
-                is_show:1,
+                cate_status:1,
+                is_show:0,
                 sort:100,
                 cate_attrs: [],
             },
@@ -221,8 +221,8 @@ export default {
             this.box_title = "新增分类" 
             this.form.parent_id = ''
             this.form.cate_name =  ''
-            this.form.cate_status = 0
-            this.form.is_show = 1
+            this.form.cate_status = 1
+            this.form.is_show = 0
             this.form.sort = 100
             this.form.cate_attrs = []    
             this.categoryVisible = true
