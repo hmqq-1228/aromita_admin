@@ -79,7 +79,8 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="二级类别名称：">
-                            <el-select v-model="skuform.second_cate_id" filterable placeholder="请输入二级类目" @change="changeClassII(skuform.second_cate_id)">
+                            <span v-if="this.secondList.length == 0">该一级类目下无二级类目，请先创建二级类目</span>
+                            <el-select v-else v-model="skuform.second_cate_id" filterable placeholder="请输入二级类目" @change="changeClassII(skuform.second_cate_id)">
                                 <el-option v-for="(item,index) in secondList" :key="index" :label="item.cate_name" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
@@ -107,12 +108,12 @@
                             <el-radio v-model="skuform.inventory_allow_update" :label='0'>否</el-radio>
                         </el-form-item>
                         <el-form-item label="属性和属性值：">
-                            <el-checkbox-group v-model="checkList">
+                            <el-checkbox-group v-model="checkList" @change="changeCheckList()">
                                 <div v-for="(item,index) in attrEditionList" :key="index">
-                                    <div><el-checkbox :label="item.id">{{item.attr_name}}</el-checkbox></div>
+                                    <div><el-checkbox :label="item.id" :disabled="disabled">{{item.attr_name}}</el-checkbox></div>
                                     <div class="radioGroup" v-if="checkList.find(n =>n == Number(item.id))">
                                         <el-radio-group v-model="item.radioId">
-                                            <el-radio v-for="(item1,index1) in item.values" :key="index1" :label="item1.id">{{item1.attr_value}}</el-radio>
+                                            <el-radio v-for="(item1,index1) in item.values" :key="index1" :label="item1.id" :disabled="disabled">{{item1.attr_value}}</el-radio>
                                         </el-radio-group>
                                     </div>
                                 </div>
@@ -146,6 +147,8 @@ export default {
     data(){
         return{
             loading:false,
+            productId:0,//不为0时，属性不可编辑
+            disabled:false,//属性是否禁用
             editSkuId:'',//编辑用skuID
             //sku远程搜索
             restaurants: [],
@@ -186,6 +189,10 @@ export default {
             this.loading = true
             this.$axios.get(`backend/product/sku/${this.editSkuId}`,{}).then((res)=>{
                 if(res.data.code === 200){
+                    this.productId = res.data.data.product_id
+                    if(this.productId !=0){
+                        this.disabled = true
+                    }
                     this.loading = false
                     this.skuform = res.data.data
                     this.sku_no = res.data.data.sku_no
@@ -197,14 +204,17 @@ export default {
                     }
                     this.skuform.thumbnail_images = urlList
                     this.defaultClassII(this.skuform.first_cate_id)
-                    var attr = JSON.parse(res.data.data.sku_attrs)
-                    //复选框绑定默认值
-                    var attrDefaultCheack = []
-                    for(var i=0;i<attr.length;i++){
-                        var num = Number(attr[i].id)
-                        attrDefaultCheack.push(num)
+                    var attr = []
+                    if(res.data.data.sku_attrs != ''){
+                        attr = JSON.parse(res.data.data.sku_attrs)
+                        //复选框绑定默认值
+                        var attrDefaultCheack = []
+                        for(var i=0;i<attr.length;i++){
+                            var num = Number(attr[i].id)
+                            attrDefaultCheack.push(num)
+                        }
+                        this.checkList = attrDefaultCheack
                     }
-                    this.checkList = attrDefaultCheack
                     //单选框绑定默认值
                     if(this.attrEditionList.length!=0){
                         for(var i=0;i<this.attrEditionList.length;i++){
@@ -287,11 +297,12 @@ export default {
                 if(res.data.data){
                     this.secondList = res.data.data
                 }
-                if(this.skuform.second_cate_id!=0){
-                    this.changeClassII(this.skuform.second_cate_id)
-                }else{
-                    console.log(this.secondList)
-                    this.skuform.second_cate_id = this.secondList[0].id
+                if(this.secondList.length!=0){
+                    if(this.skuform.second_cate_id!=0){
+                        this.changeClassII(this.skuform.second_cate_id)
+                    }else{
+                        this.skuform.second_cate_id = this.secondList[0].id
+                    }
                 }
             })
         },
@@ -299,7 +310,9 @@ export default {
         changeClassI(par_id){
             Classlinkage({parent_id:par_id}).then((res)=>{
                 this.secondList = res.data.data
-                this.skuform.second_cate_id = this.secondList[0].id
+                if(this.secondList.length!=0){
+                    this.skuform.second_cate_id = this.secondList[0].id
+                }
             })
         },
         //选择二级类目,获取该类目下的属性
@@ -327,17 +340,24 @@ export default {
                 }
             })
         },
+        //改变复选框选中值
+        changeCheckList(){
+            // console.log(this.checkList,'0000')
+            // console.log(this.attrEditionList,'1111')
+        },
         //新建sku提交
         addSkuSub(){
             var attrs = []
             var attrs1 = []
             //获取选中的属性和属性值
+            console.log(this.attrEditionList,'this.attrEditionList')
             for(var i=0;i<this.attrEditionList.length;i++){
-                if(this.attrEditionList[i].radioId != ""){
+                if(this.checkList.find(n =>n == this.attrEditionList[i].id) && this.attrEditionList[i].radioId != ""){
                     var obj = this.attrEditionList[i]
                     attrs.push(obj)
                 }
             }
+            console.log(attrs,'attrs')
             //处理属性和属性值数据结构
             for(var m = 0;m<attrs.length;m++){
                 var obj1 = attrs[m].values.find(n=>n.id == attrs[m].radioId)
@@ -360,24 +380,34 @@ export default {
             //请求接口
             if(!this.editSkuId){
                 //请求新增接口
-                addNewSku(myForm).then((res)=>{
-                    if(res.data.code == 200){
-                        this.$message({
-                            message: '创建成功',
-                            type: 'success'
-                        });
-                        this.$router.go(-1)
-                    }else{
-                        this.$message({
-                            message:res.data.msg,
-                            type: 'error'
-                        });
-                    }
-                })
+                console.log(myForm.second_cate_id,'000000')
+                if(myForm.second_cate_id == 0){
+                    this.$message({
+                        message: '二级分类必填',
+                        type: 'warning'
+                    });
+                    return false
+                }else{
+                    addNewSku(myForm).then((res)=>{
+                        if(res.data.code == 200){
+                            this.$message({
+                                message: '创建成功',
+                                type: 'success'
+                            });
+                            this.$router.go(-1)
+                        }else{
+                            this.$message({
+                                message:res.data.msg,
+                                type: 'error'
+                            });
+                        }
+                    })
+                }
             }else{
                 for(var key in myForm){
                     delete myForm['sku_attrs'];
                 }
+                console.log(myForm,'edit')
                 //请求修改接口
                 this.$axios.put(`backend/product/sku/${this.editSkuId}`,qs.stringify(myForm)).then((res)=>{
                     if(res.data.code == 200){

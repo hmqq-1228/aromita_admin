@@ -9,7 +9,7 @@
                     <el-input v-model="coupon_name" placeholder="请输入优惠券名称"></el-input>
                 </el-form-item>
                 <el-form-item label="发放总量（张）：">
-                    <el-input v-model="coupon_number"></el-input> <b>*所输入的数量必须为3的倍数</b>
+                    <el-input v-model="coupon_number" @blur="isTrue()"></el-input> <b>*所输入的数量必须为3的倍数</b>
                 </el-form-item>
                 <el-form-item label="创建类型：">
                     <el-select v-model="coupon_type" placeholder="创建类型">
@@ -93,7 +93,7 @@ export default {
         return{
             coupon_name:'',//优惠券名称
             coupon_type:'N',//创建类型
-            coupon_number:0,//优惠券发放总量
+            coupon_number:3,//优惠券发放总量
             coupon_minimum_order:'',//满足最小金额
             coupon_amount:'',//优惠券金额
             coupon_expire_date:'',//优惠券有效时长
@@ -111,12 +111,36 @@ export default {
             coupon_receive:[],//优惠券发放时间
             coupon_receive_start_time:'',//优惠券开始领取时间
             coupon_receive_end_time:'',//优惠券截止领取时间
+            checkMsg:{
+                coupon_name:'优惠券名称',//优惠券名称
+                coupon_minimum_order:'满足最小金额',//满足最小金额
+                coupon_amount:'优惠券金额',//优惠券金额
+                coupon_expire_date:'优惠券有效时长',//优惠券有效时长
+                coupon_receive_end_time:'截止领取日期',//截止领取日期
+                coupon_description:'优惠券使用说明',//优惠券使用说明
+                coupon_start_time:'优惠券生效时间',//优惠券生效时间
+                coupon_end_time:'优惠券失效时间',//优惠券失效时间
+                coupon_receive_start_time:'优惠券开始领取时间',//优惠券开始领取时间
+                coupon_receive_end_time:'优惠券截止领取时间',//优惠券截止领取时间
+            }
         }
     },
     created(){
 
     },
     methods:{
+        //判断是否是3的倍数
+        isTrue(){
+            if(this.coupon_number % 3 == 0){
+                console.log(111)
+            }else{
+                this.$message({
+                    message:'请输入3的倍数',
+                    type: 'error'
+                });
+                this.coupon_number = 3
+            };
+        },
         //创建优惠券
         createCoupon(){
             let pre = {}
@@ -141,6 +165,15 @@ export default {
                 pre.coupon_receive_start_time = this.coupon_receive[0]
                 pre.coupon_receive_end_time = this.coupon_receive[1]
                 pre.coupon_description = this.coupon_description
+            }
+            for(let key in pre){
+                if(!pre[key]){
+                    this.$message({
+                        message:`${this.checkMsg[key]}必填`,
+                        type: 'error'
+                    });
+                    return false
+                }
             }
             addCoupon(pre).then((res)=>{
                 if(res.data.code == 200){

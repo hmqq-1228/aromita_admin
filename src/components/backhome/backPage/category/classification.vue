@@ -17,7 +17,7 @@
             <el-table-column label="操作">
                 <template slot-scope="scope">
                     <el-button type="primary" @click="editList(scope.row.id,scope.row.erp_cat_id,scope.row.erp_cat_name,scope.row.web_sec_id)">编 辑</el-button>
-                    <el-button @click="delList(scope.row.id)">删 除</el-button>
+                    <el-button @click="delList(scope.row.id)" type="danger">删 除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -66,6 +66,7 @@ export default {
     data(){
         return{
             total:0,
+            pageSize:50,
             List:[],
             categoryVisible:false,
             form:{
@@ -150,9 +151,14 @@ export default {
                         type: 'success',
                         message: '修改成功!'
                     });
+                    this.categoryVisible = false
+                    this.getList()
+                }else{
+                    this.$message({
+                        type: 'error',
+                        message:res.data.msg
+                    });
                 }
-                this.categoryVisible = false
-                this.getList()
             })
         },
         //新增对应关系

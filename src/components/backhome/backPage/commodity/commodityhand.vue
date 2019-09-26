@@ -15,8 +15,9 @@
                         </el-form-item>
                         <el-form-item label="商品状态：">
                             <el-select v-model="skusearchForm.sku_status" clearable>
-                                <el-option label="已上架" :value='1'></el-option>
-                                <el-option label="已下架" :value='0'></el-option>
+                                <el-option label="正常销售" :value='1'></el-option>
+                                <el-option label="下架" :value='0'></el-option>
+                                <el-option label="补货中" :value='2'></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item>
@@ -121,7 +122,7 @@
                         <el-table-column prop="product_no" label="SPU编号"></el-table-column>
                         <el-table-column label="SPU属性">
                             <template slot-scope="scope">
-                                <p v-for="(item,key) in scope.row.attrs" :key="key">{{key}}:{{item}}</p>
+                                <span style="margin:0 10px" v-for="(item,key) in scope.row.attrs" :key="key">{{key}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column prop="date" label="操作">
@@ -177,19 +178,6 @@ export default {
         }
     },
     created(){
-        //tab切换显示页面优化
-        var active_name = localStorage.getItem('commodityName')
-        if(active_name){
-            this.activeName = active_name
-        }else{
-            this.activeName = 'first'
-            this.getskuList()
-        }
-        if(this.activeName == "second"){
-            this.getspuList()
-        }else{
-            this.getskuList()
-        }
         this.getFirstList()
         this.getClassII()      
     },
@@ -216,7 +204,23 @@ export default {
         //获取一级分类列表
         getFirstList(){
             categoryList({first:1}).then((res)=>{
-                this.firstList = res.data.data
+                //tab切换显示页面优化
+                if(res.data.code == 200){
+                    this.firstList = res.data.data
+                    //tab切换显示页面优化
+                    var active_name = localStorage.getItem('commodityName')
+                    if(active_name){
+                        this.activeName = active_name
+                    }else{
+                        this.activeName = 'first'
+                        this.getskuList()
+                    }
+                    if(this.activeName == "second"){
+                        this.getspuList()
+                    }else{
+                        this.getskuList()
+                    }
+                }
             })
         },
         //获取二级类目

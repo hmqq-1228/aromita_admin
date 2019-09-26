@@ -22,12 +22,12 @@
                 <el-table-column prop="payment_method" label="支付方式"></el-table-column>
             </el-table>
             <!-- 运输方式信息(暂无数据) -->
-            <h4>运输方式信息 （暂无数据）</h4>
+            <!-- <h4>运输方式信息 （暂无数据）</h4>
             <el-table :data="orders" border>
                 <el-table-column prop="orders_number" label="运输方式"></el-table-column>
                 <el-table-column prop="customers_id" label="跟踪号"></el-table-column>
                 <el-table-column prop="order_total" label="来源"></el-table-column>
-            </el-table>
+            </el-table> -->
             <!-- 地址信息 -->
             <h4>订单地址信息</h4>
             <div class="orderAddress">
@@ -78,7 +78,7 @@
                                     <span style="color: #333;">{{item1.value.attr_value}}</span>; 
                                 </span>
                                 </p>
-                                <p>${{scope.row.final_price}}<span class="old_price">${{scope.row.products_price}}</span></p>
+                                <p>${{scope.row.final_price}}</p>
                             </div>
                         </div>
                     </template>
@@ -93,6 +93,9 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <div class="orders_total">
+                <p v-for="(item,key,index) in orders_total" :key="index">{{key}}:{{item}}</p>
+            </div>
             <!-- 订单操作日志 -->
             <h4>订单操作日志</h4>
             <el-table :data="orders_status_history" border>
@@ -124,6 +127,8 @@ export default {
                 '50':"Cancelled",
                 '60':"pending"
             },
+            //金额小项
+            orders_total:{}
         }
     },
     created(){
@@ -139,6 +144,7 @@ export default {
                     this.orders = res.data.data.orders
                     this.orderProducts = res.data.data.orders_products
                     this.orders_status_history = res.data.data.orders_status_history
+                    this.orders_total = res.data.data.orders_total[0]
                 }
             })
         }
@@ -170,5 +176,18 @@ export default {
     width: 80px;
     height: 80px;
     margin-right:10px;
+}
+.product .detail{
+    text-align: left;
+}
+.orders_total{
+    text-align: right;
+    padding-right: 20px;
+}
+.orders_total p{
+    height: 34px;
+    line-height: 34px;
+    color: red;
+    font-size: 14px;
 }
 </style>
