@@ -57,14 +57,14 @@
                         </el-form-item>
                         <el-form-item label="是否展示：" prop="cate_status">
                             <el-switch
-                                v-model="form.cate_status"
+                                v-model="form.is_show"
                                 :active-value="1"
                                 :inactive-value="0">
                             </el-switch>
                         </el-form-item>
                         <el-form-item label="是否启用：" prop="is_show">
                             <el-switch
-                                v-model="form.is_show"
+                                v-model="form.cate_status"
                                 :active-value="1"
                                 :inactive-value="0">
                             </el-switch>
