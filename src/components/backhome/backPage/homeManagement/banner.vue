@@ -1,8 +1,8 @@
 <template>
   <div class="banner">
     <div class="header">
-      <div>首页轮播图</div>
-      <el-button type="primary" icon="el-icon-plus" @click="addNewBanner()">新增</el-button>
+      <div>首页轮播图(最多添加4个)</div>
+      <el-button type="primary" v-if="bannerList.length<4" icon="el-icon-plus" @click="addNew()">新增</el-button>
     </div>
     <el-table
       :data="bannerList"
@@ -42,7 +42,7 @@
       :before-close="handleClose">
       <div class="draCont">
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px">
-          <el-form-item label="Banner ID" v-if="isEdit">
+          <el-form-item label="ID" v-if="isEdit">
             <el-input readonly v-model="ruleForm.ID"></el-input>
           </el-form-item>
           <el-form-item label="图片标题" prop="name">
@@ -56,14 +56,14 @@
               name="image"
               :action="uploadUrl"
               :data="bannerType"
-              accept=".jpg,.png,.JPG,.PNG"
+              accept=".jpg,.png,.JPG,.PNG,.jpeg,.JPEG"
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload">
               <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
-            <div class="tip"><i class="el-icon-warning-outline"></i> 请上传不超过500KB的1440*500尺寸的PNG或JPG格式图片!</div>
+            <div class="tip"><i class="el-icon-warning-outline"></i> 请上传不超过500KB的1440*500尺寸的PNG、JPG、JPEG格式图片!</div>
           </el-form-item>
           <el-form-item label="图片链接" prop="PicUrl">
             <el-input placeholder="请输入正确的网址" v-model="ruleForm.PicUrl">
@@ -85,7 +85,7 @@
       :before-close="handleClose2">
       <div class="draCont">
         <el-form label-width="100px">
-          <el-form-item label="Banner ID">
+          <el-form-item label="ID">
             <el-input readonly v-model="DetailId"></el-input>
           </el-form-item>
           <el-form-item label="图片标题">
@@ -119,7 +119,7 @@
 </template>
 <script>
 import {uploadUrl} from '@/http/commodity.js'
-import {getBannerList} from '@/http/home.js'
+import {getBannerList,addNewBanner} from '@/http/home.js'
 export default {
   data(){
     return{
@@ -155,7 +155,7 @@ export default {
           { required: true, message: '请输入图片名称', trigger: 'blur' }
         ],
         imageUrl:[
-          { required: true, message: '请上传图片', trigger: 'change' }
+          { required: true, message: '请上传图片', trigger: 'blur' }
         ],
         PicUrl: [
           { required: true, message: '请输入图片链接', trigger: 'blur' },
@@ -177,11 +177,27 @@ export default {
         }
       })
     },
-    addNewBanner () {
+    addNew () {
       this.drawer = true
       this.isEdit = false
       this.bntStr = '立即创建'
+      this.$refs['ruleForm'].resetFields();
       this.bannerTitle = '新建Banner'
+    },
+    addNewBan () {
+      var obj = {
+        position: 10,
+        picture_src: this.ruleForm.imageUrl,
+        picture_href: this.ruleForm.PicUrl,
+        picture_title: this.ruleForm.name
+      }
+      addNewBanner (obj).then((res)=>{
+        if (res.data.code === 200) {
+          this.$message.success('新建成功！')
+          this.drawer = false
+          this.getBannerListFuc()
+        }
+      })
     },
     bannerEdit (id) {
       var that = this
@@ -202,7 +218,7 @@ export default {
     },
     handleClose(){
       this.drawer = false
-      this.drawerDetail = false
+      // this.drawerDetail = false
       this.$refs['ruleForm'].resetFields();
     },
     handleClose2(){
@@ -215,7 +231,10 @@ export default {
     beforeAvatarUpload(file) {
       const isLt2M = file.size / 1024 < 500 ;
       if (!isLt2M) {
-        this.$message.error('商品图片大小不能超过500kb!');
+        // this.$message.error('商品图片大小不能超过500kb!');
+        $('.tip').addClass('error')
+      } else {
+        $('.tip').removeClass('error')
       }
       var _this = this;
       const isSize = new Promise(function(resolve, reject) {
@@ -229,9 +248,11 @@ export default {
         }
         img.src = _URL.createObjectURL(file);
       }).then(() => {
+        $('.tip').removeClass('error')
         return file;
       }, () => {
-        _this.$message.error('商品图片宽高必须是1440*500!');
+        $('.tip').addClass('error')
+        // _this.$message.error('商品图片宽高必须是1440*500!');
         return false
       });
       return isSize && isLt2M;
@@ -289,6 +310,8 @@ export default {
         if (valid) {
           if (that.bntStr === '确定修改') {
             that.subEditInfo()
+          } else if (that.bntStr === '立即创建') {
+            that.addNewBan()
           }
         } else {
           console.log('error submit!!');
@@ -326,13 +349,16 @@ export default {
     font-size: 14px;
     color: #666;
   }
+  .tip.error{
+    color: #C51015;
+  }
   .header{
     margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
   }
   .draCont{
-    padding: 0 40px;
+    padding: 0 20px;
   }
   .draCont .el-input{
     width: 300px !important;

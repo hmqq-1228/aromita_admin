@@ -31,10 +31,15 @@ import orderDetail from '@/components/backhome/backPage/order/orderDetail.vue'
 //首页管理
 import banner from '@/components/backhome/backPage/homeManagement/banner.vue'
 import collections from '@/components/backhome/backPage/homeManagement/collections.vue'
+import collections2 from '@/components/backhome/backPage/homeManagement/collections2.vue'
 import bestSeller from '@/components/backhome/backPage/homeManagement/bestSeller.vue'
 import hotstyle from '@/components/backhome/backPage/homeManagement/hotstyle.vue'
 import newArrivals from '@/components/backhome/backPage/homeManagement/newArrivals.vue'
-
+import footerShere from '@/components/backhome/backPage/homeManagement/footerShere.vue'
+import serveMethod from '@/components/backhome/backPage/homeManagement/serveMethod.vue'
+import payMethod from '@/components/backhome/backPage/homeManagement/payMethod.vue'
+import loginRegerster from '@/components/backhome/backPage/homeManagement/loginRegerster.vue'
+import settings from '@/components/backhome/backPage/homeManagement/settings.vue'
 //运营活动
 import coupon from '@/components/backhome/backPage/operation/coupon.vue'
 import addcoupon from '@/components/backhome/backPage/operation/addcoupon.vue'
@@ -158,6 +163,11 @@ export default new Router({
           component: collections
         },
         {
+          path: '/collections2',
+          name: 'collections2',
+          component: collections2
+        },
+        {
           path: '/bestSeller',
           name: 'bestSeller',
           component: bestSeller
@@ -171,6 +181,31 @@ export default new Router({
           path: '/newArrivals',
           name: 'newArrivals',
           component: newArrivals
+        },
+        {
+          path: '/footerShere',
+          name: 'footerShere',
+          component: footerShere
+        },
+        {
+          path: '/serveMethod',
+          name: 'serveMethod',
+          component: serveMethod
+        },
+        {
+          path: '/payMethod',
+          name: 'payMethod',
+          component: payMethod
+        },
+        {
+          path: '/loginRegerster',
+          name: 'loginRegerster',
+          component: loginRegerster
+        },
+        {
+          path: '/settings',
+          name: 'settings',
+          component: settings
         },
         //运营活动
         {

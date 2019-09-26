@@ -69,13 +69,27 @@
                 </template>
                 <el-menu-item-group>
                   <el-menu-item index="/banner">Banner设置</el-menu-item>
-                  <el-menu-item index="/collections">Collections设置</el-menu-item>
+                  <el-menu-item index="/collections">Collections主图</el-menu-item>
+                  <el-menu-item index="/collections2">Collections副图</el-menu-item>
                   <el-menu-item index="/bestSeller">Best Seller设置</el-menu-item>
-                  <el-menu-item index="/hotstyle">New Arrivals设置</el-menu-item>
-                  <el-menu-item index="/newArrivals">Hot Style设置</el-menu-item>
+                  <el-menu-item index="/hotstyle">Hot Style设置</el-menu-item>
+                  <el-menu-item index="/newArrivals">New Arrivals设置</el-menu-item>
+                  <el-menu-item index="/loginRegerster">登录注册设置</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
               <el-submenu index="7">
+                <template slot="title">
+                  <i class="el-icon-picture-outline"></i>
+                  <span>底部管理</span>
+                </template>
+                <el-menu-item-group>
+                  <el-menu-item index="/footerShere">底部社交设置</el-menu-item>
+                  <el-menu-item index="/serveMethod">特色服务设置</el-menu-item>
+                  <el-menu-item index="/payMethod">支付方式设置</el-menu-item>
+                  <el-menu-item index="/settings">网站功能设置</el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
+              <el-submenu index="8">
                 <template slot="title">
                   <i class="el-icon-s-ticket"></i>
                   <span>运营活动</span>
