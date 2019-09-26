@@ -107,7 +107,7 @@
                             <el-radio v-model="skuform.inventory_allow_update" :label='0'>否</el-radio>
                         </el-form-item>
                         <el-form-item label="属性和属性值：">
-                            <el-checkbox-group v-model="checkList">
+                            <el-checkbox-group v-model="checkList" @change="changeCheckList()">
                                 <div v-for="(item,index) in attrEditionList" :key="index">
                                     <div><el-checkbox :label="item.id">{{item.attr_name}}</el-checkbox></div>
                                     <div class="radioGroup" v-if="checkList.find(n =>n == Number(item.id))">
@@ -197,14 +197,17 @@ export default {
                     }
                     this.skuform.thumbnail_images = urlList
                     this.defaultClassII(this.skuform.first_cate_id)
-                    var attr = JSON.parse(res.data.data.sku_attrs)
-                    //复选框绑定默认值
-                    var attrDefaultCheack = []
-                    for(var i=0;i<attr.length;i++){
-                        var num = Number(attr[i].id)
-                        attrDefaultCheack.push(num)
+                    var attr = []
+                    if(res.data.data.sku_attrs != ''){
+                        attr = JSON.parse(res.data.data.sku_attrs)
+                        //复选框绑定默认值
+                        var attrDefaultCheack = []
+                        for(var i=0;i<attr.length;i++){
+                            var num = Number(attr[i].id)
+                            attrDefaultCheack.push(num)
+                        }
+                        this.checkList = attrDefaultCheack
                     }
-                    this.checkList = attrDefaultCheack
                     //单选框绑定默认值
                     if(this.attrEditionList.length!=0){
                         for(var i=0;i<this.attrEditionList.length;i++){
@@ -290,7 +293,6 @@ export default {
                 if(this.skuform.second_cate_id!=0){
                     this.changeClassII(this.skuform.second_cate_id)
                 }else{
-                    console.log(this.secondList)
                     this.skuform.second_cate_id = this.secondList[0].id
                 }
             })
@@ -327,17 +329,24 @@ export default {
                 }
             })
         },
+        //改变复选框选中值
+        changeCheckList(){
+            // console.log(this.checkList,'0000')
+            // console.log(this.attrEditionList,'1111')
+        },
         //新建sku提交
         addSkuSub(){
             var attrs = []
             var attrs1 = []
             //获取选中的属性和属性值
+            console.log(this.attrEditionList,'this.attrEditionList')
             for(var i=0;i<this.attrEditionList.length;i++){
-                if(this.attrEditionList[i].radioId != ""){
+                if(this.checkList.find(n =>n == this.attrEditionList[i].id) && this.attrEditionList[i].radioId != ""){
                     var obj = this.attrEditionList[i]
                     attrs.push(obj)
                 }
             }
+            console.log(attrs,'attrs')
             //处理属性和属性值数据结构
             for(var m = 0;m<attrs.length;m++){
                 var obj1 = attrs[m].values.find(n=>n.id == attrs[m].radioId)
@@ -360,6 +369,7 @@ export default {
             //请求接口
             if(!this.editSkuId){
                 //请求新增接口
+                console.log(myForm,'add')
                 addNewSku(myForm).then((res)=>{
                     if(res.data.code == 200){
                         this.$message({
@@ -378,6 +388,7 @@ export default {
                 for(var key in myForm){
                     delete myForm['sku_attrs'];
                 }
+                console.log(myForm,'edit')
                 //请求修改接口
                 this.$axios.put(`backend/product/sku/${this.editSkuId}`,qs.stringify(myForm)).then((res)=>{
                     if(res.data.code == 200){
