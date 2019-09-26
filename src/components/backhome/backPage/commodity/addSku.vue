@@ -110,10 +110,10 @@
                         <el-form-item label="属性和属性值：">
                             <el-checkbox-group v-model="checkList" @change="changeCheckList()">
                                 <div v-for="(item,index) in attrEditionList" :key="index">
-                                    <div><el-checkbox :label="item.id">{{item.attr_name}}</el-checkbox></div>
+                                    <div><el-checkbox :label="item.id" :disabled="disabled">{{item.attr_name}}</el-checkbox></div>
                                     <div class="radioGroup" v-if="checkList.find(n =>n == Number(item.id))">
                                         <el-radio-group v-model="item.radioId">
-                                            <el-radio v-for="(item1,index1) in item.values" :key="index1" :label="item1.id">{{item1.attr_value}}</el-radio>
+                                            <el-radio v-for="(item1,index1) in item.values" :key="index1" :label="item1.id" :disabled="disabled">{{item1.attr_value}}</el-radio>
                                         </el-radio-group>
                                     </div>
                                 </div>
@@ -147,6 +147,8 @@ export default {
     data(){
         return{
             loading:false,
+            productId:0,//不为0时，属性不可编辑
+            disabled:false,//属性是否禁用
             editSkuId:'',//编辑用skuID
             //sku远程搜索
             restaurants: [],
@@ -187,6 +189,10 @@ export default {
             this.loading = true
             this.$axios.get(`backend/product/sku/${this.editSkuId}`,{}).then((res)=>{
                 if(res.data.code === 200){
+                    this.productId = res.data.data.product_id
+                    if(this.productId !=0){
+                        this.disabled = true
+                    }
                     this.loading = false
                     this.skuform = res.data.data
                     this.sku_no = res.data.data.sku_no
