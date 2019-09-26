@@ -70,7 +70,7 @@
                             </el-switch>
                         </el-form-item>
                         <el-form-item label="排序：" prop="sort">
-                            <el-input v-model="form.sort"></el-input>
+                            <el-input v-model="form.sort" @blur="sortTest()"></el-input>
                         </el-form-item>
                         <el-form-item label="分类属性：" v-if="form.parent_id!=0" prop="cate_attrs">
                             <el-checkbox-group
@@ -134,8 +134,27 @@ export default {
         this.getList()
     },
     methods:{
-        openList(){
-            this.expandStatus = true
+        //排序校验
+        sortTest(){
+            if(isNaN(Number(this.form.sort))){
+                this.$message({
+                    message: '排序值必须为数字',
+                    type: 'error'
+                });
+                this.form.sort = 100
+            }else if(this.form.sort>100){
+                this.$message({
+                    message: '排序值最大值为100',
+                    type: 'error'
+                });
+                this.form.sort = 100
+            }else if(this.form.sort<1){
+                this.$message({
+                    message: '排序值最小值为1',
+                    type: 'error'
+                });
+                this.form.sort = 100
+            }
         },
         //分类列表
         getList(){

@@ -27,7 +27,8 @@
                         type="datetimerange"
                         range-separator="至"
                         start-placeholder="开始下单日期"
-                        end-placeholder="结束下单日期">
+                        end-placeholder="结束下单日期"
+                        value-format="yyyy-MM-dd HH:mm:ss">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item>
@@ -36,7 +37,8 @@
                         type="datetimerange"
                         range-separator="至"
                         start-placeholder="起始付款时间"
-                        end-placeholder="结束付款时间">
+                        end-placeholder="结束付款时间"
+                        value-format="yyyy-MM-dd HH:mm:ss">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item>
@@ -67,12 +69,13 @@
                 </el-table-column>
             </el-table>
         </div>
-        <div class="foot">
+        <div class="pagination">
             <el-pagination
                 background
                 layout="prev, pager, next"
+                :page-size="pageSize"
                 :total="total"
-                :page-size="20">
+                @current-change="changeOrderPage">
             </el-pagination>
         </div>
         <!-- 编辑订单状态弹框-->
@@ -115,9 +118,11 @@ export default {
     data(){
        return{
             total:0,
+            pageSize:20,
             ordertime:[],//下单时间
             Paymenttime:[],//付款完成时间
             orderform:{
+               page:1,
                orders_status:'',//订单状态
                payment_method:'',//支付方式
                orders_number:'',//订单号
@@ -165,21 +170,34 @@ export default {
     methods:{
         //订单列表
         getorderList(){
-            if(this.ordertime.length!=0){
-                this.orderform.created_at_start = this.ordertime[0]
-                this.orderform.created_at_stop = this.ordertime[1]
-            }
-            if(this.Paymenttime.length!=0){
-                this.orderform.pay_success_time_start = this.Paymenttime[0]
-                this.orderform.pay_success_time_stop = this.Paymenttime[1]
-            }
             orderList(this.orderform).then((res)=>{
                 this.orderTable = res.data.data.data
                 this.total = res.data.data.total
             })
         },
+        //分页器
+        changeOrderPage(val){
+            this.orderform.page = val
+            this.getorderList()
+        },
         //查询列表
         onSubmit(){
+            console.log(this.Paymenttime)
+            console.log(this.ordertime)
+            if(this.ordertime!=null && this.ordertime.length!=0){
+                this.orderform.created_at_start = this.ordertime[0]
+                this.orderform.created_at_stop = this.ordertime[1]
+            }else{
+                this.orderform.created_at_start = ''
+                this.orderform.created_at_stop = ''
+            }
+            if(this.Paymenttime!=null && this.Paymenttime.length!=0){
+                this.orderform.pay_success_time_start = this.Paymenttime[0]
+                this.orderform.pay_success_time_stop = this.Paymenttime[1]
+            }else{
+                this.orderform.pay_success_time_start = ''
+                this.orderform.pay_success_time_stop = ''
+            }
             this.getorderList()
         },
         //订单详情

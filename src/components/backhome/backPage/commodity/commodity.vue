@@ -15,8 +15,8 @@
                         </el-form-item>
                         <el-form-item label="商品状态：">
                             <el-select v-model="skusearchForm.sku_status" clearable>
-                                <el-option label="已上架" :value='1'></el-option>
-                                <el-option label="已下架" :value='0'></el-option>
+                                <el-option label="正常销售" :value='1'></el-option>
+                                <el-option label="下架" :value='0'></el-option>
                                 <el-option label="补货中" :value='2'></el-option>
                             </el-select>
                         </el-form-item>
@@ -190,20 +190,7 @@ export default {
             spuSelection:'',//已选择spuid
         }
     },
-    created(){
-        //tab切换显示页面优化
-        var active_name = localStorage.getItem('commodityName')
-        if(active_name){
-            this.activeName = active_name
-        }else{
-            this.activeName = 'first'
-            this.getskuList()
-        }
-        if(this.activeName == "second"){
-            this.getspuList()
-        }else{
-            this.getskuList()
-        }
+    created(){       
         this.getFirstList()
         this.getClassII()      
     },
@@ -230,7 +217,22 @@ export default {
         //获取一级分类列表
         getFirstList(){
             categoryList({first:1}).then((res)=>{
-                this.firstList = res.data.data
+                if(res.data.code == 200){
+                    this.firstList = res.data.data
+                    //tab切换显示页面优化
+                    var active_name = localStorage.getItem('commodityName')
+                    if(active_name){
+                        this.activeName = active_name
+                    }else{
+                        this.activeName = 'first'
+                        this.getskuList()
+                    }
+                    if(this.activeName == "second"){
+                        this.getspuList()
+                    }else{
+                        this.getskuList()
+                    }
+                }
             })
         },
         //获取二级类目

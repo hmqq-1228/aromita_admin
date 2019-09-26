@@ -9,7 +9,7 @@
                     <el-input v-model="coupon_name" placeholder="请输入优惠券名称"></el-input>
                 </el-form-item>
                 <el-form-item label="发放总量（张）：">
-                    <el-input v-model="coupon_number"></el-input> <b>*所输入的数量必须为3的倍数</b>
+                    <el-input v-model="coupon_number" @blur="isTrue()"></el-input> <b>*所输入的数量必须为3的倍数</b>
                 </el-form-item>
                 <el-form-item label="创建类型：">
                     <el-select v-model="coupon_type" placeholder="创建类型">
@@ -93,7 +93,7 @@ export default {
         return{
             coupon_name:'',//优惠券名称
             coupon_type:'N',//创建类型
-            coupon_number:0,//优惠券发放总量
+            coupon_number:3,//优惠券发放总量
             coupon_minimum_order:'',//满足最小金额
             coupon_amount:'',//优惠券金额
             coupon_expire_date:'',//优惠券有效时长
@@ -117,6 +117,18 @@ export default {
 
     },
     methods:{
+        //判断是否是3的倍数
+        isTrue(){
+            if(this.coupon_number % 3 == 0){
+                console.log(111)
+            }else{
+                this.$message({
+                    message:'请输入3的倍数',
+                    type: 'error'
+                });
+                this.coupon_number = 3
+            };
+        },
         //创建优惠券
         createCoupon(){
             let pre = {}

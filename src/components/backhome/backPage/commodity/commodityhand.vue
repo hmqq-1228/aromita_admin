@@ -177,19 +177,6 @@ export default {
         }
     },
     created(){
-        //tab切换显示页面优化
-        var active_name = localStorage.getItem('commodityName')
-        if(active_name){
-            this.activeName = active_name
-        }else{
-            this.activeName = 'first'
-            this.getskuList()
-        }
-        if(this.activeName == "second"){
-            this.getspuList()
-        }else{
-            this.getskuList()
-        }
         this.getFirstList()
         this.getClassII()      
     },
@@ -216,7 +203,23 @@ export default {
         //获取一级分类列表
         getFirstList(){
             categoryList({first:1}).then((res)=>{
-                this.firstList = res.data.data
+                //tab切换显示页面优化
+                if(res.data.code == 200){
+                    this.firstList = res.data.data
+                    //tab切换显示页面优化
+                    var active_name = localStorage.getItem('commodityName')
+                    if(active_name){
+                        this.activeName = active_name
+                    }else{
+                        this.activeName = 'first'
+                        this.getskuList()
+                    }
+                    if(this.activeName == "second"){
+                        this.getspuList()
+                    }else{
+                        this.getskuList()
+                    }
+                }
             })
         },
         //获取二级类目
