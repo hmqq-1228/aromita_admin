@@ -79,7 +79,8 @@
                             </el-select>
                         </el-form-item>
                         <el-form-item label="二级类别名称：">
-                            <el-select v-model="skuform.second_cate_id" filterable placeholder="请输入二级类目" @change="changeClassII(skuform.second_cate_id)">
+                            <span v-if="this.secondList.length == 0">该一级类目下无二级类目，请先创建二级类目</span>
+                            <el-select v-else v-model="skuform.second_cate_id" filterable placeholder="请输入二级类目" @change="changeClassII(skuform.second_cate_id)">
                                 <el-option v-for="(item,index) in secondList" :key="index" :label="item.cate_name" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
@@ -290,10 +291,12 @@ export default {
                 if(res.data.data){
                     this.secondList = res.data.data
                 }
-                if(this.skuform.second_cate_id!=0){
-                    this.changeClassII(this.skuform.second_cate_id)
-                }else{
-                    this.skuform.second_cate_id = this.secondList[0].id
+                if(this.secondList.length!=0){
+                    if(this.skuform.second_cate_id!=0){
+                        this.changeClassII(this.skuform.second_cate_id)
+                    }else{
+                        this.skuform.second_cate_id = this.secondList[0].id
+                    }
                 }
             })
         },
@@ -301,7 +304,9 @@ export default {
         changeClassI(par_id){
             Classlinkage({parent_id:par_id}).then((res)=>{
                 this.secondList = res.data.data
-                this.skuform.second_cate_id = this.secondList[0].id
+                if(this.secondList.length!=0){
+                    this.skuform.second_cate_id = this.secondList[0].id
+                }
             })
         },
         //选择二级类目,获取该类目下的属性
@@ -369,21 +374,29 @@ export default {
             //请求接口
             if(!this.editSkuId){
                 //请求新增接口
-                console.log(myForm,'add')
-                addNewSku(myForm).then((res)=>{
-                    if(res.data.code == 200){
-                        this.$message({
-                            message: '创建成功',
-                            type: 'success'
-                        });
-                        this.$router.go(-1)
-                    }else{
-                        this.$message({
-                            message:res.data.msg,
-                            type: 'error'
-                        });
-                    }
-                })
+                console.log(myForm.second_cate_id,'000000')
+                if(myForm.second_cate_id == 0){
+                    this.$message({
+                        message: '二级分类必填',
+                        type: 'warning'
+                    });
+                    return false
+                }else{
+                    addNewSku(myForm).then((res)=>{
+                        if(res.data.code == 200){
+                            this.$message({
+                                message: '创建成功',
+                                type: 'success'
+                            });
+                            this.$router.go(-1)
+                        }else{
+                            this.$message({
+                                message:res.data.msg,
+                                type: 'error'
+                            });
+                        }
+                    })
+                }
             }else{
                 for(var key in myForm){
                     delete myForm['sku_attrs'];
