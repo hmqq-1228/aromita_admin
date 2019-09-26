@@ -15,8 +15,9 @@
                         </el-form-item>
                         <el-form-item label="商品状态：">
                             <el-select v-model="skusearchForm.sku_status" clearable>
-                                <el-option label="已上架" :value='1'></el-option>
-                                <el-option label="已下架" :value='0'></el-option>
+                                <el-option label="正常销售" :value='1'></el-option>
+                                <el-option label="下架" :value='0'></el-option>
+                                <el-option label="补货中" :value='2'></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item>
@@ -121,7 +122,7 @@
                         <el-table-column prop="product_no" label="SPU编号"></el-table-column>
                         <el-table-column label="SPU属性">
                             <template slot-scope="scope">
-                                <p v-for="(item,key) in scope.row.attrs" :key="key">{{key}}:{{item}}</p>
+                                <span style="margin:0 10px" v-for="(item,key) in scope.row.attrs" :key="key">{{key}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column prop="date" label="操作">
