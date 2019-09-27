@@ -375,11 +375,16 @@ export default {
             }
             myForm.thumbnail_images = imgattr
             //添加属性数据
-            this.$set(myForm,'attrs',attrs1)
+            if(attrs1.length == 0){
+                this.$set(myForm,'attrs','')
+            }else{
+                this.$set(myForm,'attrs',attrs1)
+            }
             this.$set(myForm,'sku_no',this.sku_no)
             //请求接口
             if(!this.editSkuId){
                 //请求新增接口
+                console.log(myForm)
                 console.log(myForm.second_cate_id,'000000')
                 if(myForm.second_cate_id == 0){
                     this.$message({

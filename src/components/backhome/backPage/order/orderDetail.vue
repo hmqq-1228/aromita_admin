@@ -94,7 +94,12 @@
                 </el-table-column>
             </el-table>
             <div class="orders_total">
-                <p v-for="(item,key,index) in orders_total" :key="index">{{key}}:{{item}}</p>
+                <p><span>Subtotal:</span> {{orders_total['Subtotal']}} </p>
+                <p v-if="orders_total['Coupon'] !='0.00'"><span>Coupon:</span> {{orders_total['Coupon']}} </p>
+                <p><span>Points:</span> {{orders_total['Points']}} </p>
+                <p><span>Tax:</span> {{orders_total['Taxes_Fee']}} </p>
+                <p><span>Shipping:</span> {{orders_total['Shipping_Fee']}} </p>
+                <p><span>Grand Total:</span> {{orders_total['Grand_Total']}} </p>
             </div>
             <!-- 订单操作日志 -->
             <h4>订单操作日志</h4>
@@ -189,5 +194,8 @@ export default {
     line-height: 34px;
     color: red;
     font-size: 14px;
+}
+.orders_total p span{
+    color: #333;
 }
 </style>
