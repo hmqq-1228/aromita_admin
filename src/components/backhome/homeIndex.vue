@@ -14,8 +14,8 @@
               <el-menu-item index="index">
                 <span slot="title">Aromita 后台管理系统</span>
               </el-menu-item>
-              <div class="loginOut" @click="outLogin()">
-                <i class="el-icon-right"></i>
+              <div class="loginOut">
+                <div style="width: 40px;margin: 0 auto;" title="退出" @click="outLogin()"><i class="el-icon-right"></i></div>
               </div>
               <el-submenu index="1">
                 <template slot="title">
