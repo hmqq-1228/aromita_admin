@@ -2,7 +2,7 @@
     <div class="classification">
         <div class="heade">
             <h3>分类对应关系列表</h3>
-            <el-button type="primary" @click="addcategory()"><i class="el-icon-plus"></i> 新增对应关系 </el-button>
+            <el-button type="primary" @click="addcategory(1)"><i class="el-icon-plus"></i> 新增对应关系 </el-button>
         </div>
         <el-table :data="List" border style="width: 100%" max-height="700">
             <el-table-column prop="erp_cat_id" label="ERP分类ID"></el-table-column>
@@ -16,7 +16,7 @@
             <el-table-column prop="updated_at" label="操作时间"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button type="primary" @click="editList(scope.row.id,scope.row.erp_cat_id,scope.row.erp_cat_name,scope.row.web_sec_id)">编 辑</el-button>
+                    <el-button type="primary" @click="editList(scope.row.id,scope.row.erp_cat_id,scope.row.erp_cat_name,scope.row.web_sec_id,2)">编 辑</el-button>
                     <el-button @click="delList(scope.row.id)" type="danger">删 除</el-button>
                 </template>
             </el-table-column>
@@ -37,7 +37,8 @@
             <div class="categoryBox">
                 <el-form label-width="160px" :model="form" :rules="rules" ref="form">
                     <el-form-item label="ERP分类ID:" prop="erp_cat_id">
-                        <el-input v-model="form.erp_cat_id" disabled></el-input>
+                        <el-input v-model="form.erp_cat_id" disabled v-if="boxtype == 2"></el-input>
+                        <el-input v-model="form.erp_cat_id" v-if="boxtype == 1"></el-input>
                     </el-form-item>
                     <el-form-item label="ERP分类名称:" prop="erp_cat_name">
                         <el-input v-model="form.erp_cat_name"></el-input>
@@ -89,7 +90,8 @@ export default {
                 web_sec_id:[
                     {required: true, message: '网站二级分类必选', trigger: 'blur'}
                 ]
-            }
+            },
+            boxtype:1,//1为新增，2为编辑
         }
     },
     created(){
@@ -134,7 +136,8 @@ export default {
             })
         },
         //编辑对应关系
-        editList(id,id1,str,id2){
+        editList(id,id1,str,id2,type){
+            this.boxtype = type
             this.cat_id = id
             this.form.erp_cat_id = id1
             this.form.erp_cat_name = str
@@ -162,7 +165,8 @@ export default {
             })
         },
         //新增对应关系
-        addcategory(){
+        addcategory(type){
+            this.boxtype = type
             this.form.erp_cat_id = ''
             this.form.erp_cat_name = ''
             this.form.web_sec_id = ''
