@@ -102,7 +102,7 @@
                     </el-pagination>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="SPU管理" name="second">
+            <el-tab-pane label="待上货SPU管理" name="second">
                 <div class="skuCenter">
                     <el-form :inline="true">
                         <el-form-item>
@@ -266,7 +266,7 @@ export default {
                         var str2 = this.ClassIIList.find(n => n.id == list[i].second_cate_id)
                         var name2 = ""
                         if(str){
-                            name2= str.cate_name
+                            name2= str2.cate_name
                         }
                         this.$set(list[i],'secondName',name2)
                     }

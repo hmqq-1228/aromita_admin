@@ -1,10 +1,10 @@
 <template>
     <div class="commodity">
         <div class="heade">
-            <h3>已上货商品管理</h3>
+            <h3>已上货SPU管理</h3>
         </div>
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-            <el-tab-pane label="SKU管理" name="first">
+            <!-- <el-tab-pane label="SKU管理" name="first">
                 <div class="skuCenter">
                     <el-form :inline="true" :model="skusearchForm">
                         <el-form-item label="是否分配SPU：">
@@ -32,23 +32,12 @@
                         <el-form-item>
                             <el-button type="primary" @click="searchSkuList()">搜 索</el-button>
                         </el-form-item>
-                        <!-- <el-form-item>
-                            <el-button type="primary">批量新建</el-button>
-                        </el-form-item>
-                        <el-form-item>
-                            <router-link to="/addSku">
-                                <el-button type="primary">新 建</el-button>
-                            </router-link>
-                        </el-form-item> -->
                         <el-form-item v-if="this.skuStatus == 0">
                             <el-button type="warning" @click="batchUpperOrLower(1)">批量上架</el-button>
                         </el-form-item>
                         <el-form-item v-if="this.skuStatus == 1">
                             <el-button type="danger" @click="batchUpperOrLower(0)">批量下架</el-button>
                         </el-form-item>
-                        <!-- <el-form-item>
-                            <el-button type="info">库存同步(未开发)</el-button>
-                        </el-form-item> -->
                     </el-form>
                     <el-table
                         :data="skuTable"
@@ -99,7 +88,7 @@
                         @current-change="changeSkuPage">
                     </el-pagination>
                 </div>
-            </el-tab-pane>
+            </el-tab-pane> -->
             <el-tab-pane label="SPU管理" name="second">
                 <div class="skuCenter">
                     <el-form :inline="true">
@@ -158,7 +147,7 @@ export default {
             skutotal:0,//总量
             spupage:1,
             sputotal:0,//总量
-            activeName:'',
+            activeName:'second',
             skuTable:[],//sku列表
             skusearchForm:{//sku列表搜索条件
                 page:1,
@@ -207,19 +196,20 @@ export default {
                 //tab切换显示页面优化
                 if(res.data.code == 200){
                     this.firstList = res.data.data
+                    this.getspuList()
                     //tab切换显示页面优化
-                    var active_name = localStorage.getItem('commodityName')
-                    if(active_name){
-                        this.activeName = active_name
-                    }else{
-                        this.activeName = 'first'
-                        this.getskuList()
-                    }
-                    if(this.activeName == "second"){
-                        this.getspuList()
-                    }else{
-                        this.getskuList()
-                    }
+                    // var active_name = localStorage.getItem('commodityName')
+                    // if(active_name){
+                    //     this.activeName = active_name
+                    // }else{
+                    //     this.activeName = 'first'
+                    //     this.getskuList()
+                    // }
+                    // if(this.activeName == "second"){
+                        
+                    // }else{
+                    //     this.getskuList()
+                    // }
                 }
             })
         },

@@ -47,7 +47,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="list">
+                <div class="list" v-if="orders[0].payment_method != 'paypal'">
                     <h4>Billing Address</h4>
                     <div class="detail" v-if="orders[0]">
                         <h5>{{orders[0].billing_name}}</h5>
@@ -89,17 +89,17 @@
                     label="Total"
                     width="260">
                     <template slot-scope="scope">
-                        <h4>{{(scope.row.final_price*scope.row.products_quantity).toFixed(2)}}</h4>
+                        <h4>${{(scope.row.final_price*scope.row.products_quantity).toFixed(2)}}</h4>
                     </template>
                 </el-table-column>
             </el-table>
             <div class="orders_total">
-                <p><span>Subtotal:</span> {{orders_total['Subtotal']}} </p>
-                <p v-if="orders_total['Coupon'] !='0.00'"><span>Coupon:</span> {{orders_total['Coupon']}} </p>
-                <p><span>Points:</span> {{orders_total['Points']}} </p>
-                <p><span>Tax:</span> {{orders_total['Taxes_Fee']}} </p>
-                <p><span>Shipping:</span> {{orders_total['Shipping_Fee']}} </p>
-                <p><span>Grand Total:</span> {{orders_total['Grand_Total']}} </p>
+                <p><span>Subtotal:</span> ${{orders_total['Subtotal']}} </p>
+                <p v-if="orders_total['Coupon'] !='0.00'"><span>Coupon:</span> ${{orders_total['Coupon']}} </p>
+                <p v-if="orders_total['PointsToMoney'] !='0.00'"><span>Points:</span> ${{orders_total['PointsToMoney']}} </p>
+                <p><span>Tax:</span> ${{orders_total['Taxes_Fee']}} </p>
+                <p><span>Shipping:</span> ${{orders_total['Shipping_Fee']}} </p>
+                <p><span>Grand Total:</span> ${{orders_total['Grand_Total']}} </p>
             </div>
             <!-- 订单操作日志 -->
             <h4>订单操作日志</h4>
@@ -166,7 +166,7 @@ export default {
     display: flex;
 }
 .orderAddress .list{
-    flex: 1;
+    width: 500px;
     border: 1px solid #e5e5e5;
     min-height: 240px;
     padding:10px;

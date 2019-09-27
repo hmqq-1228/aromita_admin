@@ -9,12 +9,12 @@
                     <el-input v-model="coupon_name" placeholder="请输入优惠券名称"></el-input>
                 </el-form-item>
                 <el-form-item label="发放总量（张）：">
-                    <el-input v-model="coupon_number" @blur="isTrue()"></el-input> <b>*所输入的数量必须为3的倍数</b>
+                    <el-input v-model="coupon_number" @blur="isTrue()"></el-input> <b v-if="coupon_type=='N'">*所输入的数量必须为3的倍数</b>
                 </el-form-item>
                 <el-form-item label="创建类型：">
                     <el-select v-model="coupon_type" placeholder="创建类型">
                         <el-option label="节日券" value="F"></el-option>
-                        <el-option label="周年庆" value="B"></el-option>
+                        <!-- <el-option label="周年庆" value="B"></el-option> -->
                         <el-option label="注册券" value="N"></el-option>
                     </el-select>
                     <span v-if="coupon_type=='N'">注：3 张</span>
@@ -31,7 +31,7 @@
                 </el-form-item>
                 <el-form-item label="优惠券有效时间：">
                     <div v-if="coupon_type=='N'">
-                        <span>  领券当日起  </span><el-input v-model="coupon_expire_date"></el-input>  天
+                        <span>  领券当日起  </span><el-input v-model="coupon_expire_date" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"></el-input>  天
                     </div>
                     <div v-else>
                         <el-date-picker
@@ -93,7 +93,7 @@ export default {
         return{
             coupon_name:'',//优惠券名称
             coupon_type:'N',//创建类型
-            coupon_number:3,//优惠券发放总量
+            coupon_number:1,//优惠券发放总量
             coupon_minimum_order:'',//满足最小金额
             coupon_amount:'',//优惠券金额
             coupon_expire_date:'',//优惠券有效时长
@@ -129,17 +129,23 @@ export default {
 
     },
     methods:{
-        //判断是否是3的倍数
+        //判断是否是3的倍数 注册券要求3的倍数，其他券不做要求
         isTrue(){
-            if(this.coupon_number % 3 == 0){
-                console.log(111)
-            }else{
+            if(this.coupon_number<1){
                 this.$message({
-                    message:'请输入3的倍数',
+                    message:'发放总数最少一张',
                     type: 'error'
                 });
-                this.coupon_number = 3
-            };
+                this.coupon_number = 1
+            }else{
+                if(this.coupon_type=='N' && this.coupon_number % 3 != 0){
+                    this.$message({
+                        message:'注册券要求发放优惠券总数为3的倍数',
+                        type: 'error'
+                    });
+                    this.coupon_number = 3
+                }
+            }
         },
         //创建优惠券
         createCoupon(){

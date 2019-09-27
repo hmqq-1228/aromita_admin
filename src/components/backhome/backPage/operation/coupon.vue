@@ -18,7 +18,7 @@
                 <el-form-item>
                     <el-select v-model="coupon_type" placeholder="创建类型" clearable>
                         <el-option label="节日券" value="F"></el-option>
-                        <el-option label="周年庆" value="B"></el-option>
+                        <!-- <el-option label="周年庆" value="B"></el-option> -->
                         <el-option label="注册券" value="N"></el-option>
                     </el-select>
                 </el-form-item>
@@ -31,7 +31,7 @@
                     </router-link>
                 </el-form-item>
             </el-form>
-            <el-table :data="couponTable">
+            <el-table :data="couponTable" max-height="740px">
                 <el-table-column prop="coupon_name" label="优惠券名称"></el-table-column>
                 <el-table-column label="创建类型">
                     <template slot-scope="scope">
@@ -83,7 +83,7 @@ export default {
     data(){
         return{
             total:0,
-            pageSize:50,
+            pageSize:20,
             couponTable:[],//优惠券列表
             coupon_name:'',//优惠券名称
             coupon_status:'',//优惠券状态
@@ -114,6 +114,7 @@ export default {
             }
             couponList(pre).then((res)=>{
                 this.couponTable = res.data.data.data
+                this.total = res.data.data.total
             })
         },
         //搜索优惠券列表
@@ -168,8 +169,9 @@ export default {
             
         },
         //分页器
-        changePage(){
-            
+        changePage(val){
+            this.page = val
+            this.getList()
         }
     }
 }

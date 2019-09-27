@@ -46,9 +46,8 @@
                 </el-table-column>
                 <el-table-column prop="inventory" label="库存"></el-table-column>
             </el-table>
-
             <h4>SPU描述</h4>
-            <div v-if="detail.detail!=null">{{detail.detail.product_detail}}</div>
+            <div v-if="detail.detail!=null" v-html="detail.detail.product_detail"></div>
         </div>
     </div>
 </template>
