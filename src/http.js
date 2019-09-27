@@ -1,5 +1,7 @@
 import axios from "axios";
 import qs from "qs";
+import Router from '@/router/index'
+
 
 if(process.env.API_ROOT){
     axios.defaults.baseURL = process.env.API_ROOT;
@@ -18,9 +20,13 @@ axios.interceptors.request.use(config => {
 
 // response全局拦截
 axios.interceptors.response.use(response => {
+  if (response.data.code === 30001) {
+    Router.push('/')
+  } else {
     return response
+  }
 }, error => {
-    return Promise.reject(error.response)
+  return Promise.reject(error.response)
 });
 
 export const post = (url, params, config = {}) => {
@@ -37,7 +43,7 @@ export const put = (url, params, config = {}) => {
         url: url,
         data: qs.stringify(params)
     })
-} 
+}
 
 export const get = (url,params,config = {}) => {
     return axios({

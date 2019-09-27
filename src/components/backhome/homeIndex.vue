@@ -14,6 +14,9 @@
               <el-menu-item index="index">
                 <span slot="title">Aromita 后台管理系统</span>
               </el-menu-item>
+              <div class="loginOut" @click="outLogin()">
+                <i class="el-icon-right"></i>
+              </div>
               <el-submenu index="1">
                 <template slot="title">
                   <i class="el-icon-s-grid"></i>
@@ -79,7 +82,7 @@
               </el-submenu>
               <el-submenu index="7">
                 <template slot="title">
-                  <i class="el-icon-picture-outline"></i>
+                  <i class="el-icon-setting"></i>
                   <span>底部管理</span>
                 </template>
                 <el-menu-item-group>
@@ -125,6 +128,13 @@ export default {
     this.getScreenHeight()
   },
   methods:{
+    outLogin () {
+      this.$axios.post('backend/admin/loginout',{}).then((res)=>{
+        if (res.data.code === 200) {
+          this.$router.push('/')
+        }
+      })
+    },
     getScreenHeight:function () {
       this.height = $(window).height() - 40
       var path = this.$route.path.split('/')
@@ -139,6 +149,16 @@ export default {
 <style>
 .el-menu{
   border-right: 0!important;
+}
+.loginOut{
+  text-align: center;
+  color: #fff;
+  height: 40px;
+  cursor: pointer;
+  font-size: 18px;
+}
+.loginOut:hover{
+  color: #ffd04b;
 }
 .el-submenu .el-menu-item{
   min-width: 180px!important;

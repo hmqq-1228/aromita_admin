@@ -37,6 +37,15 @@ export default {
       }
     }
   },
+  created () {
+    var that = this;
+    document.onkeydown = function () {
+      var key = window.event.keyCode;
+      if (key === 13) {
+        that.submitForm('formLabelAlign')
+      }
+    }
+  },
   methods:{
     submitForm(formName){
       var pre = {

@@ -2,7 +2,7 @@
   <div class="banner">
     <div class="header">
       <div>社交平台(最多添加6个)</div>
-      <el-button type="primary" icon="el-icon-plus" v-if="bannerList.length<6" @click="addNew()">新增</el-button>
+      <el-button type="primary" icon="el-icon-plus" v-if="bannerList.length<4" @click="addNew()">新增</el-button>
     </div>
     <el-table
       :data="bannerList"
@@ -31,7 +31,7 @@
         <template slot-scope="scope">
           <el-button size="mini" @click="toBannerDetail(scope.row.id)">详情</el-button>
           <el-button size="mini" type="primary" @click="bannerEdit(scope.row.id)">编辑</el-button>
-          <el-button size="mini" type="danger" v-if="bannerList.length>4" @click="delItem(scope.row.id)">删除</el-button>
+          <el-button size="mini" type="danger" v-if="bannerList.length>2" @click="delItem(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

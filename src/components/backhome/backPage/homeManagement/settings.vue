@@ -64,9 +64,9 @@
           <el-form-item label="列数" prop="column">
             <el-select v-model="ruleForm.column" placeholder="请选择功能列数" style="width: 300px;">
               <el-option label="第一列" value="1"></el-option>
-              <el-option label="第二例" value="2"></el-option>
+              <el-option label="第二列" value="2"></el-option>
               <el-option label="第三列" value="3"></el-option>
-              <el-option label="第四例" value="4"></el-option>
+              <el-option label="第四列" value="4"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="是否为主项" prop="isMain">
@@ -206,6 +206,7 @@
         }
         addNewSetting(obj).then((res)=>{
           if (res.data.code === 200) {
+            this.drawer = false
             this.$message.success('新建成功！')
             this.shereToolsListFuc()
           }else {

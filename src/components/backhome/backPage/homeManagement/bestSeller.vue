@@ -197,6 +197,7 @@
         }
         addNewProduct(obj).then((res)=>{
           if (res.data.code === 200) {
+            this.drawer = false
             this.$message.success('新建成功！')
             this.getBannerListFuc()
             // this.drawer = false
