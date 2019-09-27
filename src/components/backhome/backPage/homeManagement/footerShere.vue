@@ -2,7 +2,7 @@
   <div class="banner">
     <div class="header">
       <div>社交平台(最多添加6个)</div>
-      <el-button type="primary" icon="el-icon-plus" v-if="bannerList.length<4" @click="addNew()">新增</el-button>
+      <el-button type="primary" icon="el-icon-plus" v-if="bannerList.length<6" @click="addNew()">新增</el-button>
     </div>
     <el-table
       :data="bannerList"
@@ -181,7 +181,6 @@
       addNew () {
         this.drawer = true
         this.isEdit = false
-        this.$refs['ruleForm'].resetFields();
         this.bntStr = '立即创建'
         this.bannerTitle = '新建社交平台'
       },
@@ -197,6 +196,7 @@
             this.drawer = false
             this.$message.success('新建成功！')
             this.getBannerListFuc()
+            this.$refs['ruleForm'].resetFields();
           } else {
             this.$message.warning(res.data.msg)
           }
@@ -336,6 +336,7 @@
             that.drawer = false
             that.getBannerListFuc()
             that.$message.success('修改成功！')
+            this.$refs['ruleForm'].resetFields();
           } else {
             that.$message.warning(res.data.msg)
           }

@@ -183,7 +183,6 @@
         this.isEdit = false
         this.bntStr = '立即创建'
         this.bannerTitle = '添加服务类型'
-        this.$refs['ruleForm'].resetFields();
       },
       addNewBanner () {
         var obj = {
@@ -197,6 +196,7 @@
             this.drawer = false
             this.$message.success('新建成功！')
             this.getBannerListFuc()
+            this.$refs['ruleForm'].resetFields();
           }else {
             this.$message.warning(res.data.msg)
           }
@@ -221,7 +221,6 @@
       },
       handleClose(){
         this.drawer = false
-        this.drawerDetail = false
         this.$refs['ruleForm'].resetFields();
       },
       handleClose2(){
@@ -336,6 +335,7 @@
             that.drawer = false
             that.getBannerListFuc()
             that.$message.success('修改成功！')
+            this.$refs['ruleForm'].resetFields();
           } else {
             that.$message.warning(res.data.msg)
           }

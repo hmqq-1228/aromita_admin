@@ -183,7 +183,6 @@
         this.isEdit = false
         this.bntStr = '立即创建'
         this.bannerTitle = '添加登录注册图'
-        this.$refs['ruleForm'].resetFields();
       },
       addNewFuc () {
         var obj = {
@@ -197,6 +196,7 @@
             this.drawer = false
             this.$message.success('新建成功！')
             this.getBannerListFuc()
+            this.$refs['ruleForm'].resetFields();
           } else {
             this.$message.warning(res.data.msg)
           }
@@ -336,6 +336,7 @@
             that.drawer = false
             that.getBannerListFuc()
             that.$message.success('修改成功！')
+            this.$refs['ruleForm'].resetFields();
           } else {
             that.$message.warning(res.data.msg)
           }

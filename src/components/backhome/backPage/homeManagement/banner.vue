@@ -182,7 +182,6 @@ export default {
       this.drawer = true
       this.isEdit = false
       this.bntStr = '立即创建'
-      this.$refs['ruleForm'].resetFields();
       this.bannerTitle = '新建Banner'
     },
     addNewBan () {
@@ -197,6 +196,7 @@ export default {
           this.$message.success('新建成功！')
           this.drawer = false
           this.getBannerListFuc()
+          this.$refs['ruleForm'].resetFields();
         }
       })
     },
@@ -334,6 +334,7 @@ export default {
           that.drawer = false
           that.getBannerListFuc()
           that.$message.success('修改成功！')
+          this.$refs['ruleForm'].resetFields();
         } else {
           that.$message.warning(res.data.msg)
         }
