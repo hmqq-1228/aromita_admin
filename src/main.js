@@ -8,7 +8,11 @@ import ElementUI from 'element-ui'
 import './assets/theme/index.css'
 import $ from 'jquery'
 import qs from 'qs';
-
+import VueQuillEditor from 'vue-quill-editor';
+import 'quill/dist/quill.core.css';
+import 'quill/dist/quill.snow.css';
+import 'quill/dist/quill.bubble.css';
+Vue.use(VueQuillEditor)
 
 Vue.prototype.$qs = qs
 Vue.use(ElementUI, { size: 'small', zIndex: 3000 });

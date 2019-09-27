@@ -37,7 +37,7 @@
             <div class="categoryBox">
                 <el-form label-width="160px" :model="form" :rules="rules" ref="form">
                     <el-form-item label="ERP分类ID:" prop="erp_cat_id">
-                        <el-input v-model="form.erp_cat_id"></el-input>
+                        <el-input v-model="form.erp_cat_id" disabled></el-input>
                     </el-form-item>
                     <el-form-item label="ERP分类名称:" prop="erp_cat_name">
                         <el-input v-model="form.erp_cat_name"></el-input>

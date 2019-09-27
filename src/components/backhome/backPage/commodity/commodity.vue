@@ -102,7 +102,7 @@
                     </el-pagination>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="SPU管理" name="second">
+            <el-tab-pane label="待上货SPU管理" name="second">
                 <div class="skuCenter">
                     <el-form :inline="true">
                         <el-form-item>
