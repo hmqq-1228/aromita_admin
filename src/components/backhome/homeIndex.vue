@@ -72,8 +72,8 @@
                   <el-menu-item index="/collections">Collections主图</el-menu-item>
                   <el-menu-item index="/collections2">Collections副图</el-menu-item>
                   <el-menu-item index="/bestSeller">Best Seller设置</el-menu-item>
-                  <el-menu-item index="/hotstyle">Hot Style设置</el-menu-item>
                   <el-menu-item index="/newArrivals">New Arrivals设置</el-menu-item>
+                  <el-menu-item index="/hotstyle">Hot Style设置</el-menu-item>
                   <el-menu-item index="/loginRegerster">登录注册设置</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>

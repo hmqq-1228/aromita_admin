@@ -31,7 +31,7 @@
         <template slot-scope="scope">
           <el-button size="mini" @click="toBannerDetail(scope.row.id)">详情</el-button>
           <el-button size="mini" type="primary" @click="bannerEdit(scope.row.id)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="delItem(scope.row.id)">删除</el-button>
+          <el-button size="mini" type="danger" v-if="bannerList.length>2" @click="delItem(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

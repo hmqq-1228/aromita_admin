@@ -31,7 +31,7 @@
         <template slot-scope="scope">
           <el-button size="mini" @click="toBannerDetail(scope.row.id)">详情</el-button>
           <el-button size="mini" type="primary" @click="bannerEdit(scope.row.id)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="delItem(scope.row.id)">删除</el-button>
+          <!--<el-button size="mini" type="danger" @click="delItem(scope.row.id)">删除</el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -63,7 +63,7 @@
               <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
             </el-upload>
-            <div class="tip"><i class="el-icon-warning-outline"></i> 请上传不超过500KB的1440*500尺寸的PNG、JPG、JPEG格式图片!</div>
+            <div class="tip"><i class="el-icon-warning-outline"></i> 请上传不超过500KB的950*300尺寸的PNG、JPG、JPEG格式图片!</div>
           </el-form-item>
           <el-form-item label="图片链接" prop="PicUrl">
             <el-input placeholder="请输入正确的网址" v-model="ruleForm.PicUrl">
