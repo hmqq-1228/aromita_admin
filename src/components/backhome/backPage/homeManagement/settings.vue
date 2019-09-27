@@ -7,6 +7,7 @@
     <el-table
       :data="bannerList"
       border
+      :cell-class-name="tableRowClassName"
       style="width: 100%">
       <el-table-column
         prop="id"
@@ -168,6 +169,13 @@
       this.shereToolsListFuc()
     },
     methods:{
+      tableRowClassName({row, rowIndex}) {
+        // console.log('kk', row, rowIndex)
+        if (row.is_top === 20) {
+          return 'warning-row';
+        }
+        return '';
+      },
       // 获取banner列表
       shereToolsListFuc () {
         shereTools ().then((res)=>{
@@ -187,7 +195,7 @@
         this.isEdit = false
         this.bntStr = '立即创建'
         this.bannerTitle = '添加功能设置'
-        // this.$refs['ruleForm'].resetFields();
+        this.$refs['ruleForm'].resetFields();
       },
       addNewBanner () {
         var obj = {
@@ -213,7 +221,7 @@
         that.bntStr = '确定修改'
         that.bannerTitle = '修改功能设置'
         that.$axios.get(`backend/home/tools/edit/${id}`,{}).then((res)=>{
-          console.log('eeeeee', res)
+          // console.log('eeeeee', res)
           if (res.data.code === 200) {
             that.ruleForm.ID = res.data.data.id
             that.ruleForm.name = res.data.data.tool_title
@@ -237,7 +245,7 @@
       },
       // 删除
       delItem (id) {
-        this.$confirm('此操作将永久删除该图片, 是否继续?', '提示', {
+        this.$confirm('此操作将永久删除该服务, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -248,9 +256,9 @@
         });
       },
       deleteFuc (id) {
-        this.$axios.delete(`backend/home/${id}`,{}).then((res)=>{
+        this.$axios.delete(`backend/home/tools/${id}`,{}).then((res)=>{
           if (res.data.code === 200) {
-            this.getBannerListFuc()
+            this.shereToolsListFuc()
             this.$message.success('删除成功！')
           }
         })
@@ -259,7 +267,7 @@
       toBannerDetail (id) {
         this.drawerDetail = true
         this.$axios.get(`backend/home/tools/${id}`,{}).then((res)=>{
-          console.log('kkkkk', res)
+          // console.log('kkkkk', res)
           if (res.data.code === 200) {
             this.DetailId = res.data.data.id
             this.DetailName = res.data.data.tool_title
@@ -297,16 +305,17 @@
       subEditInfo () {
         var that = this
         var obj = {
-          picture_title: that.ruleForm.name,
-          picture_src: that.ruleForm.imageUrl,
-          picture_href: that.ruleForm.PicUrl
+          tool_title: that.ruleForm.name,
+          tool_href: that.ruleForm.imageUrl,
+          column: that.ruleForm.column,
+          is_top: that.ruleForm.isMain === true? 20 : 10
         }
         // console.log('iiiiii', that.ruleForm.imageUrl.split(that.url)[1])
-        this.$axios.put("backend/home/" + that.currentId,obj).then((res)=>{
+        this.$axios.put("backend/home/tools/" + that.currentId,obj).then((res)=>{
           console.log('kkkkk', res)
           if (res.data.code === 200) {
             that.drawer = false
-            that.getBannerListFuc()
+            that.shereToolsListFuc()
             that.$message.success('修改成功！')
           } else {
             that.$message.warning(res.data.msg)

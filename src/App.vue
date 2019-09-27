@@ -20,4 +20,7 @@ export default {
   .stateStyle1{
     color: #666;
   }
+  .el-table .warning-row{
+    background: #f0f9eb;
+  }
 </style>
