@@ -142,12 +142,6 @@ export default {
                     type: 'error'
                 });
                 this.form.sort = 100
-            }else if(this.form.sort>100){
-                this.$message({
-                    message: '排序值最大值为100',
-                    type: 'error'
-                });
-                this.form.sort = 100
             }else if(this.form.sort<1){
                 this.$message({
                     message: '排序值最小值为1',
