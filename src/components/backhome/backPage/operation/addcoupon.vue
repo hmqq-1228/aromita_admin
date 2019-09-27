@@ -6,13 +6,13 @@
         <div class="addcouponCenter">
             <el-form label-width="140px">
                 <el-form-item label="优惠券名称：">
-                    <el-input v-model="coupon_name" placeholder="请输入优惠券名称"></el-input>
+                    <el-input v-model="coupon_name" placeholder="请输入优惠券名称" @change="nameisTrue()"></el-input>
                 </el-form-item>
                 <el-form-item label="发放总量（张）：">
                     <el-input v-model="coupon_number" @blur="isTrue()"></el-input> <b v-if="coupon_type=='N'">*所输入的数量必须为3的倍数</b>
                 </el-form-item>
                 <el-form-item label="创建类型：">
-                    <el-select v-model="coupon_type" placeholder="创建类型">
+                    <el-select v-model="coupon_type" placeholder="创建类型" @change="changecouponType()">
                         <el-option label="节日券" value="F"></el-option>
                         <!-- <el-option label="周年庆" value="B"></el-option> -->
                         <el-option label="注册券" value="N"></el-option>
@@ -22,10 +22,10 @@
                 <el-form-item label="使用门槛：">
                     <div>
                         <span> 订单满 </span>
-                        <el-input v-model="coupon_minimum_order"></el-input>
+                        <el-input v-model="coupon_minimum_order" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"></el-input>
                         <span> 美元 ，</span>
                         <span> 减 </span>
-                        <el-input v-model="coupon_amount"></el-input>
+                        <el-input v-model="coupon_amount" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"></el-input>
                         <span> 美元 </span>
                     </div>
                 </el-form-item>
@@ -93,7 +93,7 @@ export default {
         return{
             coupon_name:'',//优惠券名称
             coupon_type:'N',//创建类型
-            coupon_number:1,//优惠券发放总量
+            coupon_number:3,//优惠券发放总量
             coupon_minimum_order:'',//满足最小金额
             coupon_amount:'',//优惠券金额
             coupon_expire_date:'',//优惠券有效时长
@@ -145,6 +145,31 @@ export default {
                     });
                     this.coupon_number = 3
                 }
+            }
+        },
+        //验证优惠券要求
+        nameisTrue(){
+            var patt1=new RegExp("^[a-zA-Z]+$");
+            if(!patt1.test(this.coupon_name)){
+                this.$message({
+                    message:'注册券名称只能是字母',
+                    type: 'error'
+                });
+                this.coupon_name = ''
+                return false
+            }else if(this.coupon_name.length>100){
+                this.$message({
+                    message:'注册券名称长度不能超过100',
+                    type: 'error'
+                });
+                this.coupon_name = ''
+            }
+        },
+        //选择优惠券类型
+        changecouponType(){
+            console.log(this.coupon_type)
+            if(this.coupon_type!='N'){
+                this.coupon_number = 1
             }
         },
         //创建优惠券
