@@ -137,13 +137,14 @@ export default {
                     message:'发放总数最少一张',
                     type: 'error'
                 });
-                //this.coupon_number = 1
+                this.couponTrue = false
+                return false
             }else if(this.coupon_type=='N' && this.coupon_number % 3 != 0){
                 this.$message({
                     message:'注册券要求发放优惠券总数为3的倍数',
                     type: 'error'
                 });
-                //this.coupon_number = 3
+                this.couponTrue = false
                 return false
             }else{
                 this.couponTrue = true
