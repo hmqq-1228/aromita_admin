@@ -4,6 +4,7 @@
             <h3>颜色图片设置管理</h3>
         </div>
         <div class="setpicCenter">
+            <p class="tip">颜色图片上传尺寸说明：宽高必须是80*80</p>
             <el-form :inline="true">
                 <el-form-item v-for="(item,key,index) in color" :label="`${item}：`" :key="index">
                     <div @click="getAttrId(key)">
@@ -89,24 +90,50 @@ export default {
         },
         //图片上传成功回调
         handleAvatarSuccess(res, file) {
-            this.images[this.attrid] = res.data
+            if(res.code == 200){
+                this.images[this.attrid] = res.data
+            }else{
+                return false
+            }
+            
         },
         //图片上传之前回调
         beforeAvatarUpload(file) {
-            const isJPG = file.type === 'image/jpeg';
-            const isLt2M = file.size / 1024 / 1024 < 2;
-            if (!isJPG) {
-            this.$message.error('上传头像图片只能是 JPG 格式!');
-            }
+            const isLt2M = file.size / 1024 < 500 ;
             if (!isLt2M) {
-            this.$message.error('上传头像图片大小不能超过 2MB!');
+                this.$message.error('颜色图片大小不能超过500kb!');
             }
-            return isJPG && isLt2M;
+            var _this = this;
+            const isSize = new Promise(function(resolve, reject) {
+                let width = 80;
+                let height = 80;
+                let _URL = window.URL || window.webkitURL;
+                let img = new Image();
+                img.onload = function() {
+                    let valid = img.width == width && img.height == height;
+                    valid ? resolve() : reject();
+                }
+                img.src = _URL.createObjectURL(file);
+            }).then(() => {
+                return file;
+            }, () => {
+                _this.$message.error('颜色图片宽高必须是80*80!');
+                return false
+            });
+
+            return isSize && isLt2M;
         }
     }
 }
 </script>
 <style scoped>
+.setpicCenter p{
+    font-size: 12px;
+    font-weight: bolder;
+    color: red;
+    height: 50px;
+    line-height: 50px;
+}
 .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;

@@ -10,9 +10,9 @@
                 </el-form-item>
                 <el-form-item>
                     <el-select v-model="coupon_status" placeholder="优惠券状态" clearable>
-                        <el-option label="未生效" value="0"></el-option>
-                        <el-option label="已生效" value="1"></el-option>
-                        <el-option label="已失效" value="2"></el-option>
+                        <el-option label="待发放" value="待发放"></el-option>
+                        <el-option label="发放中" value="发放中"></el-option>
+                        <el-option label="已结束" value="已结束"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item>
@@ -52,16 +52,16 @@
                 </el-table-column>
                 <el-table-column label="状态">
                     <template slot-scope="scope">
-                        {{couponStatus[scope.row.coupon_status]}}
+                        <span>{{listStatus[scope.$index]}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="date" label="操作">
                     <template slot-scope="scope">
                         <!-- <el-button type="primary">查看</el-button> -->
-                        <el-button type="primary" v-if="scope.row.coupon_status == '1'" @click="stopList(scope.row.id)">终止</el-button>
-                        <el-button type="primary" v-else disabled>终止</el-button>
-                        <el-button type="danger" v-if="scope.row.coupon_status != '0' && scope.row.coupon_number_receive == 0" @click="delList(scope.row.id)">删除</el-button>
-                        <el-button type="danger" v-else disabled>删除</el-button>
+                        <el-button type="primary" v-if="listStatus[scope.$index] == '发放中'" @click="stopList(scope.row.id)">终止</el-button>
+                        <!-- <el-button type="primary" v-else disabled>终止</el-button> -->
+                        <el-button type="danger" v-else-if="listStatus[scope.$index] == '待发放'" @click="delList(scope.row.id)">删除</el-button>
+                        <el-button type="info" v-else disabled>不可操作</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -97,7 +97,8 @@ export default {
                 '0':"未生效",
                 '1':"已生效",
                 '2':"已失效"
-            }
+            },
+            listStatus:[],//优惠券状态
         }
     },
     created(){
@@ -113,7 +114,8 @@ export default {
                 coupon_type:this.coupon_type,
             }
             couponList(pre).then((res)=>{
-                this.couponTable = res.data.data.data
+                this.couponTable = res.data.data.data.data
+                this.listStatus = res.data.data.status
                 this.total = res.data.data.total
             })
         },
