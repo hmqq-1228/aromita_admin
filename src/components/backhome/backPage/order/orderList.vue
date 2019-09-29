@@ -42,7 +42,7 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="onSubmit">查询</el-button>
+                    <el-button type="primary" @click="onSubmit">查 询</el-button>
                 </el-form-item>
             </el-form>
             <el-table
@@ -182,8 +182,7 @@ export default {
         },
         //查询列表
         onSubmit(){
-            console.log(this.Paymenttime)
-            console.log(this.ordertime)
+            this.orderform.page = 1
             if(this.ordertime!=null && this.ordertime.length!=0){
                 this.orderform.created_at_start = this.ordertime[0]
                 this.orderform.created_at_stop = this.ordertime[1]

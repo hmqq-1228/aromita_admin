@@ -150,7 +150,7 @@ export default {
             productId:0,//不为0时，属性不可编辑
             disabled:false,//属性是否禁用
             editSkuId:'',//编辑用skuID
-            //sku远程搜索
+            //sku远程查询
             restaurants: [],
             firstList:[],//一级类目
             secondList:[],//二级类目
@@ -228,7 +228,7 @@ export default {
                 }
             })
         },
-        //sku远程搜索
+        //sku远程查询
         querySearchAsync(queryString, cb) {
             if(!queryString){
                 return false
@@ -246,7 +246,7 @@ export default {
                 });
             }
         },
-        //选择远程搜索值
+        //选择远程查询值
         handleSelect(item) {
             this.sku_no = item.value
             this.getSkuErp()
@@ -350,14 +350,20 @@ export default {
             var attrs = []
             var attrs1 = []
             //获取选中的属性和属性值
-            console.log(this.attrEditionList,'this.attrEditionList')
-            for(var i=0;i<this.attrEditionList.length;i++){
-                if(this.checkList.find(n =>n == this.attrEditionList[i].id) && this.attrEditionList[i].radioId != ""){
-                    var obj = this.attrEditionList[i]
-                    attrs.push(obj)
+            if(this.checkList.length!=0){
+                for(var i=0;i<this.attrEditionList.length;i++){
+                    if(this.checkList.find(n =>n == this.attrEditionList[i].id) && this.attrEditionList[i].radioId != ""){
+                        var obj = this.attrEditionList[i]
+                        attrs.push(obj)
+                    }else if(this.checkList.find(n =>n == this.attrEditionList[i].id) && this.attrEditionList[i].radioId == ""){
+                        this.$message({
+                            message: '请勾选对应属性值',
+                            type: 'warning'
+                        });
+                        return false
+                    }
                 }
             }
-            console.log(attrs,'attrs')
             //处理属性和属性值数据结构
             for(var m = 0;m<attrs.length;m++){
                 var obj1 = attrs[m].values.find(n=>n.id == attrs[m].radioId)

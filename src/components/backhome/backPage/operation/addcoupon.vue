@@ -149,7 +149,7 @@ export default {
         },
         //验证优惠券要求
         nameisTrue(){
-            var patt1=new RegExp("^[a-zA-Z]+$");
+            var patt1=new RegExp("^[ a-zA-Z]+$");
             if(!patt1.test(this.coupon_name)){
                 this.$message({
                     message:'注册券名称只能是字母',
@@ -167,9 +167,10 @@ export default {
         },
         //选择优惠券类型
         changecouponType(){
-            console.log(this.coupon_type)
             if(this.coupon_type!='N'){
                 this.coupon_number = 1
+            }else{
+                this.coupon_number = 3
             }
         },
         //创建优惠券

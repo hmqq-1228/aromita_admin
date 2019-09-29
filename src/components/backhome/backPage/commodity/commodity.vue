@@ -30,7 +30,7 @@
                             <el-input v-model="skusearchForm.sku_no" clearable placeholder="请输入SKU编号"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary" @click="searchSkuList()">搜 索</el-button>
+                            <el-button type="primary" @click="searchSkuList()">查 询</el-button>
                         </el-form-item>
                         <!-- <el-form-item>
                             <el-button type="primary">批量新建</el-button>
@@ -109,7 +109,7 @@
                             <el-input v-model="spu_no" clearable placeholder="请输入SPU编号"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary" @click="searchSpuList()">搜 索</el-button>
+                            <el-button type="primary" @click="searchSpuList()">查 询</el-button>
                         </el-form-item>
                         <el-form-item>
                             <router-link to="/addSpu">
@@ -173,7 +173,7 @@ export default {
             sputotal:0,//总量
             activeName:'',
             skuTable:[],//sku列表
-            skusearchForm:{//sku列表搜索条件
+            skusearchForm:{//sku列表查询条件
                 page:1,
                 has_spu:'',
                 product_no:'',
@@ -185,7 +185,7 @@ export default {
             firstList:[],//一级类目
             ClassIIList:[],//二级类目
             spuTable:[],//spu列表
-            spu_no:'',//spu搜索条件
+            spu_no:'',//spu查询条件
             skuSelection:'',//已选择skuid
             spuSelection:'',//已选择spuid
         }
@@ -241,8 +241,9 @@ export default {
                 this.ClassIIList = res.data.data
             })
         },
-        //搜索sku列表
+        //查询sku列表
         searchSkuList(){
+            this.skusearchForm.page = 1
             this.skuStatus = Number(this.skusearchForm.sku_status)
             this.getskuList()
         },
@@ -274,8 +275,9 @@ export default {
                 }
             })
         },
-        //搜索spu列表
+        //查询spu列表
         searchSpuList(){
+            this.spupage = 1
             this.getspuList()
         },
         //spu列表

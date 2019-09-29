@@ -2,7 +2,7 @@
   <div class="customerList">
     <div class="heade">
         <h3>客户管理</h3>
-        <el-button type="success" @click="coupon()">赠送优惠券</el-button>
+        <!-- <el-button type="success" @click="coupon()">赠送优惠券</el-button> -->
     </div>
     <div class="search">
         <div class="inputVal">
@@ -35,13 +35,13 @@
             </el-date-picker>
           </div>
         </div>
-        <div style="margin-left: 20px"><el-button type="primary" @click="getList()">搜 索</el-button></div>
+        <div style="margin-left: 20px"><el-button type="primary" @click="searchList()">查 询</el-button></div>
     </div>
     <div class="content">
       <el-table
         :data="customerTable"
         style="width: 100%"
-        max-height="700px">
+        max-height="720px">
         <el-table-column prop="id" label="客户ID"></el-table-column>
         <el-table-column label="姓名">
           <template slot-scope="scope">
@@ -64,7 +64,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="foot">
+    <div class="pagination">
       <el-pagination
         background
         @current-change="currentPage($event)"
@@ -124,6 +124,12 @@ export default {
     this.getList()
   },
   methods:{
+    //查询列表
+    searchList(){
+      this.page = 1
+      this.getList()
+    },
+    //分页
     currentPage(num) {
       this.page = num
       this.getList()
@@ -166,9 +172,9 @@ export default {
       this.$router.push({ path: 'pointsDetail', query: { id: id }})
     },
     //赠送优惠券
-    coupon(){
-      this.couponVisible = true
-    }
+    // coupon(){
+    //   this.couponVisible = true
+    // }
   }
 }
 </script>

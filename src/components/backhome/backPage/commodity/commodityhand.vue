@@ -96,7 +96,7 @@
                             <el-input v-model="spu_no" clearable placeholder="请输入SPU编号"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary" @click="searchSpuList()">搜 索</el-button>
+                            <el-button type="primary" @click="searchSpuList()">查 询</el-button>
                         </el-form-item>
                         <el-form-item>
                             <el-button type="danger" @click="batchspudelete()">批量删除</el-button>
@@ -149,7 +149,7 @@ export default {
             sputotal:0,//总量
             activeName:'second',
             skuTable:[],//sku列表
-            skusearchForm:{//sku列表搜索条件
+            skusearchForm:{//sku列表查询条件
                 page:1,
                 has_spu:'',
                 product_no:'',
@@ -161,7 +161,7 @@ export default {
             firstList:[],//一级类目
             ClassIIList:[],//二级类目
             spuTable:[],//spu列表
-            spu_no:'',//spu搜索条件
+            spu_no:'',//spu查询条件
             skuSelection:'',//已选择skuid
             spuSelection:'',//已选择spuid
         }
@@ -219,7 +219,7 @@ export default {
                 this.ClassIIList = res.data.data
             })
         },
-        //搜索sku列表
+        //查询sku列表
         searchSkuList(){
             this.skuStatus = Number(this.skusearchForm.sku_status)
             this.getskuList()
@@ -248,8 +248,9 @@ export default {
                 this.skuTable = list
             })
         },
-        //搜索spu列表
+        //查询spu列表
         searchSpuList(){
+            this.spupage = 1
             this.getspuList()
         },
         //spu列表

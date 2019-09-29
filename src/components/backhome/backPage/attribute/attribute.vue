@@ -4,7 +4,7 @@
     <h3>属性管理</h3>
     <el-input placeholder="请输入属性名称" v-model="attrName">
       <template slot="prepend">属性名称:</template>
-      <el-button slot="append" icon="el-icon-search" @click="searchList()"></el-button>
+      <el-button slot="append" icon="el-icon-search" @click="searchList()">查询</el-button>
     </el-input>
     <el-button type="primary" @click="addAttr()"><i class="el-icon-plus"></i>新增</el-button>
   </div>
