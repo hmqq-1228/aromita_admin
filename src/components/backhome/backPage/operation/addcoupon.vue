@@ -9,7 +9,7 @@
                     <el-input v-model="coupon_name" placeholder="请输入优惠券名称" @change="nameisTrue()"></el-input>
                 </el-form-item>
                 <el-form-item label="发放总量（张）：">
-                    <el-input v-model="coupon_number" @blur="isTrue()"></el-input> <b v-if="coupon_type=='N'">*所输入的数量必须为3的倍数</b>
+                    <el-input v-model="coupon_number"></el-input> <b v-if="coupon_type=='N'">*所输入的数量必须为3的倍数</b>
                 </el-form-item>
                 <el-form-item label="创建类型：">
                     <el-select v-model="coupon_type" placeholder="创建类型" @change="changecouponType()">
@@ -122,7 +122,8 @@ export default {
                 coupon_end_time:'优惠券失效时间',//优惠券失效时间
                 coupon_receive_start_time:'优惠券开始领取时间',//优惠券开始领取时间
                 coupon_receive_end_time:'优惠券截止领取时间',//优惠券截止领取时间
-            }
+            },
+            couponTrue:false
         }
     },
     created(){
@@ -136,15 +137,16 @@ export default {
                     message:'发放总数最少一张',
                     type: 'error'
                 });
-                this.coupon_number = 1
+                //this.coupon_number = 1
+            }else if(this.coupon_type=='N' && this.coupon_number % 3 != 0){
+                this.$message({
+                    message:'注册券要求发放优惠券总数为3的倍数',
+                    type: 'error'
+                });
+                //this.coupon_number = 3
+                return false
             }else{
-                if(this.coupon_type=='N' && this.coupon_number % 3 != 0){
-                    this.$message({
-                        message:'注册券要求发放优惠券总数为3的倍数',
-                        type: 'error'
-                    });
-                    this.coupon_number = 3
-                }
+                this.couponTrue = true
             }
         },
         //验证优惠券要求
@@ -175,52 +177,56 @@ export default {
         },
         //创建优惠券
         createCoupon(){
-            let pre = {}
-            //注册券
-            if(this.coupon_type == 'N'){
-                pre.coupon_name = this.coupon_name
-                pre.coupon_type = this.coupon_type
-                pre.coupon_amount = this.coupon_amount
-                pre.coupon_minimum_order = this.coupon_minimum_order
-                pre.coupon_expire_date = this.coupon_expire_date
-                pre.coupon_number = this.coupon_number
-                pre.coupon_receive_end_time = this.coupon_receive_end_time
-                pre.coupon_description = this.coupon_description
-            }else if(this.coupon_type != 'N'){//非注册券
-                pre.coupon_name = this.coupon_name
-                pre.coupon_type = this.coupon_type
-                pre.coupon_amount = this.coupon_amount
-                pre.coupon_minimum_order = this.coupon_minimum_order
-                pre.coupon_number = this.coupon_number
-                pre.coupon_start_time = this.coupon_time[0]
-                pre.coupon_end_time = this.coupon_time[1]
-                pre.coupon_receive_start_time = this.coupon_receive[0]
-                pre.coupon_receive_end_time = this.coupon_receive[1]
-                pre.coupon_description = this.coupon_description
-            }
-            for(let key in pre){
-                if(!pre[key]){
-                    this.$message({
-                        message:`${this.checkMsg[key]}必填`,
-                        type: 'error'
-                    });
-                    return false
-                }
-            }
-            addCoupon(pre).then((res)=>{
-                if(res.data.code == 200){
-                    this.$message({
-                        message: '创建成功',
-                        type: 'success'
-                    });
-                    this.$router.push({path:'/coupon'})
+            this.isTrue()
+            if(this.couponTrue == true){
+                let pre={}
+                if(this.coupon_type=='N'){
+                    pre.coupon_name = this.coupon_name
+                    pre.coupon_type = this.coupon_type
+                    pre.coupon_amount = this.coupon_amount
+                    pre.coupon_minimum_order = this.coupon_minimum_order
+                    pre.coupon_expire_date = this.coupon_expire_date
+                    pre.coupon_number = this.coupon_number
+                    pre.coupon_receive_end_time = this.coupon_receive_end_time
+                    pre.coupon_description = this.coupon_description
                 }else{
-                    this.$message({
-                        message:res.data.msg,
-                        type: 'error'
-                    });
+                    pre.coupon_name = this.coupon_name
+                    pre.coupon_type = this.coupon_type
+                    pre.coupon_amount = this.coupon_amount
+                    pre.coupon_minimum_order = this.coupon_minimum_order
+                    pre.coupon_number = this.coupon_number
+                    pre.coupon_start_time = this.coupon_time[0]
+                    pre.coupon_end_time = this.coupon_time[1]
+                    pre.coupon_receive_start_time = this.coupon_receive[0]
+                    pre.coupon_receive_end_time = this.coupon_receive[1]
+                    pre.coupon_description = this.coupon_description
                 }
-            })
+                for(let key in pre){
+                    if(!pre[key]){
+                        this.$message({
+                            message:`${this.checkMsg[key]}必填`,
+                            type: 'error'
+                        });
+                        return false
+                    }
+                }
+                addCoupon(pre).then((res)=>{
+                    if(res.data.code == 200){
+                        this.$message({
+                            message: '创建成功',
+                            type: 'success'
+                        });
+                        this.$router.push({path:'/coupon'})
+                    }else{
+                        this.$message({
+                            message:res.data.msg,
+                            type: 'error'
+                        });
+                    }
+                })
+            }else{
+                console.log('00000')
+            }
         }
     }
 }

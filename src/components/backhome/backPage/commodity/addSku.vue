@@ -390,11 +390,15 @@ export default {
             //请求接口
             if(!this.editSkuId){
                 //请求新增接口
-                console.log(myForm)
-                console.log(myForm.second_cate_id,'000000')
                 if(myForm.second_cate_id == 0){
                     this.$message({
                         message: '二级分类必填',
+                        type: 'warning'
+                    });
+                    return false
+                }else if(myForm.sku_price == 0){
+                    this.$message({
+                        message: '最终售价不能为0',
                         type: 'warning'
                     });
                     return false
@@ -418,22 +422,29 @@ export default {
                 for(var key in myForm){
                     delete myForm['sku_attrs'];
                 }
-                console.log(myForm,'edit')
-                //请求修改接口
-                this.$axios.put(`backend/product/sku/${this.editSkuId}`,qs.stringify(myForm)).then((res)=>{
-                    if(res.data.code == 200){
-                        this.$message({
-                            message: '修改成功',
-                            type: 'success'
-                        });
-                        this.$router.go(-1)
-                    }else{
-                        this.$message({
-                            message:res.data.msg,
-                            type: 'error'
-                        });
-                    }
-                })
+                if(myForm.sku_price == 0){
+                    this.$message({
+                        message: '最终售价不能为0',
+                        type: 'warning'
+                    });
+                    return false
+                }else{
+                    //请求修改接口
+                    this.$axios.put(`backend/product/sku/${this.editSkuId}`,qs.stringify(myForm)).then((res)=>{
+                        if(res.data.code == 200){
+                            this.$message({
+                                message: '修改成功',
+                                type: 'success'
+                            });
+                            this.$router.go(-1)
+                        }else{
+                            this.$message({
+                                message:res.data.msg,
+                                type: 'error'
+                            });
+                        }
+                    })
+                }
             }
         },
         //商品主图
