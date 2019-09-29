@@ -40,6 +40,7 @@ import serveMethod from '@/components/backhome/backPage/homeManagement/serveMeth
 import payMethod from '@/components/backhome/backPage/homeManagement/payMethod.vue'
 import loginRegerster from '@/components/backhome/backPage/homeManagement/loginRegerster.vue'
 import settings from '@/components/backhome/backPage/homeManagement/settings.vue'
+import copyright from '@/components/backhome/backPage/homeManagement/copyright.vue'
 //运营活动
 import coupon from '@/components/backhome/backPage/operation/coupon.vue'
 import addcoupon from '@/components/backhome/backPage/operation/addcoupon.vue'
@@ -206,6 +207,11 @@ export default new Router({
           path: '/settings',
           name: 'settings',
           component: settings
+        },
+        {
+          path: '/copyright',
+          name: 'copyright',
+          component: copyright
         },
         //运营活动
         {

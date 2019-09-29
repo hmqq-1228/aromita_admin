@@ -324,6 +324,7 @@
       subEditInfo () {
         var that = this
         var obj = {
+          position: 70,
           picture_title: that.ruleForm.name,
           picture_src: that.ruleForm.imageUrl,
           picture_href: ''

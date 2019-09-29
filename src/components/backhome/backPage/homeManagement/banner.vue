@@ -323,6 +323,7 @@ export default {
     subEditInfo () {
       var that = this
       var obj = {
+        position: 10,
         picture_title: that.ruleForm.name,
         picture_src: that.ruleForm.imageUrl,
         picture_href: that.ruleForm.PicUrl

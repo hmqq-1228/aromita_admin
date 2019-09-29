@@ -11,12 +11,21 @@
               text-color="#fff"
               active-text-color="#ffd04b"
               router>
-              <el-menu-item index="index">
-                <span slot="title">Aromita 后台管理系统</span>
-              </el-menu-item>
-              <div class="loginOut">
-                <div style="width: 40px;margin: 0 auto;" title="退出" @click="outLogin()"><i class="el-icon-right"></i></div>
-              </div>
+              <!--<el-menu-item index="index">-->
+                <!--<span slot="title">Aromita 后台管理系统</span>-->
+              <!--</el-menu-item>-->
+              <el-submenu index="0">
+                <template slot="title">
+                  <!--<i class="el-icon-s-grid"></i>-->
+                  <span>Aromita后台管理</span>
+                </template>
+                <el-menu-item-group>
+                  <el-menu-item @click="outLogin()">退出</el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
+              <!--<div class="loginOut">-->
+                <!--<div style="width: 40px;margin: 0 auto;" title="退出" @click="outLogin()"><i class="el-icon-right"></i></div>-->
+              <!--</div>-->
               <el-submenu index="1">
                 <template slot="title">
                   <i class="el-icon-s-grid"></i>
@@ -90,6 +99,7 @@
                   <el-menu-item index="/serveMethod">特色服务设置</el-menu-item>
                   <el-menu-item index="/payMethod">支付方式设置</el-menu-item>
                   <el-menu-item index="/settings">网站功能设置</el-menu-item>
+                  <el-menu-item index="/copyright">版权信息设置</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
               <el-submenu index="8">
@@ -129,11 +139,20 @@ export default {
   },
   methods:{
     outLogin () {
-      this.$axios.post('backend/admin/loginout',{}).then((res)=>{
-        if (res.data.code === 200) {
-          this.$router.push('/')
-        }
-      })
+      var that = this
+      that.$confirm('此操作将退出该系统, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        that.$axios.post('backend/admin/loginout',{}).then((res)=>{
+          if (res.data.code === 200) {
+            that.$router.push('/')
+          }
+        })
+      }).catch(() => {
+        return false
+      });
     },
     getScreenHeight:function () {
       this.height = $(window).height() - 40
