@@ -8,7 +8,7 @@
         <el-form-item label="属性名称：" prop="attr_name">
           <el-input v-model="attrFrom.attr_name"></el-input>
         </el-form-item>
-        <el-form-item label="属性值：">
+        <el-form-item label="属性值：" required>
           <div class="attrFromList">
             <div class="attrFromInput">
               <div v-for="(item,index) in attrFrom.attr_value" :key="index" class="attrvaluelist">
@@ -40,7 +40,7 @@ export default {
       },
       rules:{
         attr_name:[
-          { required: true, message:'属性名称不能为空',trigger: 'blur'}
+          { required: true, message:'属性名称必填',trigger: 'blur'}
         ]
       },
       attrid:'',
@@ -56,29 +56,45 @@ export default {
     //添加属性值
     addValue(){
       this.attrFrom.attr_value.push("")
-      console.log(this.attrFrom.attr_value)
     },
     //删除属性值
     delValue(dex){
       this.attrFrom.attr_value.splice(dex,1);
-      console.log(this.attrFrom.attr_value)
     },
     //创建属性值
     subAttr(){
-      addAttr(this.attrFrom).then((res)=>{
-          if(res.data.code == 200){
-            this.$message({
-              message: '创建成功',
-              type: 'success'
-            });
-            this.$router.push({ path:'/attribute'}) 
-          }else{
-            this.$message({
-              message:res.data.msg,
-              type: 'error'
-            });
+      if(this.attrFrom.attr_name == ''){
+          this.$message({
+            message: '属性名称必填',
+            type: 'error'
+          });
+          return false
+      }else{
+          var attrValue = this.attrFrom.attr_value
+          for(var i in attrValue){
+            if(attrValue[i] == ''){
+              this.$message({
+                message: '属性值必填',
+                type: 'error'
+              });
+              return false
+            }
           }
-      })
+          addAttr(this.attrFrom).then((res)=>{
+              if(res.data.code == 200){
+                this.$message({
+                  message: '创建成功',
+                  type: 'success'
+                });
+                this.$router.push({ path:'/attribute'}) 
+              }else{
+                this.$message({
+                  message:res.data.msg,
+                  type: 'error'
+                });
+              }
+          })
+      }
     }
   }
 }

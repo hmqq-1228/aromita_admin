@@ -59,7 +59,7 @@
                             </el-dialog>
                         </el-form-item>
                         <el-form-item>
-                            <b class="imgTips">商品图片大小不能超过500kb，商品图片宽高必须是1024*1024</b>
+                            <b class="imgTips">请上传不超过500KB的1024*1024尺寸的PNG或JPG格式图片！</b>
                         </el-form-item>
                         <el-form-item label="SKU单位：">
                             <span>{{skuform.sku_unit}}</span>

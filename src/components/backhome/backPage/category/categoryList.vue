@@ -117,7 +117,7 @@ export default {
             },
             rules: {
                 cate_name: [
-                    {required: true, message: '请输入分类名称', trigger: 'blur'},
+                    {required: true, message: '类别名称必填', trigger: 'blur'},
                 ],
                 sort: [
                     {required: true, message: '请输入排序值', trigger: 'blur'}
