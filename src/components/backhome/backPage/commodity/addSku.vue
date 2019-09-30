@@ -178,10 +178,6 @@ export default {
     created(){
         this.getAttrEdition()
         this.getFirstList()
-        this.editSkuId = this.$route.query.id
-        if(this.editSkuId){
-            this.skuDetail()
-        }
     },
     methods:{
         //编辑用sku详情
@@ -334,9 +330,15 @@ export default {
         //获取属性和属性值
         getAttrEdition(){
             attrEdition().then((res)=>{
-                this.attrEditionList = res.data.data
-                for(var i=0;i<this.attrEditionList.length;i++){
-                    this.$set(this.attrEditionList[i],'radioId','')
+                if(res.data.code == 200){
+                    this.attrEditionList = res.data.data
+                    for(var i=0;i<this.attrEditionList.length;i++){
+                        this.$set(this.attrEditionList[i],'radioId','')
+                    }
+                    this.editSkuId = this.$route.query.id
+                    if(this.editSkuId){
+                        this.skuDetail()
+                    }
                 }
             })
         },
