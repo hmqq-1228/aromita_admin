@@ -59,7 +59,7 @@
                             </el-dialog>
                         </el-form-item>
                         <el-form-item>
-                            <b class="imgTips">商品图片大小不能超过500kb，商品图片宽高必须是1024*1024</b>
+                            <b class="imgTips">请上传不超过500KB的1024*1024尺寸的PNG或JPG格式图片！</b>
                         </el-form-item>
                         <el-form-item label="SKU单位：">
                             <span>{{skuform.sku_unit}}</span>
@@ -150,7 +150,7 @@ export default {
             productId:0,//不为0时，属性不可编辑
             disabled:false,//属性是否禁用
             editSkuId:'',//编辑用skuID
-            //sku远程搜索
+            //sku远程查询
             restaurants: [],
             firstList:[],//一级类目
             secondList:[],//二级类目
@@ -178,10 +178,6 @@ export default {
     created(){
         this.getAttrEdition()
         this.getFirstList()
-        this.editSkuId = this.$route.query.id
-        if(this.editSkuId){
-            this.skuDetail()
-        }
     },
     methods:{
         //编辑用sku详情
@@ -228,7 +224,7 @@ export default {
                 }
             })
         },
-        //sku远程搜索
+        //sku远程查询
         querySearchAsync(queryString, cb) {
             if(!queryString){
                 return false
@@ -246,7 +242,7 @@ export default {
                 });
             }
         },
-        //选择远程搜索值
+        //选择远程查询值
         handleSelect(item) {
             this.sku_no = item.value
             this.getSkuErp()
@@ -334,9 +330,15 @@ export default {
         //获取属性和属性值
         getAttrEdition(){
             attrEdition().then((res)=>{
-                this.attrEditionList = res.data.data
-                for(var i=0;i<this.attrEditionList.length;i++){
-                    this.$set(this.attrEditionList[i],'radioId','')
+                if(res.data.code == 200){
+                    this.attrEditionList = res.data.data
+                    for(var i=0;i<this.attrEditionList.length;i++){
+                        this.$set(this.attrEditionList[i],'radioId','')
+                    }
+                    this.editSkuId = this.$route.query.id
+                    if(this.editSkuId){
+                        this.skuDetail()
+                    }
                 }
             })
         },
@@ -350,14 +352,20 @@ export default {
             var attrs = []
             var attrs1 = []
             //获取选中的属性和属性值
-            console.log(this.attrEditionList,'this.attrEditionList')
-            for(var i=0;i<this.attrEditionList.length;i++){
-                if(this.checkList.find(n =>n == this.attrEditionList[i].id) && this.attrEditionList[i].radioId != ""){
-                    var obj = this.attrEditionList[i]
-                    attrs.push(obj)
+            if(this.checkList.length!=0){
+                for(var i=0;i<this.attrEditionList.length;i++){
+                    if(this.checkList.find(n =>n == this.attrEditionList[i].id) && this.attrEditionList[i].radioId != ""){
+                        var obj = this.attrEditionList[i]
+                        attrs.push(obj)
+                    }else if(this.checkList.find(n =>n == this.attrEditionList[i].id) && this.attrEditionList[i].radioId == ""){
+                        this.$message({
+                            message: '请勾选对应属性值',
+                            type: 'warning'
+                        });
+                        return false
+                    }
                 }
             }
-            console.log(attrs,'attrs')
             //处理属性和属性值数据结构
             for(var m = 0;m<attrs.length;m++){
                 var obj1 = attrs[m].values.find(n=>n.id == attrs[m].radioId)
@@ -384,11 +392,15 @@ export default {
             //请求接口
             if(!this.editSkuId){
                 //请求新增接口
-                console.log(myForm)
-                console.log(myForm.second_cate_id,'000000')
                 if(myForm.second_cate_id == 0){
                     this.$message({
                         message: '二级分类必填',
+                        type: 'warning'
+                    });
+                    return false
+                }else if(myForm.sku_price == 0){
+                    this.$message({
+                        message: '最终售价不能为0',
                         type: 'warning'
                     });
                     return false
@@ -412,22 +424,29 @@ export default {
                 for(var key in myForm){
                     delete myForm['sku_attrs'];
                 }
-                console.log(myForm,'edit')
-                //请求修改接口
-                this.$axios.put(`backend/product/sku/${this.editSkuId}`,qs.stringify(myForm)).then((res)=>{
-                    if(res.data.code == 200){
-                        this.$message({
-                            message: '修改成功',
-                            type: 'success'
-                        });
-                        this.$router.go(-1)
-                    }else{
-                        this.$message({
-                            message:res.data.msg,
-                            type: 'error'
-                        });
-                    }
-                })
+                if(myForm.sku_price == 0){
+                    this.$message({
+                        message: '最终售价不能为0',
+                        type: 'warning'
+                    });
+                    return false
+                }else{
+                    //请求修改接口
+                    this.$axios.put(`backend/product/sku/${this.editSkuId}`,qs.stringify(myForm)).then((res)=>{
+                        if(res.data.code == 200){
+                            this.$message({
+                                message: '修改成功',
+                                type: 'success'
+                            });
+                            this.$router.go(-1)
+                        }else{
+                            this.$message({
+                                message:res.data.msg,
+                                type: 'error'
+                            });
+                        }
+                    })
+                }
             }
         },
         //商品主图

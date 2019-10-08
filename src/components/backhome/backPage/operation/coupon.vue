@@ -82,6 +82,7 @@ import {couponList,delCoupon,stopCoupon} from '@/http/coupon.js'
 export default {
     data(){
         return{
+            page:1,
             total:0,
             pageSize:20,
             couponTable:[],//优惠券列表
@@ -116,11 +117,12 @@ export default {
             couponList(pre).then((res)=>{
                 this.couponTable = res.data.data.data.data
                 this.listStatus = res.data.data.status
-                this.total = res.data.data.total
+                this.total = res.data.data.data.total
             })
         },
-        //搜索优惠券列表
+        //查询优惠券列表
         searchCoupon(){
+            this.page = 1
             this.getList()
         },
         //删除优惠券

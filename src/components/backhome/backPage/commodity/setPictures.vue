@@ -4,7 +4,7 @@
             <h3>颜色图片设置管理</h3>
         </div>
         <div class="setpicCenter">
-            <p class="tip">颜色图片上传尺寸说明：宽高必须是80*80</p>
+            <p class="tip">请上传不超过500KB的80*80尺寸的PNG或JPG格式图片！</p>
             <el-form :inline="true">
                 <el-form-item v-for="(item,key,index) in color" :label="`${item}：`" :key="index">
                     <div @click="getAttrId(key)">
@@ -80,6 +80,7 @@ export default {
                         message: '设置成功',
                         type: 'success'
                     });
+                    this.$router.go(-1)
                 }else{
                     this.$message({
                         message: res.data.msg,

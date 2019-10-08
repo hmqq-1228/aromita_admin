@@ -39,14 +39,15 @@
     </div>
 </template>
 <script>
-import {addSpuList,uploadUrl} from '@/http/commodity.js'
+import {addSpuList,uploadUrl,aditSpuList} from '@/http/commodity.js'
 import toolbarOptions from '../toolbarOptions'
+import qs from 'qs'
 export default {
     data(){
         return{
             editor:null,
             editSpuId:'',//spuid
-            type:0,
+            type:0,//判断是新建spu ,编辑spu
             addspuform:{
                 sku_nos:'',
                 product_detail:''
@@ -128,7 +129,9 @@ export default {
         getSpuDetail(){
             this.$axios.get(`/backend/product/edit/${this.editSpuId}`,{}).then((res)=>{
                 if(res.data.code === 200){
-                    this.addspuform.product_detail = res.data.data.detail.product_detail
+                    if(res.data.data.detail!=null){
+                        this.addspuform.product_detail = res.data.data.detail.product_detail
+                    }
                     var skuArr = res.data.data.edit_sku
                     var arr = []
                     for(var i=0;i<skuArr.length;i++){
@@ -146,20 +149,38 @@ export default {
                 sku_nos:nos,
                 product_detail:this.addspuform.product_detail
             }
-            addSpuList(pre).then((res)=>{
-                if(res.data.code == 200){
-                    this.$message({
-                        message: '新建SPU成功',
-                        type: 'success'
-                    });
-                    this.$router.go(-1)
-                }else{
-                    this.$message({
-                        message: res.data.msg,
-                        type: 'error'
-                    });
-                }
-            })
+            if(this.type == 0){
+                addSpuList(pre).then((res)=>{
+                    if(res.data.code == 200){
+                        this.$message({
+                            message: '新建SPU成功',
+                            type: 'success'
+                        });
+                        this.$router.go(-1)
+                    }else{
+                        this.$message({
+                            message: res.data.msg,
+                            type: 'error'
+                        });
+                    }
+                })
+            }else{
+                this.$axios.put(`/backend/product/${this.editSpuId}`,qs.stringify(pre)).then((res)=>{
+                    if(res.data.code == 200){
+                        this.$message({
+                            message: '编辑SPU成功',
+                            type: 'success'
+                        });
+                        this.$router.go(-1)
+                    }else{
+                        this.$message({
+                            message: res.data.msg,
+                            type: 'error'
+                        });
+                    }
+                })
+            }
+            
         }
     }
 }

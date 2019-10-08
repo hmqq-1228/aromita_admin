@@ -33,6 +33,9 @@ export const attrEdition = params =>get("/backend/product/attr/skuAttributeList"
 //新建spu
 export const addSpuList = params =>post("/backend/product",params)
 
+//编辑spu
+export const aditSpuList = params =>put("/backend/product",params)
+
 //设置图片
 export const settingSave = params => post("/backend/product/sku/settingSave",params)
 

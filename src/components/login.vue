@@ -75,12 +75,27 @@ export default {
 }
 </script>
 <style scoped>
+.hello{
+  height: 100vh;
+  position: relative; 
+  box-sizing: border-box;
+  background: url(".././assets/images/login_bg1.jpg") no-repeat 100% 100%;
+  background-size: cover;
+}
 .login_form{
   width: 400px;
-  height: 400px;
-  margin:10% auto;
-  border:1px solid #e5e5e5;
+  height: 200px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -200px;
+  margin-top: -100px;
+  background: rgba(236, 234, 234, 0.8);
+  border-radius: 10px;
   padding:40px;
   box-sizing: border-box;
+}
+.hello .el-form .el-form-item__label{
+  color: #ffffff!important;
 }
 </style>
