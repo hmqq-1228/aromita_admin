@@ -94,7 +94,7 @@
                             <span> $ </span><el-input v-model="skuform.sku_price"></el-input>
                         </el-form-item>
                         <el-form-item label="商品状态：">
-                            <el-select v-model="skuform.sku_status" filterable placeholder="请选择商品状态">
+                            <el-select v-model="skuform.sku_status" placeholder="请选择商品状态" @change="changeSkuStatus()">
                                 <el-option label="下架" :value='0'></el-option>
                                 <el-option label="正常销售" :value='1'></el-option>
                                 <el-option label="补货中" :value='2'></el-option>
@@ -346,6 +346,15 @@ export default {
         changeCheckList(){
             // console.log(this.checkList,'0000')
             // console.log(this.attrEditionList,'1111')
+        },
+        //修改商品状态
+        changeSkuStatus(){
+            if(this.skuform.sku_status == 2 && this.skuform.inventory != 0){
+                this.$message({
+                    message: '当前商品库存大于0，确定要修改商品状态为补货中吗？',
+                    type: 'warning'
+                });
+            }
         },
         //新建sku提交
         addSkuSub(){

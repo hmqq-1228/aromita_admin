@@ -2,7 +2,7 @@
     <div class="categoryList">
         <div class="heade">
             <h3>类别管理</h3>
-            <el-button type="primary" @click="append(1)"><i class="el-icon-plus"></i> 新增分类 </el-button>
+            <el-button type="primary" @click="append(1)"><i class="el-icon-plus"></i> 新增类别 </el-button>
             <!-- <el-button plain @click="openList()"><i class="el-icon-s-unfold"></i> 展开所有分类 </el-button>
             <el-button type="primary" plain @click="closeList()"><i class="el-icon-s-fold"></i> 收起所有分类 </el-button> -->
         </div>

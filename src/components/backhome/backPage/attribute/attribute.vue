@@ -1,7 +1,7 @@
 <template>
 <div class="attribute">
   <div class="heade">
-    <h3>属性管理</h3>
+    <h3>属相&属性值管理</h3>
     <el-input placeholder="请输入属性名称" v-model="attrName">
       <template slot="prepend">属性名称:</template>
       <el-button slot="append" icon="el-icon-search" @click="searchList()">查询</el-button>

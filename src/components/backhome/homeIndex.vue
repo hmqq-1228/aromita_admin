@@ -38,11 +38,11 @@
               <el-submenu index="2">
                 <template slot="title">
                   <i class="el-icon-files"></i>
-                  <span>分类管理</span>
+                  <span>类别管理</span>
                 </template>
                 <el-menu-item-group>
-                  <el-menu-item index="/categoryList">分类列表</el-menu-item>
-                  <el-menu-item index="/classification">分类对应关系列表</el-menu-item>
+                  <el-menu-item index="/categoryList">类别列表</el-menu-item>
+                  <el-menu-item index="/classification">类别对应关系设置</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
               <el-submenu index="3">
@@ -53,7 +53,7 @@
                 <el-menu-item-group>
                   <el-menu-item index="/commodity">待上货商品管理</el-menu-item>
                   <el-menu-item index="/commodityhand">已上货SPU管理</el-menu-item>
-                  <el-menu-item index="/coefficient">利润系数</el-menu-item>
+                  <el-menu-item index="/coefficient">利润系数设置</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
               <el-submenu index="4">
