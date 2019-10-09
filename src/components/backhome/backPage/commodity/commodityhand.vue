@@ -98,16 +98,16 @@
                         <el-form-item>
                             <el-button type="primary" @click="searchSpuList()">查 询</el-button>
                         </el-form-item>
-                        <el-form-item>
+                        <!-- <el-form-item>
                             <el-button type="danger" @click="batchspudelete()">批量删除</el-button>
-                        </el-form-item>
+                        </el-form-item> -->
                     </el-form>
                     <el-table
                         :data="spuTable"
                         style="width: 100%"
                         max-height="700px"
                         @selection-change="handleSelectionChangespu">
-                        <el-table-column type="selection" width="45"></el-table-column>
+                        <!-- <el-table-column type="selection" width="45"></el-table-column> -->
                         <el-table-column prop="product_no" label="SPU编号"></el-table-column>
                         <el-table-column label="SPU属性">
                             <template slot-scope="scope">
@@ -119,7 +119,7 @@
                                 <el-button type="warning" v-if="scope.row.hasAttr == 'HAS_COLOR'" @click="setImages(scope.row.id)">设置图片</el-button>
                                 <el-button type="primary" @click="editSpuList(scope.row.id)">编辑</el-button>
                                 <el-button type="primary" @click="viewSkuList(scope.row.id)">详情</el-button>
-                                <el-button type="danger" @click="deleteSpu(scope.row.id)">删除</el-button>
+                                <!-- <el-button type="danger" @click="deleteSpu(scope.row.id)">删除</el-button> -->
                             </template>
                         </el-table-column>
                     </el-table>

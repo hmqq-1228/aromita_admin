@@ -474,7 +474,7 @@ export default {
                                 message: '删除成功',
                                 type: 'success'
                             });
-                            this.getskuList()
+                            this.getspuList()
                         }else{
                             this.$message({
                                 message: res.data.msg,
