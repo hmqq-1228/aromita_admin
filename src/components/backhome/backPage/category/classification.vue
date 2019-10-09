@@ -1,7 +1,7 @@
 <template>
     <div class="classification">
         <div class="heade">
-            <h3>分类对应关系列表</h3>
+            <h3>类别对应关系设置</h3>
             <el-button type="primary" @click="addcategory(1)"><i class="el-icon-plus"></i> 新增对应关系 </el-button>
         </div>
         <el-table :data="List" border style="width: 100%" max-height="700">
