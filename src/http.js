@@ -3,11 +3,12 @@ import qs from "qs";
 import Router from '@/router/index'
 
 
-if(process.env.NODE_ENV === 'production'){
-  axios.defaults.baseURL = window.location.protocol + '//' + window.location.hostname
+if(process.env.API_ROOT){
+  axios.defaults.baseURL = process.env.API_ROOT
 }else{
-    axios.defaults.baseURL = ''
+  axios.defaults.baseURL = ''
 }
+
 //本地开发
 axios.defaults.timeout = 60 * 1000;
 
