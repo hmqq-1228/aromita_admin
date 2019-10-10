@@ -41,6 +41,15 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="pagination">
+        <el-pagination
+            background
+            layout="prev, pager, next"
+            :page-size="pageSize"
+            :total="total"
+            @current-change="changePage">
+        </el-pagination>
+    </div>
     <el-drawer
       :title="bannerTitle"
       :visible.sync="drawer"
@@ -121,6 +130,9 @@
   export default {
     data(){
       return{
+        page:1,
+        pageSize:15,
+        total:0,
         isEdit: false,
         drawer: false,
         currentId: '',
@@ -169,6 +181,11 @@
       this.shereToolsListFuc()
     },
     methods:{
+      //分页
+      changePage(val){
+        this.page = val
+        this.shereToolsListFuc()
+      },
       tableRowClassName({row, rowIndex}) {
         // console.log('kk', row, rowIndex)
         if (row.is_top === 20) {
@@ -178,9 +195,10 @@
       },
       // 获取banner列表
       shereToolsListFuc () {
-        shereTools ().then((res)=>{
+        shereTools({page:this.page}).then((res)=>{
           if (res.data.code === 200) {
             this.bannerList = res.data.data.data
+            this.total = res.data.data.total
             for (var i=0;i<this.bannerList.length;i++){
               this.$set(this.bannerList[i],'topStr', '否')
               if (this.bannerList[i].is_top === 20) {
