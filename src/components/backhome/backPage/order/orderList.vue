@@ -85,7 +85,7 @@
             width="40%">
             <el-form :model="orderDetailForm" class="demo-form-inline" label-width="100px">
                 <el-form-item label="订单ID:">
-                    <el-input v-model="orderDetailForm.ID" disabled></el-input>
+                    <el-input v-model="orderDetailForm.id" disabled></el-input>
                 </el-form-item>
                 <el-form-item label="订单号:">
                     <el-input v-model="orderDetailForm.orders_number" disabled></el-input>
@@ -206,6 +206,7 @@ export default {
         //订单编辑
         Edit(obj){
             this.orderVisible = true;
+            console.log(obj)
             this.orderDetailForm = JSON.parse(JSON.stringify(obj))
         },
         //修改订单状态提交
