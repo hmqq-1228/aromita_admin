@@ -102,7 +102,7 @@ export default {
                         //二级类目
                         var str2 = this.ClassIIList.find(n => n.id == list[i].second_cate_id)
                         var name2 = ""
-                        if(str){
+                        if(str2){
                             name2= str2.cate_name
                         }
                         this.$set(list[i],'secondName',name2)
