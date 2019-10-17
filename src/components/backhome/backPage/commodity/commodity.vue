@@ -41,8 +41,13 @@
                             </router-link>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="danger" @click="batchdelete()">批量删除</el-button>
+                            <router-link to="/addSku">
+                                <el-button type="primary">批量新建</el-button>
+                            </router-link>
                         </el-form-item>
+                        <!-- <el-form-item>
+                            <el-button type="danger" @click="batchdelete()">批量删除</el-button>
+                        </el-form-item> -->
                         <el-form-item v-if="this.skuStatus == 0">
                             <el-button type="warning" @click="batchUpperOrLower(1)">批量上架</el-button>
                         </el-form-item>
@@ -54,9 +59,8 @@
                         :data="skuTable"
                         style="width: 100%"
                         max-height="680px"
-                        v-loading="skuLoading"
-                        @selection-change="handleSelectionChange">
-                        <el-table-column type="selection" width="45"></el-table-column>
+                        v-loading="skuLoading">
+                        <!-- <el-table-column type="selection" width="45"></el-table-column> -->
                         <el-table-column prop="date" label="商品" width="280px">
                             <template slot-scope="scope">
                                 <div class="sku">
@@ -81,13 +85,15 @@
                             </template>
                         </el-table-column>
                         <el-table-column prop="inventory" label="库存"></el-table-column>
-                        <el-table-column label="操作" width="300px">
+                        <el-table-column label="操作" width="310px">
                             <template slot-scope="scope">
                                 <el-button type="warning" v-if="scope.row.sku_status == 0" @click="UpperOrLower(scope.row.id,1)">上架</el-button>
                                 <el-button type="danger" v-if="scope.row.sku_status == 1" @click="UpperOrLower(scope.row.id,0)">下架</el-button>
-                                <el-button type="success" @click="skuDetail(scope.row.id)">详情</el-button>
+                                <el-button type="primary" @click="skuDetail(scope.row.id)">详情</el-button>
                                 <el-button type="primary" @click="editorAddSku(scope.row.id)">编辑</el-button>
-                                <el-button type="danger" @click="deleteSku(scope.row.id)">删除</el-button>
+                                <!-- <el-button type="danger" @click="deleteSku(scope.row.id)">删除</el-button> -->
+                                <el-button type="danger" v-if="scope.row.is_delete == 0" @click="disableSku(scope.row.id)">禁用</el-button>
+                                <el-button type="success" v-if="scope.row.is_delete == 1" @click="enableSku(scope.row.id)">启用</el-button>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -161,7 +167,7 @@
     </div>
 </template>
 <script>
-import {skuList,spuList,deleteSkuBatch,deleteSpuBatch,spuGoods,skuGoods} from '@/http/commodity.js'
+import {skuList,spuList,deleteSkuBatch,deleteSpuBatch,spuGoods,skuGoods,skuSetEnable,skuSetDisable} from '@/http/commodity.js'
 import {categoryList,ClassII} from '@/http/category.js'
 export default {
     data(){
@@ -195,6 +201,40 @@ export default {
         this.getClassII()      
     },
     methods:{
+        //sku启用
+        enableSku(id){
+            skuSetEnable({id:id}).then((res)=>{
+                if(res.data.code == 200){
+                    this.$message({
+                        message: '操作成功',
+                        type: 'success'
+                    });
+                    this.getskuList()
+                }else{
+                    this.$message({
+                        message:res.data.msg,
+                        type: 'error'
+                    });
+                }
+            })
+        },
+        //sku禁用
+        disableSku(id){
+            skuSetDisable({id:id}).then((res)=>{
+                if(res.data.code == 200){
+                    this.$message({
+                        message: '操作成功',
+                        type: 'success'
+                    });
+                    this.getskuList()
+                }else{
+                    this.$message({
+                        message:res.data.msg,
+                        type: 'error'
+                    });
+                }
+            })
+        },
         //sku列表分页器
         changeSkuPage(val){
             this.skusearchForm.page = val
@@ -341,15 +381,15 @@ export default {
             });   
         },
         //批量勾选sku
-        handleSelectionChange(val) {
-            var arr = []
-            for(var i=0;i<val.length;i++){
-                var skuid = val[i].id
-                arr.push(skuid)
-            }
-            this.skuSelection = arr.join(',')
-            console.log(this.skuSelection)
-        },
+        // handleSelectionChange(val) {
+        //     var arr = []
+        //     for(var i=0;i<val.length;i++){
+        //         var skuid = val[i].id
+        //         arr.push(skuid)
+        //     }
+        //     this.skuSelection = arr.join(',')
+        //     console.log(this.skuSelection)
+        // },
         //批量勾选spu
         handleSelectionChangespu(val) {
             var arr = []

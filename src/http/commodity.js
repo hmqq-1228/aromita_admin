@@ -41,3 +41,9 @@ export const settingSave = params => post("/backend/product/sku/settingSave",par
 
 //新建sku
 export const addNewSku = params =>post("/backend/product/sku",params)
+
+//sku启用
+export const skuSetEnable = params =>put("/backend/product/sku/ajaxSetEnable",params)
+
+//sku禁用
+export const skuSetDisable = params =>put("/backend/product/sku/ajaxSetDisable",params)
