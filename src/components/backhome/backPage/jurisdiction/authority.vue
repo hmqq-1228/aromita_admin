@@ -6,7 +6,9 @@
         <el-tree
             :props="props"
             :data="rolelist"
+            node-key="id"
             show-checkbox
+            :default-checked-keys="[2,3]"
             @check-change="handleCheckChange">
         </el-tree>
     </div>
@@ -19,9 +21,11 @@ export default {
             roleid:'',
             props: {
                 label: 'name',
-                children: 'children'
+                children: 'children',
+                id:'id'
             },
-            rolelist:[]
+            rolelist:[],//权限列表
+            role_permission:[],//已配置的权限
         }
     },
     created(){
@@ -34,6 +38,7 @@ export default {
         getData(){
             fqRole({id:this.roleid}).then((res)=>{
                 var rolelist = res.data.data.all_permission
+                this.role_permission = res.data.data.role_permission
                 for(var i=0;i<rolelist.length;i++){
                     for(var j=0;j<rolelist.length;j++){
                         if(rolelist[i].parent_id == rolelist[j].id){
@@ -42,7 +47,14 @@ export default {
                         }
                     }  
                 }
-                this.rolelist = rolelist
+                var attr = []
+                for(var i=0;i<rolelist.length;i++){
+                    if(rolelist[i].parent_id == 0){
+                        attr.push(rolelist[i])
+                    }
+                }
+                this.rolelist = attr
+                console.log(this.rolelist)
             })
         },
         handleCheckChange(){

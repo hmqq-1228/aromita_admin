@@ -78,7 +78,7 @@ export default {
                         this.loading = false
                         this.exportPre={
                             file_id:res.data.data.file_id,
-                            count:res.data.data.file_id
+                            count:res.data.data.count
                         }
                         this.exportData()
                     }else if(res.data.code == 40002){
