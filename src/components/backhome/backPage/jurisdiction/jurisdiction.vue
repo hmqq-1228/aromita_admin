@@ -16,13 +16,13 @@
                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-input v-model="searchForm.username" placeholder="请输入用户名"></el-input>
+                <el-input v-model="searchForm.username" clearable placeholder="请输入用户名"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="searchList()">搜 索</el-button>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="addRole()">新 建</el-button>
+                <el-button type="primary" @click="addUser()">新 建</el-button>
             </el-form-item>
         </el-form>
         <el-table :data="list">
@@ -194,13 +194,24 @@ export default {
             });
         },
         //新建权限
-        addRole(){
+        addUser(){
             this.newDialog = true
         },
         adduserSub(){
-            console.log(this.addFrom)
             createUser(this.addFrom).then((res)=>{
-
+                if(res.data.code == 200){
+                    this.$message({
+                        message: '新建成功',
+                        type: 'success'
+                    });
+                    this.newDialog = false
+                    this.getList()
+                }else{
+                    this.$message({
+                        message:res.data.msg,
+                        type: 'error'
+                    });
+                }
             })
         }
     }

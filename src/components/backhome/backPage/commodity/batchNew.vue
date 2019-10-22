@@ -8,10 +8,6 @@
             <h3>批量新建SKU</h3>
         </div>
         <div class="addspuCenter">
-            <div class="errormsg">
-                <p>{{errorMsg}}</p>
-                <p>{{dataMsg}}</p>
-            </div>
             <el-form ref="form" :rules="rules" :model="addspuform" label-width="120px">
                 <el-form-item label="请输入SKU：" prop="name">
                     <el-input type="textarea" :rows="40" v-model="addspuform.sku_nos" placeholder="SKU以回车键隔开"></el-input>
@@ -21,6 +17,14 @@
                 </el-form-item>
             </el-form>
         </div>
+        <el-dialog title="提示" :visible.sync="boxVisible" width="500px">
+            <div class="errormsg">
+                <p>{{errorMsg}}</p>
+                <p class="datamsg">
+                    <span v-for="(item,index) in dataMsg" :key="index">{{item}}</span>
+                </p>
+            </div>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -30,6 +34,7 @@ export default {
     data(){
         return{
             loading:false,
+            boxVisible:false,
             errorMsg:'',
             dataMsg:'',
             addspuform:{
@@ -83,8 +88,9 @@ export default {
                         this.exportData()
                     }else if(res.data.code == 40002){
                         this.loading = false
+                        this.boxVisible = true
                         this.errorMsg = res.data.msg
-                        this.dataMsg = res.data.data
+                        this.dataMsg = res.data.data.split(',')
                     }else{
                         this.loading = false
                         this.$message({
@@ -143,8 +149,17 @@ export default {
 }
 .errormsg{
     font-size: 12px;
-    color:red;
-    padding-left:50px;
     margin-bottom: 10px;
+}
+.datamsg{
+    overflow-y: scroll;
+    max-height: 600px;
+}
+.datamsg span{
+    display: inline-block;
+    width: 110px;
+    box-sizing: border-box;
+    float: left;
+    padding:10px;
 }
 </style>
