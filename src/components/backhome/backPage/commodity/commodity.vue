@@ -41,8 +41,8 @@
                             </router-link>
                         </el-form-item>
                         <el-form-item>
-                            <router-link to="/addSku">
-                                <el-button type="primary">批量新建</el-button>
+                            <router-link to="/batchNew">
+                                <el-button type="primary">批量新建SKU</el-button>
                             </router-link>
                         </el-form-item>
                         <!-- <el-form-item>

@@ -112,6 +112,16 @@
                   <el-menu-item index="/addcoupon">新建优惠券</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
+              <el-submenu index="9">
+                <template slot="title">
+                  <i class="el-icon-s-check"></i>
+                  <span>权限管理</span>
+                </template>
+                <el-menu-item-group>
+                  <el-menu-item index="/jurisdiction">权限管理列表</el-menu-item>
+                  <el-menu-item index="/role">角色管理列表</el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
             </el-menu>
           </el-aside>
         </div>

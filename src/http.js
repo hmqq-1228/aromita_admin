@@ -10,7 +10,7 @@ if(process.env.API_ROOT){
 }
 
 //本地开发
-axios.defaults.timeout = 60 * 1000;
+axios.defaults.timeout = 60 * 1000 * 10;
 
 // request全局拦截
 axios.interceptors.request.use(config => {

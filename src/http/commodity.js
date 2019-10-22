@@ -47,3 +47,7 @@ export const skuSetEnable = params =>put("/backend/product/sku/ajaxSetEnable",pa
 
 //sku禁用
 export const skuSetDisable = params =>put("/backend/product/sku/ajaxSetDisable",params)
+
+//批量新建SKU
+export const batchCreate = params =>post("/backend/product/sku/batchCreate",params)
+export const batchgetCount = params =>get("/backend/product/sku/getCount",params)

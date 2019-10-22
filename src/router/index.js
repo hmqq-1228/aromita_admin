@@ -9,9 +9,11 @@ import Index from '@/components/backhome/index.vue'
 import attribute from '@/components/backhome/backPage/attribute/attribute.vue'
 import addAttr from '@/components/backhome/backPage/attribute/addAttr.vue'
 import coefficient from '@/components/backhome/backPage/attribute/coefficient.vue'
+
 //分类管理
 import categoryList from '@/components/backhome/backPage/category/categoryList.vue'
 import classification from '@/components/backhome/backPage/category/classification.vue'
+
 // 客户管理
 import customerList from '@/components/backhome/backPage/customer/customerList.vue'
 import pointsDetail from '@/components/backhome/backPage/customer/pointsDetail.vue'
@@ -23,6 +25,7 @@ import addSpu from '@/components/backhome/backPage/commodity/addSpu.vue'
 import skuDetail from '@/components/backhome/backPage/commodity/skuDetail.vue'
 import spuskulist from '@/components/backhome/backPage/commodity/spuskulist.vue'
 import setPictures from '@/components/backhome/backPage/commodity/setPictures.vue'
+import batchNew from '@/components/backhome/backPage/commodity/batchNew.vue'
 
 //订单管理
 import orderList from '@/components/backhome/backPage/order/orderList.vue'
@@ -41,9 +44,15 @@ import payMethod from '@/components/backhome/backPage/homeManagement/payMethod.v
 import loginRegerster from '@/components/backhome/backPage/homeManagement/loginRegerster.vue'
 import settings from '@/components/backhome/backPage/homeManagement/settings.vue'
 import copyright from '@/components/backhome/backPage/homeManagement/copyright.vue'
+
 //运营活动
 import coupon from '@/components/backhome/backPage/operation/coupon.vue'
 import addcoupon from '@/components/backhome/backPage/operation/addcoupon.vue'
+
+//权限管理
+import jurisdiction from '@/components/backhome/backPage/jurisdiction/jurisdiction.vue'
+import role from '@/components/backhome/backPage/jurisdiction/role.vue'
+import authority from '@/components/backhome/backPage/jurisdiction/authority.vue'
 
 Vue.use(Router)
 export default new Router({
@@ -64,6 +73,22 @@ export default new Router({
           path: '/index',
           name: 'Index',
           component: Index
+        },
+        //权限管理
+        {
+          path: '/jurisdiction',
+          name: 'jurisdiction',
+          component: jurisdiction
+        },
+        {
+          path: '/role',
+          name: 'role',
+          component: role
+        },
+        {
+          path: '/authority',
+          name: 'authority',
+          component: authority
         },
         //属性管理
         {
@@ -128,6 +153,12 @@ export default new Router({
           path: '/spuskulist',
           name: 'spuskulist',
           component: spuskulist
+        },
+        //批量新建sku
+        {
+          path: '/batchNew',
+          name: 'batchNew',
+          component: batchNew
         },
         //设置图片
         {
