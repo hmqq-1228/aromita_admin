@@ -58,6 +58,8 @@ export default {
             if (res.data.code === 200) {
               this.$message.success(res.data.msg)
               localStorage.setItem('username',res.data.data)
+              var permission = res.data.data.permission
+              localStorage.setItem('menuList',JSON.stringify(permission))
               this.$router.push({
                 path:'/homeIndex'
               })
