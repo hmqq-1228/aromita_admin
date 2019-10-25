@@ -18,14 +18,6 @@
                 <el-menu-item-group>
                   <el-menu-item @click="outLogin()">退出</el-menu-item>
                 </el-menu-item-group>
-              </el-submenu>、
-              <el-submenu index="-1">
-                  <template slot="title">
-                    <span>日志管理</span>
-                  </template>
-                  <el-menu-item-group>
-                    <el-menu-item index="/journal">日志列表</el-menu-item>
-                  </el-menu-item-group>
               </el-submenu>
               <el-submenu v-for="(item,index) in menuList" :index="String(item.id)" :key="index">
                 <template slot="title" v-if="item.parent_id == 0">

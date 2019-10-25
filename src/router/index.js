@@ -58,6 +58,8 @@ import authority from '@/components/backhome/backPage/jurisdiction/authority.vue
 import journal from '@/components/backhome/backPage/journal/journal.vue'
 import journaldetail from '@/components/backhome/backPage/journal/journaldetail.vue'
 
+//系统设置
+import system from '@/components/backhome/backPage/system/system.vue'
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -88,6 +90,12 @@ export default new Router({
           path: '/journaldetail',
           name: 'journaldetail',
           component: journaldetail
+        },
+        //系统设置
+        {
+          path: '/system',
+          name: 'system',
+          component: system
         },
         //权限管理
         {

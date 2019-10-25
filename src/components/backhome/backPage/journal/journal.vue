@@ -18,7 +18,7 @@
                    </span>
                 </template>
             </el-table-column>
-            <el-table-column prop="log_extra" label="日志扩展信息"></el-table-column>
+            <el-table-column prop="log_extra" label="日志说明"></el-table-column>
         </el-table>
         <div class="pagination">
             <el-pagination
