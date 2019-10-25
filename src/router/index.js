@@ -54,6 +54,10 @@ import jurisdiction from '@/components/backhome/backPage/jurisdiction/jurisdicti
 import role from '@/components/backhome/backPage/jurisdiction/role.vue'
 import authority from '@/components/backhome/backPage/jurisdiction/authority.vue'
 
+//日志管理
+import journal from '@/components/backhome/backPage/journal/journal.vue'
+import journaldetail from '@/components/backhome/backPage/journal/journaldetail.vue'
+
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -73,6 +77,17 @@ export default new Router({
           path: '/index',
           name: 'Index',
           component: Index
+        },
+        //日志管理
+        {
+          path: '/journal',
+          name: 'journal',
+          component: journal
+        },
+        {
+          path: '/journaldetail',
+          name: 'journaldetail',
+          component: journaldetail
         },
         //权限管理
         {
