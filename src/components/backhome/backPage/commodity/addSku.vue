@@ -84,6 +84,9 @@
                                 <el-option v-for="(item,index) in secondList" :key="index" :label="item.cate_name" :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
+                        <el-form-item label="TIC：">
+                            <el-input v-model="skuform.tic" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"></el-input>
+                        </el-form-item>
                         <el-form-item label="上货价：">
                             <span>$ {{skuform.goods_price}}</span>
                         </el-form-item>

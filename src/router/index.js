@@ -60,6 +60,11 @@ import journaldetail from '@/components/backhome/backPage/journal/journaldetail.
 
 //系统设置
 import system from '@/components/backhome/backPage/system/system.vue'
+import screening from '@/components/backhome/backPage/system/screening.vue'
+//售后设置
+import aftersale from '@/components/backhome/backPage/system/aftersale.vue'
+
+
 Vue.use(Router)
 export default new Router({
   routes: [
@@ -96,6 +101,16 @@ export default new Router({
           path: '/system',
           name: 'system',
           component: system
+        },
+        {
+          path: '/screening',
+          name: 'screening',
+          component: screening
+        },
+        {
+          path: '/aftersale',
+          name: 'aftersale',
+          component: aftersale
         },
         //权限管理
         {
@@ -282,3 +297,8 @@ export default new Router({
     }
   ]
 })
+
+const routerPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return routerPush.call(this, location).catch(error=> error)
+}

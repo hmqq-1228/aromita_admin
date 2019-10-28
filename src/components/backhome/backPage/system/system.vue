@@ -10,7 +10,7 @@
             <el-table-column prop="attr_name" label="属性名称"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button type="primary">设置</el-button>
+                    <el-button type="primary" @click="screening(scope.row.id)">设置</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -28,12 +28,17 @@ export default {
         this.getList()
     },
     methods:{
+        //获取列表
         getList(){
             getSystemList().then((res)=>{
                 if(res.data.code == 200){
                     this.systemList = res.data.data
                 }
             })
+        },
+        //跳转到设置详情页
+        screening(id){
+            this.$router.push({path:'/screening',query:{id:id}})
         }
     }
 }
