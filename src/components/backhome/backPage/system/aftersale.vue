@@ -25,7 +25,7 @@
             <el-table-column prop="created_at" label="添加时间"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button type="primary">编辑</el-button>
+                    <el-button type="primary" @click="editAttr(scope.row.id,2)">编辑</el-button>
                     <el-button type="danger" @click="deleteAttr(scope.row.id)">删除</el-button>
                 </template>
             </el-table-column>
@@ -45,14 +45,14 @@
                 <el-form-item label="是否启用：">
                     <el-switch 
                         v-model="addform.status"
-                        active-value="1"
-                        inactive-value="0">
+                        :active-value="1"
+                        :inactive-value="0">
                     </el-switch>
                 </el-form-item>
                 <el-form-item label="上传凭证：">
                     <el-radio-group v-model="addform.is_upload">
-                        <el-radio label="1">是</el-radio>
-                        <el-radio label="0">否</el-radio>
+                        <el-radio :label="1">是</el-radio>
+                        <el-radio :label="0">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
             </el-form>
@@ -64,7 +64,7 @@
     </div>
 </template>
 <script>
-import {afterList,createdSale,deleteSale,batchdeleteSale} from '@/http/system.js'
+import {afterList,createdSale,deleteSale,batchdeleteSale,saledetail,saledetailSub} from '@/http/system.js'
 export default {
     data(){
         return{
@@ -73,9 +73,9 @@ export default {
             afterVisible:false,
             addform:{
                 return_reason:'',
-                sort_order:'100',
-                is_upload:'1',
-                status:'1'
+                sort_order:100,
+                is_upload:1,
+                status:1
             },
             flag:true,
             selectId: [],//选中的列表id
@@ -145,6 +145,16 @@ export default {
                 });
             }
         },
+        //编辑售后
+        editAttr(id,type){
+            saledetail({id:id}).then((res)=>{
+                if(res.data.code == 200){
+                    this.addform = res.data.data
+                    this.type = type
+                    this.afterVisible = true
+                }
+            })
+        },
         //新增弹框
         addAfterSale(){
             this.afterVisible = true
@@ -165,21 +175,40 @@ export default {
         },
         //新建售后原因
         addSub(){
-            createdSale(this.addform).then((res)=>{
-                if(res.data.code == 200){
-                    this.$message({
-                        message:'新建成功',
-                        type: 'success'
-                    });
-                    this.afterVisible = false
-                    this.getList()
-                }else{
-                    this.$message({
-                        message:res.data.msg,
-                        type: 'error'
-                    });
-                }
-            }) 
+            if(this.type == 1){
+                createdSale(this.addform).then((res)=>{
+                    if(res.data.code == 200){
+                        this.$message({
+                            message:'新建成功',
+                            type: 'success'
+                        });
+                        this.afterVisible = false
+                        this.getList()
+                    }else{
+                        this.$message({
+                            message:res.data.msg,
+                            type: 'error'
+                        });
+                    }
+                }) 
+            }else if(this.type == 2){
+                saledetailSub(this.addform).then((res)=>{
+                    if(res.data.code == 200){
+                        this.$message({
+                            message:'修改成功',
+                            type: 'success'
+                        });
+                        this.afterVisible = false
+                        this.getList()
+                    }else{
+                        this.$message({
+                            message:res.data.msg,
+                            type: 'error'
+                        });
+                    }
+                }) 
+            }
+            
         }
     }
 }

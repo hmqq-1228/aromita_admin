@@ -25,3 +25,9 @@ export const deleteSale = params =>post("/backend/rr/delete",params)
 
 //批量删除
 export const batchdeleteSale = params =>post("/backend/rr/batchdelete",params)
+
+//编辑售后获取详情
+export const saledetail = params =>post("/backend/rr/edit",params)
+
+//编辑售后提交
+export const saledetailSub = params =>post("/backend/rr/update",params)
