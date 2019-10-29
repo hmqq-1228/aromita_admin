@@ -91,8 +91,13 @@ export default {
                         this.editVisible = false
                         this.getList()
                     }else{
+                        var msg = res.data.msg
+                        var msgstr = ''
+                        for(var i in msg){
+                            msgstr = msg[i][0]
+                        }
                         this.$message({
-                            message:res.data.msg,
+                            message:msgstr,
                             type: 'error'
                         });
                     }

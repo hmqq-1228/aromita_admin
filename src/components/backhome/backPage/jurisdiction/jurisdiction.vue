@@ -79,7 +79,7 @@
                     <el-input v-model="addFrom.username"></el-input>
                 </el-form-item>
                 <el-form-item label="密码：">
-                    <el-input v-model="addFrom.password" type="password"></el-input>
+                    <el-input v-model="addFrom.password"></el-input>
                 </el-form-item>
                 <el-form-item label="角色：">
                     <el-select v-model="addFrom.role">
@@ -89,8 +89,8 @@
                 <el-form-item label="是否启用：">
                     <el-switch
                         v-model="addFrom.status"
-                        :active-value="1"
-                        :inactive-value="0">
+                        active-value="1"
+                        inactive-value="0">
                     </el-switch>
                 </el-form-item>
             </el-form>
@@ -124,9 +124,9 @@ export default {
             newDialog:false,
             addFrom:{
                 username:'',
-                password:'',
+                password:'123456',
                 role:'',
-                status:'',
+                status:'1',
             }
         }
     },
@@ -196,6 +196,7 @@ export default {
         //新建权限
         addUser(){
             this.newDialog = true
+            this.addFrom.role = this.roleList[0].role_name
         },
         adduserSub(){
             createUser(this.addFrom).then((res)=>{
@@ -207,8 +208,13 @@ export default {
                     this.newDialog = false
                     this.getList()
                 }else{
+                    var msg = res.data.msg
+                    var msgstr = ''
+                    for(var i in msg){
+                        msgstr = msg[i][0]
+                    }
                     this.$message({
-                        message:res.data.msg,
+                        message:msgstr,
                         type: 'error'
                     });
                 }

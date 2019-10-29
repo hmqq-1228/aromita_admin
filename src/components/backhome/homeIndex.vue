@@ -17,6 +17,7 @@
                 </template>
                 <el-menu-item-group>
                   <el-menu-item @click="outLogin()">退出</el-menu-item>
+                  <el-menu-item @click="updateUserPass()">修改密码</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
               <el-submenu v-for="(item,index) in menuList" :index="String(item.id)" :key="index">
@@ -35,16 +36,40 @@
         </el-main>
       </el-container>
     </el-container>
+    <el-dialog
+        title="修改密码"
+        :visible.sync="passVisible"
+        width="300px">
+        <el-form>
+          <el-form-item label="旧密码：">
+              <el-input type="password" v-model="oldpassword"></el-input>
+          </el-form-item>
+          <el-form-item label="新密码：">
+              <el-input type="password" v-model="password"></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码：">
+              <el-input type="password" v-model="password"></el-input>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="passVisible = false">取 消</el-button>
+          <el-button type="primary" @click="updateUserPassSub()">确 定</el-button>
+        </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import {updatepass} from '@/http/home.js'
 export default {
   data () {
     return {
       height: '',
       activeRoute: 'index',
-      menulist:[]
+      menulist:[],
+      passVisible:false,
+      oldpassword:'',
+      password:'',//密码
     }
   },
   watch:{
@@ -70,13 +95,16 @@ export default {
           fristAttr[i]["children"] = obj
       }
       this.menuList = fristAttr
-      console.log(this.menuList)
     }else{
       this.$message.warning("登录已过期，请重新登录")
       this.$router.push('/')
     }
   },
   methods:{
+    //修改密码
+    updateUserPass(){
+        this.passVisible = true;
+    },
     //退出登录
     outLogin () {
       this.$confirm('此操作将退出该系统, 是否继续?', '提示', {

@@ -11,3 +11,17 @@ export const attrSet = params =>post("/backend/attr/setting",params)
 
 //保存系统设置
 export const attrUpdate = params =>post("/backend/attr/update",params)
+
+//售后原因
+
+//售后原因列表
+export const afterList = params =>post("/backend/rr/list",params)
+
+//创建售后服务
+export const createdSale = params =>post("/backend/rr/create",params)
+
+//单个删除售后
+export const deleteSale = params =>post("/backend/rr/delete",params)
+
+//批量删除
+export const batchdeleteSale = params =>post("/backend/rr/batchdelete",params)
