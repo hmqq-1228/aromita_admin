@@ -31,3 +31,15 @@ export const saledetail = params =>post("/backend/rr/edit",params)
 
 //编辑售后提交
 export const saledetailSub = params =>post("/backend/rr/update",params)
+
+//服务邮箱列表
+export const emailList = params =>post("/backend/email/index",params)
+
+//新建服务邮箱
+export const createEmail = params =>post("/backend/email/create",params)
+
+//编辑服务邮箱获取详情
+export const editEmailDetail = params =>post("/backend/email/edit",params)
+
+//编辑服务邮箱
+export const editEmail = params =>post("/backend/email/update",params)

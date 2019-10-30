@@ -63,7 +63,6 @@ export default {
                 type:'detail'
             },
             imageUrl:'',
-            docContent:null,
             editorOption: {
                 placeholder: '',
                 theme: 'snow',

@@ -48,6 +48,8 @@ import copyright from '@/components/backhome/backPage/homeManagement/copyright.v
 //运营活动
 import coupon from '@/components/backhome/backPage/operation/coupon.vue'
 import addcoupon from '@/components/backhome/backPage/operation/addcoupon.vue'
+import hotword from '@/components/backhome/backPage/operation/hotword.vue'
+import linkword from '@/components/backhome/backPage/operation/linkword.vue'
 
 //权限管理
 import jurisdiction from '@/components/backhome/backPage/jurisdiction/jurisdiction.vue'
@@ -61,10 +63,13 @@ import journaldetail from '@/components/backhome/backPage/journal/journaldetail.
 //系统设置
 import system from '@/components/backhome/backPage/system/system.vue'
 import screening from '@/components/backhome/backPage/system/screening.vue'
+
 //售后设置
 import aftersale from '@/components/backhome/backPage/system/aftersale.vue'
+
 //邮箱服务设置
 import servicemail from '@/components/backhome/backPage/system/servicemail.vue'
+import addEmail from '@/components/backhome/backPage/system/addEmail.vue'
 
 Vue.use(Router)
 
@@ -120,6 +125,11 @@ export default new Router({
           path: '/servicemail',
           name: 'servicemail',
           component: servicemail
+        },
+        {
+          path: '/addEmail',
+          name: 'addEmail',
+          component: addEmail
         },
         //权限管理
         {
@@ -301,6 +311,17 @@ export default new Router({
           path: '/addcoupon',
           name: 'addcoupon',
           component: addcoupon
+        },
+        //热搜词
+        {
+          path: '/hotword',
+          name: 'hotword',
+          component: hotword
+        },
+        {
+          path: '/linkword',
+          name: 'linkword',
+          component: linkword
         }
       ]
     }

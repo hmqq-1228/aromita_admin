@@ -412,7 +412,6 @@ export default {
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    console.log(1)
                     deleteSkuBatch({ids:this.skuSelection}).then((res)=>{
                         if(res.data.code == 200){
                             this.$message({

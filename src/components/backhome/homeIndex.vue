@@ -20,14 +20,6 @@
                   <el-menu-item @click="updateUserPass()">修改密码</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
-              <el-submenu index="100">
-                <template slot="title">
-                  <span>邮箱服务设置</span>
-                </template>
-                <el-menu-item-group>
-                  <el-menu-item index="/servicemail">服务邮箱列表</el-menu-item>
-                </el-menu-item-group>
-              </el-submenu>
               <el-submenu v-for="(item,index) in menuList" :index="String(item.id)" :key="index">
                 <template slot="title" v-if="item.parent_id == 0">
                   <span>{{item.name}}</span>
