@@ -63,9 +63,11 @@ import system from '@/components/backhome/backPage/system/system.vue'
 import screening from '@/components/backhome/backPage/system/screening.vue'
 //售后设置
 import aftersale from '@/components/backhome/backPage/system/aftersale.vue'
-
+//邮箱服务设置
+import servicemail from '@/components/backhome/backPage/system/servicemail.vue'
 
 Vue.use(Router)
+
 export default new Router({
   routes: [
     //登陆页
@@ -107,10 +109,17 @@ export default new Router({
           name: 'screening',
           component: screening
         },
+        //售后服务
         {
           path: '/aftersale',
           name: 'aftersale',
           component: aftersale
+        },
+        //服务邮件设置
+        {
+          path: '/servicemail',
+          name: 'servicemail',
+          component: servicemail
         },
         //权限管理
         {

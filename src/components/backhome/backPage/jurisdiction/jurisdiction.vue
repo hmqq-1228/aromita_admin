@@ -74,11 +74,11 @@
             title="新建"
             :visible.sync="newDialog"
             width="460px">
-            <el-form :model="addFrom" label-width="120px">
-                <el-form-item label="用户名：">
+            <el-form :model="addFrom" :rules="rules" ref="addFrom" label-width="120px">
+                <el-form-item label="用户名：" prop="username">
                     <el-input v-model="addFrom.username"></el-input>
                 </el-form-item>
-                <el-form-item label="密码：">
+                <el-form-item label="密码：" prop="password">
                     <el-input v-model="addFrom.password"></el-input>
                 </el-form-item>
                 <el-form-item label="角色：">
@@ -96,7 +96,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="newDialog = false">取 消</el-button>
-                <el-button type="primary" @click="adduserSub()">确 定</el-button>
+                <el-button type="primary" @click="adduserSub('addFrom')">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -127,6 +127,15 @@ export default {
                 password:'123456',
                 role:'',
                 status:'1',
+            },
+            rules:{
+                username:[
+                    { required: true, message: '用户名必填', trigger: 'blur' },
+                    { min:1, max:30, message: '长度不能超过30个字符', trigger: 'blur' }
+                ],
+                password:[
+                    { required: true, message: '用户密码必填', trigger: 'blur' }
+                ]
             }
         }
     },
@@ -196,29 +205,36 @@ export default {
         //新建权限
         addUser(){
             this.newDialog = true
+            this.addFrom.username = ''
             this.addFrom.role = this.roleList[0].role_name
         },
-        adduserSub(){
-            createUser(this.addFrom).then((res)=>{
-                if(res.data.code == 200){
-                    this.$message({
-                        message: '新建成功',
-                        type: 'success'
-                    });
-                    this.newDialog = false
-                    this.getList()
-                }else{
-                    var msg = res.data.msg
-                    var msgstr = ''
-                    for(var i in msg){
-                        msgstr = msg[i][0]
-                    }
-                    this.$message({
-                        message:msgstr,
-                        type: 'error'
-                    });
+        adduserSub(addFrom){
+            this.$refs[addFrom].validate((valid) => {
+                if (valid) {
+                    createUser(this.addFrom).then((res)=>{
+                        if(res.data.code == 200){
+                            this.$message({
+                                message: '新建成功',
+                                type: 'success'
+                            });
+                            this.newDialog = false
+                            this.getList()
+                        }else{
+                            var msg = res.data.msg
+                            var msgstr = ''
+                            for(var i in msg){
+                                msgstr = msg[i][0]
+                            }
+                            this.$message({
+                                message:msgstr,
+                                type: 'error'
+                            });
+                        }
+                    })
+                } else {
+                    return false;
                 }
-            })
+            });
         }
     }
 }

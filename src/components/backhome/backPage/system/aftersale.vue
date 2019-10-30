@@ -68,6 +68,9 @@ import {afterList,createdSale,deleteSale,batchdeleteSale,saledetail,saledetailSu
 export default {
     data(){
         return{
+            page:1,
+            pageSize:10,
+            total:0,
             saleList:[],
             //退货原因弹框
             afterVisible:false,

@@ -19,12 +19,11 @@
                 </template>
             </el-table-column>
         </el-table>
-
         <!-- 编辑/新建角色 -->
         <el-dialog title="角色管理" :visible.sync="editVisible" width="500px">
-            <el-form :model="editForm" label-width="120px">
-                <el-form-item label="角色名：">
-                    <el-input v-model="editForm.role_name"></el-input>
+            <el-form :model="editForm" label-width="180px" :rules="rules" ref="addFrom">
+                <el-form-item label="角色名（要求中文）：" prop="role_name">
+                    <el-input v-model="editForm.role_name" onkeyup="this.value=this.value.replace(/[^\u4e00-\u9fa5]/g,'')"></el-input>
                 </el-form-item>
                 <el-form-item label="是否启用：">
                     <el-switch
@@ -36,7 +35,7 @@
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="editSub()">确 定</el-button>
+                <el-button type="primary" @click="editSub('addFrom')">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -54,7 +53,13 @@ export default {
                 role_name:'',
                 status:1
             },
-            type:1
+            type:1,
+            rules:{
+                role_name:[
+                    { required: true, message: '角色名必填', trigger: 'blur' },
+                    { min:1, max:15, message: '长度不能超过15个字符', trigger: 'blur' }
+                ]
+            }
         }
     },
     created(){
@@ -76,59 +81,67 @@ export default {
             this.type = type
         },
         //编辑角色提交
-        editSub(){
-            if(this.type == 1){
-                let pre={
-                    role_name:this.editForm.role_name,
-                    status:this.editForm.status
-                }
-                createRole(pre).then((res)=>{
-                    if(res.data.code == 200){
-                        this.$message({
-                            message: '新建成功',
-                            type: 'success'
-                        });
-                        this.editVisible = false
-                        this.getList()
-                    }else{
-                        var msg = res.data.msg
-                        var msgstr = ''
-                        for(var i in msg){
-                            msgstr = msg[i][0]
+        editSub(addFrom){
+            this.$refs[addFrom].validate((valid) => {
+                if (valid) {
+                    if(this.type == 1){
+                        let pre={
+                            role_name:this.editForm.role_name,
+                            status:this.editForm.status
                         }
-                        this.$message({
-                            message:msgstr,
-                            type: 'error'
-                        });
+                        createRole(pre).then((res)=>{
+                            if(res.data.code == 200){
+                                this.$message({
+                                    message: '新建成功',
+                                    type: 'success'
+                                });
+                                this.editVisible = false
+                                this.getList()
+                            }else{
+                                var msg = res.data.msg
+                                var msgstr = ''
+                                for(var i in msg){
+                                    msgstr = msg[i][0]
+                                }
+                                this.$message({
+                                    message:msgstr,
+                                    type: 'error'
+                                });
+                            }
+                        })
+                    }else if(this.type == 2){
+                        updateRole(this.editForm).then((res)=>{
+                            if(res.data.code == 200){
+                                this.$message({
+                                    message: '修改成功',
+                                    type: 'success'
+                                });
+                                this.editVisible = false
+                                this.getList()
+                            }else if(res.data.code == 401){
+                                this.$message({
+                                    message:'更新失败',
+                                    type: 'error'
+                                });
+                                this.editVisible = false
+                            }else{
+                                this.$message({
+                                    message:res.data.msg,
+                                    type: 'error'
+                                });
+                            }
+                        })
                     }
-                })
-            }else if(this.type == 2){
-                updateRole(this.editForm).then((res)=>{
-                    if(res.data.code == 200){
-                        this.$message({
-                            message: '修改成功',
-                            type: 'success'
-                        });
-                        this.editVisible = false
-                        this.getList()
-                    }else if(res.data.code == 401){
-                        this.$message({
-                            message:'更新失败',
-                            type: 'error'
-                        });
-                        this.editVisible = false
-                    }else{
-                        this.$message({
-                            message:res.data.msg,
-                            type: 'error'
-                        });
-                    }
-                })
-            }
+                }else{
+                    return false
+                }
+            })
+            
         },
         //新建角色
         addRole(type){
             this.type = type
+            this.editForm.role_name = ''
             this.editVisible = true
         },
         //配置权限
