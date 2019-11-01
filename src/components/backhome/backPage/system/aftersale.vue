@@ -4,7 +4,7 @@
             <h3>退款理由</h3>
         </div>
         <div class="btn">
-            <el-button type="primary" @click="addAfterSale()">新建</el-button>
+            <el-button type="primary" @click="addAfterSale(1)">新建</el-button>
             <el-button type="danger" @click="bothDeleteAttr()">批量删除</el-button>
         </div>
         <el-table :data="saleList" style="width: 100%" @selection-change="handleSelectionChange">
@@ -72,6 +72,7 @@ export default {
             pageSize:10,
             total:0,
             saleList:[],
+            type:1,
             //退货原因弹框
             afterVisible:false,
             addform:{
@@ -159,7 +160,8 @@ export default {
             })
         },
         //新增弹框
-        addAfterSale(){
+        addAfterSale(type){
+            this.type = type
             this.afterVisible = true
         },
         //验证售后原因
@@ -202,6 +204,7 @@ export default {
                             type: 'success'
                         });
                         this.afterVisible = false
+                        this.addform.return_reason = ''
                         this.getList()
                     }else{
                         this.$message({

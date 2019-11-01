@@ -1,17 +1,19 @@
 <template>
     <div class="linkword">
         <div class="heade">
-            <h3>链接词</h3>
+            <h3>新建链接词</h3>
         </div>
         <el-form :inline="true">
-            <el-form-item>
-                <el-input v-model="word_name" clearable placeholder="输入热搜词名称"></el-input>
+            <el-form-item label="活动名称：">
+                <el-input v-model="name" clearable placeholder="活动名称"></el-input>
+            </el-form-item>
+            <el-form-item label="请选择时间：">
+                <el-select>
+                    <el-option></el-option>
+                </el-select>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="searchLink">搜 索</el-button>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="addLinkWord">新建链接词</el-button>
+                <el-button type="primary" @click="searchList">搜 索</el-button>
             </el-form-item>
         </el-form>
         <el-table
@@ -20,34 +22,20 @@
             max-height="730px"
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column prop="link_word_name" label="热词名称"></el-table-column>
-            <el-table-column prop="created_at" label="创建时间"></el-table-column>
-            <el-table-column label="状态">
-                <template slot-scope="scope">
-                    <span>{{scope.row.status}}</span>
-                </template>
-            </el-table-column>
-            <el-table-column label="活动时间">
-                <template slot-scope="scope">
-                    <span>{{scope.row.acitivity_start_time}}</span>至
-                    <span>{{scope.row.acitivity_end_time}}</span>
-                </template>
-            </el-table-column>
-            <el-table-column label="操作">
-                <template slot-scope="scope">
-                    <el-button type="warning" @click="downLink(scope.row.id)">下架</el-button>
-                    <el-button type="danger" @click="deleteLink(scope.row.id)">删除</el-button>
-                </template>
-            </el-table-column>
+            <el-table-column prop="link_word_name" label="活动ID"></el-table-column>
+            <el-table-column prop="created_at" label="活动名称"></el-table-column>
+            <el-table-column label="开始时间"></el-table-column>
+            <el-table-column label="结束时间"></el-table-column>
         </el-table>
     </div>
 </template>
 <script>
-import {linkwordList,createdLink,deleteLinkword,downLinkword} from '@/http/word.js'
+import {activityindex,createdLink,deleteLinkword,downLinkword} from '@/http/word.js'
 export default {
     data(){
         return{
-            word_name:'',
+            name:'',
+            start_time:'',
             linkList:[],//列表
             multipleSelection: []
         }
@@ -57,7 +45,7 @@ export default {
     },
     methods:{
         getList(){
-            linkwordList({link_word_name:this.word_name}).then((res)=>{
+            activityindex({name:this.name,start_time:this.start_time}).then((res)=>{
                 if(res.data.code == 200){
                     this.linkList = res.data.data
                 }
@@ -66,7 +54,7 @@ export default {
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
-        searchLink(){
+        searchList(){
             this.getList()
         },
         addLinkWord(){

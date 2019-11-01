@@ -148,6 +148,7 @@
                                 <el-button type="success" v-if="scope.row.imageIsSet == false" disabled="disabled">上货</el-button>
                                 <el-button type="success" v-if="scope.row.imageIsSet == true" @click="goodsSpu(scope.row.id)">上货</el-button>
                                 <el-button type="primary" @click="viewSkuList(scope.row.id)">详情</el-button>
+                                <el-button type="success" v-if="scope.row.attrs.length!=0" @click="viewSort(scope.row.id)">属性排序</el-button>
                                 <el-button type="danger" @click="deleteSpu(scope.row.id)">删除</el-button>
                             </template>
                         </el-table-column>
@@ -201,6 +202,10 @@ export default {
         this.getClassII()      
     },
     methods:{
+        //配置属性顺序
+        viewSort(id){
+            this.$router.push({path:'/attributeOrder',query:{id:id}})
+        },
         //sku启用
         enableSku(id){
             skuSetEnable({id:id}).then((res)=>{
@@ -436,7 +441,7 @@ export default {
         },
         //单个删除spu
         deleteSpu(spuid){
-            this.$confirm('删除SPU后，该SPU下的SKU会被同步删除，是否继续？', '提示', {
+            this.$confirm('删除SPU后，该SPU下的SKU会被禁用，是否继续？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'

@@ -51,3 +51,6 @@ export const skuSetDisable = params =>put("/backend/product/sku/ajaxSetDisable",
 //批量新建SKU
 export const batchCreate = params =>post("/backend/product/sku/batchCreate",params)
 export const batchgetCount = params =>get("/backend/product/sku/getCount",params)
+
+//保存属性排序
+export const saveAttrSort = params =>post("/backend/product/sku/settingSaveSort",params)

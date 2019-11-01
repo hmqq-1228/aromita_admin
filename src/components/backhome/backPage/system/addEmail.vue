@@ -6,7 +6,7 @@
         </div>
         <el-form ref="emailForm" :rules="rules" :model="emailForm" label-width="140px">
             <el-form-item label="邮箱中文名称：" prop="cn_name">
-                <el-input v-model="emailForm.cn_name" onkeyup="this.value=this.value.replace(/[^\u4e00-\u9fa5]/g,'')"></el-input>
+                <el-input v-model="emailForm.cn_name" @blur="isTrue"></el-input>
             </el-form-item>
             <el-form-item label="邮箱英文名称：" prop="en_name">
                 <el-input v-model="emailForm.en_name"></el-input>
@@ -112,7 +112,8 @@ export default {
     },
     created(){
         this.emailId = this.$route.query.id
-        if(this.emailId!=''){
+        if(this.emailId){
+            console.log(1)
             this.getEmailDetail()
         }
     },
@@ -124,6 +125,18 @@ export default {
                     this.emailForm = res.data.data
                 }
             })
+        },
+        //检验邮箱中文名
+        isTrue(){
+            var patt1=/[\u4e00-\u9fa5]+$/
+            if(!patt1.test(this.emailForm.cn_name)){
+                this.$message({
+                    message:'邮箱中文名只能是中文',
+                    type: 'error'
+                });
+                this.emailForm.cn_name = ''
+                return false
+            }
         },
         //保存邮箱
         saveEmail(form){

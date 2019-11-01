@@ -35,7 +35,7 @@
                 </div>
             </el-form>
             <div class="btn">
-                <el-button type="primary" @click="saveAttr()" :disabled="this.flag">保存</el-button>
+                <el-button type="primary" @click="saveAttr()">保存</el-button>
                 <el-button type="info" @click="cancelAttr()">取消</el-button>
             </div>
         </div>
@@ -52,7 +52,6 @@ export default {
             attrform:{},
             required:false,
             errorMsg:[],//错误显示数组
-            flag:true,
         }
     },
     created(){
@@ -121,9 +120,6 @@ export default {
                             message:res.data.msg,
                             type: 'error'
                         });
-                        this.flag = true
-                    }else{
-                        this.flag = false
                     }
                 })
             }
@@ -146,22 +142,20 @@ export default {
                 val_search_show:search_show.join(','),
                 val_sort_order:sort_order.join(',')
             }
-            
-                attrUpdate(pre).then((res)=>{
-                    if(res.data.code == 200){
-                        this.$message({
-                            message:'保存成功',
-                            type: 'success'
-                        });
-                        this.$router.push({path:'/system'})
-                    }else{
-                        this.$message({
-                            message:res.data.msg,
-                            type: 'error'
-                        });
-                    }
-                })
-            
+            attrUpdate(pre).then((res)=>{
+                if(res.data.code == 200){
+                    this.$message({
+                        message:'保存成功',
+                        type: 'success'
+                    });
+                    this.$router.push({path:'/system'})
+                }else{
+                    this.$message({
+                        message:res.data.msg,
+                        type: 'error'
+                    });
+                }
+            })
         },
         //取消
         cancelAttr(){

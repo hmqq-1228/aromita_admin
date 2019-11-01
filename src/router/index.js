@@ -17,6 +17,7 @@ import classification from '@/components/backhome/backPage/category/classificati
 // 客户管理
 import customerList from '@/components/backhome/backPage/customer/customerList.vue'
 import pointsDetail from '@/components/backhome/backPage/customer/pointsDetail.vue'
+
 //商品管理
 import commodity from '@/components/backhome/backPage/commodity/commodity.vue'
 import commodityhand from '@/components/backhome/backPage/commodity/commodityhand.vue'
@@ -26,6 +27,7 @@ import skuDetail from '@/components/backhome/backPage/commodity/skuDetail.vue'
 import spuskulist from '@/components/backhome/backPage/commodity/spuskulist.vue'
 import setPictures from '@/components/backhome/backPage/commodity/setPictures.vue'
 import batchNew from '@/components/backhome/backPage/commodity/batchNew.vue'
+import attributeOrder from '@/components/backhome/backPage/commodity/attributeOrder.vue'
 
 //订单管理
 import orderList from '@/components/backhome/backPage/order/orderList.vue'
@@ -50,6 +52,7 @@ import coupon from '@/components/backhome/backPage/operation/coupon.vue'
 import addcoupon from '@/components/backhome/backPage/operation/addcoupon.vue'
 import hotword from '@/components/backhome/backPage/operation/hotword.vue'
 import linkword from '@/components/backhome/backPage/operation/linkword.vue'
+import newlink from '@/components/backhome/backPage/operation/newlink.vue'
 
 //权限管理
 import jurisdiction from '@/components/backhome/backPage/jurisdiction/jurisdiction.vue'
@@ -70,6 +73,7 @@ import aftersale from '@/components/backhome/backPage/system/aftersale.vue'
 //邮箱服务设置
 import servicemail from '@/components/backhome/backPage/system/servicemail.vue'
 import addEmail from '@/components/backhome/backPage/system/addEmail.vue'
+
 
 Vue.use(Router)
 
@@ -217,6 +221,12 @@ export default new Router({
           name: 'batchNew',
           component: batchNew
         },
+        //属性排序
+        {
+          path: '/attributeOrder',
+          name: 'attributeOrder',
+          component: attributeOrder
+        },
         //设置图片
         {
           path:'/setPictures',
@@ -318,10 +328,16 @@ export default new Router({
           name: 'hotword',
           component: hotword
         },
+        //链接词 
         {
           path: '/linkword',
           name: 'linkword',
           component: linkword
+        },
+        {
+          path: '/newlink',
+          name: 'newlink',
+          component: newlink
         }
       ]
     }
