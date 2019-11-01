@@ -142,7 +142,8 @@ export default {
         saveEmail(form){
             this.$refs[form].validate((valid) => {
                 if(valid){
-                    if(this.emailId!=''){
+                    if(this.emailId){
+                        console.log(1)
                         editEmail(this.emailForm).then((res)=>{
                             if(res.data.code == 200){
                                 this.$message({
