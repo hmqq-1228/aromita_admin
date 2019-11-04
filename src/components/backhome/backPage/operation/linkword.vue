@@ -24,7 +24,8 @@
             <el-table-column prop="created_at" label="创建时间"></el-table-column>
             <el-table-column label="状态">
                 <template slot-scope="scope">
-                    <span>{{scope.row.status}}</span>
+                    <el-tag v-if="scope.row.status == 1" type="success">启用</el-tag>
+                    <el-tag v-if="scope.row.status == 0" type="danger">关闭</el-tag>
                 </template>
             </el-table-column>
             <el-table-column label="活动时间">
@@ -93,6 +94,11 @@ export default {
                         type: 'success'
                     });
                     this.getList()
+                }else{
+                    this.$message({
+                        message:res.data.msg,
+                        type: 'error'
+                    });
                 }
             })
         }

@@ -8,9 +8,14 @@
                 <el-input v-model="name" clearable placeholder="活动名称"></el-input>
             </el-form-item>
             <el-form-item label="请选择时间：">
-                <el-select>
-                    <el-option></el-option>
-                </el-select>
+                <el-date-picker
+                    v-model="time"
+                    type="datetimerange"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    value-format="yyyy-MM-dd HH:mm:ss">
+                </el-date-picker>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="searchList">搜 索</el-button>
@@ -22,11 +27,15 @@
             max-height="730px"
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column prop="link_word_name" label="活动ID"></el-table-column>
-            <el-table-column prop="created_at" label="活动名称"></el-table-column>
-            <el-table-column label="开始时间"></el-table-column>
-            <el-table-column label="结束时间"></el-table-column>
+            <el-table-column prop="id" label="活动ID"></el-table-column>
+            <el-table-column prop="name" label="活动名称"></el-table-column>
+            <el-table-column prop="start_time" label="开始时间"></el-table-column>
+            <el-table-column prop="end_time" label="结束时间"></el-table-column>
         </el-table>
+        <div class="savebtn">
+            <el-button type="primary" @click="saveLink()">确定</el-button>
+            <el-button type="info">取消</el-button>
+        </div>
     </div>
 </template>
 <script>
@@ -35,7 +44,7 @@ export default {
     data(){
         return{
             name:'',
-            start_time:'',
+            time:[],
             linkList:[],//列表
             multipleSelection: []
         }
@@ -44,11 +53,16 @@ export default {
         this.getList()
     },
     methods:{
+        //获取活动列表
         getList(){
-            activityindex({name:this.name,start_time:this.start_time}).then((res)=>{
-                if(res.data.code == 200){
-                    this.linkList = res.data.data
-                }
+            var start_time = ''
+            var end_time = ''
+            if(this.time && this.time.length!=0){
+                start_time = this.time[0]
+                end_time = this.time[1]
+            }
+            activityindex({name:this.name,start_time:start_time,end_time:end_time}).then((res)=>{
+                this.linkList = res.data
             })
         },
         handleSelectionChange(val) {
@@ -57,36 +71,43 @@ export default {
         searchList(){
             this.getList()
         },
-        addLinkWord(){
-            this.$router.push({path:'/newlink'})
-        },
-        //下架链接词
-        downLink(id){
-            downLinkword({id:id}).then((res)=>{
-                if(res.data.code == 200){
-                    this.$message({
-                        message:'已下架',
-                        type: 'success'
-                    });
-                    this.getList()
+        //保存链接词
+        saveLink(){
+            if(this.multipleSelection.length == 0){
+                this.$message({
+                    message: '请勾选活动',
+                    type: 'warning'
+                });
+                return false
+            }else{
+                var arr =[]
+                for(var i=0;i<this.multipleSelection.length;i++){
+                    var obj = {
+                            "acitivity_id":this.multipleSelection[i].id,
+                            "link_word_name":this.multipleSelection[i].name,
+                            "status":this.multipleSelection[i].status,
+                            "acitivity_start_time":this.multipleSelection[i].start_time,
+                            "acitivity_end_time":this.multipleSelection[i].end_time,
+                            "url":this.multipleSelection[i].url,
+                        }
+                    arr.push(obj)
                 }
-            })
+                createdLink(arr).then((res)=>{
+                    if(res.data.code == 200){
+                        this.$message({
+                            message: '新建成功',
+                            type: 'success'
+                        });
+                        this.$router.push({path:'/linkword'})
+                    }
+                })
+            }
         },
-        //删除链接词
-        deleteLink(id){
-            deleteLinkword({id:id}).then((res)=>{
-                if(res.data.code == 200){
-                    this.$message({
-                        message:'已删除',
-                        type: 'success'
-                    });
-                    this.getList()
-                }
-            })
-        }
     }
 }
 </script>
 <style scoped>
-
+.savebtn{
+    margin-top: 20px;
+}
 </style>
