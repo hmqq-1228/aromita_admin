@@ -20,10 +20,10 @@
             </el-table-column>
         </el-table>
         <!-- 编辑/新建角色 -->
-        <el-dialog title="角色管理" :visible.sync="editVisible" width="500px">
+        <el-dialog title="角色管理" :visible.sync="editVisible" :show-close="false" width="500px">
             <el-form :model="editForm" label-width="180px" :rules="rules" ref="addFrom">
                 <el-form-item label="角色名（要求中文）：" prop="role_name">
-                    <el-input v-model="editForm.role_name" onkeyup="this.value=this.value.replace(/[^\u4e00-\u9fa5]/g,'')"></el-input>
+                    <el-input v-model="editForm.role_name"></el-input>
                 </el-form-item>
                 <el-form-item label="是否启用：">
                     <el-switch
@@ -34,7 +34,7 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
+                <el-button @click="cancel('addFrom')">取 消</el-button>
                 <el-button type="primary" @click="editSub('addFrom')">确 定</el-button>
             </span>
         </el-dialog>
@@ -44,6 +44,14 @@
 import {roleIndex,updateRole,createRole} from '@/http/jurisdiction.js'
 export default {
     data(){
+        var roleName = (rule, value, callback) => {
+            var patt1=new RegExp("^[\u4E00-\u9FA5]+$");
+            if(value !== '' && !patt1.test(value)){
+                callback(new Error('角色名只能是中文'));
+            }else {
+                callback();
+            }
+        };
         return{
             list:[],
             //编辑角色
@@ -56,6 +64,7 @@ export default {
             type:1,
             rules:{
                 role_name:[
+                    { validator: roleName, trigger: 'blur' },
                     { required: true, message: '角色名必填', trigger: 'blur' },
                     { min:1, max:15, message: '长度不能超过15个字符', trigger: 'blur' }
                 ]
@@ -79,6 +88,11 @@ export default {
             this.editForm.status = obj.status
             this.editVisible = true
             this.type = type
+        },
+        //取消按钮
+        cancel(formName){
+            this.$refs[formName].resetFields();
+            this.editVisible = false
         },
         //编辑角色提交
         editSub(addFrom){

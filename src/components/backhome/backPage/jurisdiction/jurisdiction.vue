@@ -95,7 +95,7 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="newDialog = false">取 消</el-button>
+                <el-button @click="cancel('addFrom')">取 消</el-button>
                 <el-button type="primary" @click="adduserSub('addFrom')">确 定</el-button>
             </span>
         </el-dialog>
@@ -179,6 +179,11 @@ export default {
                 }
             })
         },
+        //新建取消按钮
+        cancel(formName){
+            this.$refs[formName].resetFields();
+            this.newDialog = false
+        },
         //重置密码
         resetPass(id){
             this.$confirm('确定要重置密码吗?', '提示', {
@@ -189,7 +194,7 @@ export default {
                 resetUserPass({id:id}).then((res)=>{
                     if(res.data.code == 200){
                         this.$message({
-                            message: '已重置',
+                            message: '密码重置为123456成功',
                             type: 'success'
                         });
                         this.getList()

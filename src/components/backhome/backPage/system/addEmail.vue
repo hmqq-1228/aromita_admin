@@ -105,7 +105,8 @@ export default {
                     { required: true, message: '邮箱内容必填', trigger: 'blur' }
                 ],
                 send_email:[
-                    { required: true, message: '发件邮箱必填', trigger: 'blur' }
+                    { required: true, message: '发件邮箱必填', trigger: 'blur' },
+                    { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
                 ]
             }
         }
@@ -169,7 +170,7 @@ export default {
                         })
                     }
                 }else{
-                    this.$message.warning('请先填写内容')
+                    this.$message.warning('输入有误')
                 }
             })
         },

@@ -4,7 +4,7 @@
             <h3>退款理由</h3>
         </div>
         <div class="btn">
-            <el-button type="primary" @click="addAfterSale(1)">新建</el-button>
+            <el-button type="primary" @click="addAfterSale(1,'addform')">新建</el-button>
             <el-button type="danger" @click="bothDeleteAttr()">批量删除</el-button>
         </div>
         <el-table :data="saleList" style="width: 100%" @selection-change="handleSelectionChange">
@@ -34,10 +34,11 @@
         <el-dialog
             title="添加退货原因"
             :visible.sync="afterVisible"
+            :show-close="false"
             width="400px">
-            <el-form v-model="addform" label-width="100px">
-                <el-form-item label="退货原因：">
-                    <el-input v-model="addform.return_reason" @change="nameisTrue"></el-input>
+            <el-form :model="addform" label-width="100px" :rules="rules" ref="addform">
+                <el-form-item label="退货原因：" prop="return_reason">
+                    <el-input v-model="addform.return_reason" placeholder="请输入英文"></el-input>
                 </el-form-item>
                 <el-form-item label="优先级：">
                     <el-input v-model="addform.sort_order"></el-input>
@@ -57,8 +58,8 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="afterVisible = false">取 消</el-button>
-                <el-button type="primary" @click="addSub()" :disabled="flag">确 定</el-button>
+                <el-button @click="cancelReason('addform')">取 消</el-button>
+                <el-button type="primary" @click="addSub('addform')">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -67,6 +68,16 @@
 import {afterList,createdSale,deleteSale,batchdeleteSale,saledetail,saledetailSub} from '@/http/system.js'
 export default {
     data(){
+        var return_reason = (rule, value, callback) => {
+            var patt1=new RegExp("^[ a-zA-Z]+$");
+            if(value != '' && !patt1.test(value)){
+                callback(new Error('售后原因只能是英文'));
+            }else if(value != '' && value.length > 50){
+                callback(new Error('售后原因不能超过50个字符'));
+            }else {
+                callback();
+            }
+        };
         return{
             page:1,
             pageSize:10,
@@ -76,13 +87,19 @@ export default {
             //退货原因弹框
             afterVisible:false,
             addform:{
-                return_reason:'',
+                return_reason:' ',
                 sort_order:100,
                 is_upload:1,
                 status:1
             },
             flag:true,
             selectId: [],//选中的列表id
+            rules:{
+                return_reason:[
+                    { validator: return_reason, trigger: 'blur' },
+                    { required: true, message: '售后原因必填', trigger: 'blur' },
+                ]
+            }
         }
     },
     created(){
@@ -160,61 +177,59 @@ export default {
             })
         },
         //新增弹框
-        addAfterSale(type){
+        addAfterSale(type,form){
             this.type = type
+            this.addform.return_reason = ''
+            this.addform.sort_order = 100
+            this.addform.is_upload = 1
+            this.addform.status = 1
             this.afterVisible = true
         },
-        //验证售后原因
-        nameisTrue(){
-            var patt1=new RegExp("^[ a-zA-Z]+$");
-            if(!patt1.test(this.addform.return_reason)){
-                this.$message({
-                    message:'售后原因只能是英文',
-                    type: 'error'
-                });
-                this.addform.return_reason = ''
-                return false
-            }else{
-                this.flag = false
-            }
+        //取消售后
+        cancelReason(formName){
+            this.$refs[formName].resetFields();
+            this.afterVisible = false
         },
         //新建售后原因
-        addSub(){
-            if(this.type == 1){
-                createdSale(this.addform).then((res)=>{
-                    if(res.data.code == 200){
-                        this.$message({
-                            message:'新建成功',
-                            type: 'success'
-                        });
-                        this.afterVisible = false
-                        this.getList()
-                    }else{
-                        this.$message({
-                            message:res.data.msg,
-                            type: 'error'
-                        });
+        addSub(form){
+            this.$refs[form].validate((valid) => {
+                if(valid){
+                    if(this.type == 1){
+                        createdSale(this.addform).then((res)=>{
+                            if(res.data.code == 200){
+                                this.$message({
+                                    message:'新建成功',
+                                    type: 'success'
+                                });
+                                this.afterVisible = false
+                                this.getList()
+                            }else{
+                                this.$message({
+                                    message:res.data.msg,
+                                    type: 'error'
+                                });
+                            }
+                        }) 
+                    }else if(this.type == 2){
+                        saledetailSub(this.addform).then((res)=>{
+                            if(res.data.code == 200){
+                                this.$message({
+                                    message:'修改成功',
+                                    type: 'success'
+                                });
+                                this.afterVisible = false
+                                this.addform.return_reason = ''
+                                this.getList()
+                            }else{
+                                this.$message({
+                                    message:res.data.msg,
+                                    type: 'error'
+                                });
+                            }
+                        }) 
                     }
-                }) 
-            }else if(this.type == 2){
-                saledetailSub(this.addform).then((res)=>{
-                    if(res.data.code == 200){
-                        this.$message({
-                            message:'修改成功',
-                            type: 'success'
-                        });
-                        this.afterVisible = false
-                        this.addform.return_reason = ''
-                        this.getList()
-                    }else{
-                        this.$message({
-                            message:res.data.msg,
-                            type: 'error'
-                        });
-                    }
-                }) 
-            }
-            
+                }
+            }) 
         }
     }
 }
