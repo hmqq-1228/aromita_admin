@@ -23,3 +23,6 @@ export const createdLink = params =>post("/backend/linkword/create",params)
 
 //链接词活动新建列表
 export const activityindex = params =>post("/backend/linkword/activityindex",params)
+
+//推送链接词
+export const pushlinkword = params =>post("/backend/linkword/tuisong",params)

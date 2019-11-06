@@ -12,27 +12,30 @@
                 <el-button type="primary" @click="searchList">搜 索</el-button>
             </el-form-item>
         </el-form>
-        <el-table
-            :data="hotList"
-            style="width: 100%"
-            max-height="730px">
-            <el-table-column prop="name" label="热搜词"></el-table-column>
-            <el-table-column prop="created_at" label="创建时间"></el-table-column>
-            <el-table-column label="操作">
-                <template slot-scope="scope">
-                    <el-button type="danger" @click="deleteList(scope.row.id)">删除</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-        <div class="pagination">
-            <el-pagination
-                background
-                layout="prev, pager, next"
-                :page-size="pageSize"
-                :total="total"
-                @current-change="changePage">
-            </el-pagination>
+        <div v-if="hotList.length!=0">
+            <el-table
+                :data="hotList"
+                style="width: 100%"
+                max-height="730px">
+                <el-table-column prop="name" label="热搜词"></el-table-column>
+                <el-table-column prop="created_at" label="创建时间"></el-table-column>
+                <el-table-column label="操作">
+                    <template slot-scope="scope">
+                        <el-button type="danger" @click="deleteList(scope.row.id)">删除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="pagination">
+                <el-pagination
+                    background
+                    layout="prev, pager, next"
+                    :page-size="pageSize"
+                    :total="total"
+                    @current-change="changePage">
+                </el-pagination>
+            </div>
         </div>
+        <div class="custom" v-else>您还没有自定义热词，您可以创建<span @click="addWord">自定义热词</span></div>
         <!-- 新增弹框 -->
         <el-dialog
             title="新增热搜词"
@@ -40,7 +43,7 @@
             width="600px">
             <el-input v-model="name" @blur="isTrue" placeholder="每次输入只能输入一个热词，且热词必须为英文"></el-input>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="wordVisible = false">取 消</el-button>
+                <el-button @click="cancel()">取 消</el-button>
                 <el-button type="primary" @click="addWordSub()">确 定</el-button>
             </span>
         </el-dialog>
@@ -76,6 +79,10 @@ export default {
                 return false
             }
         },
+        //新建热搜词
+        addWord(){
+            this.wordVisible = true
+        },
         addWordSub(){
             createHotword({name:this.name}).then((res)=>{
                 if(res.data.code == 200){
@@ -84,9 +91,15 @@ export default {
                         type: 'success'
                     });
                     this.wordVisible = false
+                    this.name = ''
                     this.getList()
                 }
             })
+        },
+        //取消热搜词
+        cancel(){
+            this.name = ''
+            this.wordVisible = false
         },
         //查询列表
         searchList(){
@@ -104,7 +117,6 @@ export default {
         },
         //分页
         changePage(val){
-            console.log(val)
             this.page = val
             this.getList()
         },
@@ -119,17 +131,20 @@ export default {
                     this.getList()
                 }
             })
-        },
-        addWord(){
-            this.wordVisible = true
-        },
-        //创建热搜词
-        createdWord(){
-
         }
     }
 }
 </script>
 <style scoped>
-
+.custom{
+    height: 120px;
+    line-height: 120px;
+    text-align: center;
+    color:#333;
+}
+.custom span{
+    color:cadetblue;
+    margin:0 10px;
+    cursor: pointer;
+}
 </style>

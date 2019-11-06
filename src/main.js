@@ -14,8 +14,8 @@ import 'quill/dist/quill.snow.css';
 import 'quill/dist/quill.bubble.css';
 Vue.use(VueQuillEditor)
 
-Vue.prototype.$qs = qs
 Vue.use(ElementUI, { size: 'small', zIndex: 3000 });
+Vue.prototype.$qs = qs
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false
 

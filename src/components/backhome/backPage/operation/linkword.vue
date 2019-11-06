@@ -17,9 +17,8 @@
         <el-table
             :data="linkList"
             style="width: 100%"
-            max-height="730px"
-            @selection-change="handleSelectionChange">
-            <el-table-column type="selection" width="55"></el-table-column>
+            max-height="730px">
+            <!-- <el-table-column type="selection" width="55"></el-table-column> -->
             <el-table-column prop="link_word_name" label="热词名称"></el-table-column>
             <el-table-column prop="created_at" label="创建时间"></el-table-column>
             <el-table-column label="状态">
@@ -38,13 +37,14 @@
                 <template slot-scope="scope">
                     <el-button type="warning" @click="downLink(scope.row.id)">下架</el-button>
                     <el-button type="danger" @click="deleteLink(scope.row.id)">删除</el-button>
+                    <el-button type="primary" @click="pushLink(scope.row.id)">推送</el-button>
                 </template>
             </el-table-column>
         </el-table>
     </div>
 </template>
 <script>
-import {linkwordList,createdLink,deleteLinkword,downLinkword} from '@/http/word.js'
+import {linkwordList,createdLink,deleteLinkword,downLinkword,pushlinkword} from '@/http/word.js'
 export default {
     data(){
         return{
@@ -57,6 +57,7 @@ export default {
         this.getList()
     },
     methods:{
+        //获取列表
         getList(){
             linkwordList({link_word_name:this.word_name}).then((res)=>{
                 if(res.data.code == 200){
@@ -64,12 +65,23 @@ export default {
                 }
             })
         },
-        handleSelectionChange(val) {
-            this.multipleSelection = val;
+        //推送链接词
+        pushLink(id){
+            pushlinkword({id:id}).then((res)=>{
+                if(res.data.code == 200){
+                    this.$message({
+                        message:'已推送',
+                        type: 'success'
+                    });
+                    this.getList()
+                }
+            })
         },
+        //搜索
         searchLink(){
             this.getList()
         },
+        //新建链接词
         addLinkWord(){
             this.$router.push({path:'/newlink'})
         },
