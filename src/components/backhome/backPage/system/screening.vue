@@ -10,12 +10,12 @@
                 </el-form-item>
                 <el-form-item label="在前台显示：">
                     <el-radio-group v-model="attrform.search_show" @change="changeAttrShow()">
-                        <el-radio :label="1">是</el-radio>
+                        <el-radio :label="1" disabled>是</el-radio>
                         <el-radio :label="0">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="在前台显示顺序：" :required="required">
-                    <el-input v-model="attrform.sort_order" @change="validationRule(attrform,'attr',0)" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"></el-input>                   
+                    <el-input v-model="attrform.sort_order" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')" @blur="attrIstrue(attrform.sort_order)"></el-input>                   
                 </el-form-item>
             </el-form>
             <el-form label-width="140px">
@@ -30,7 +30,7 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="在前台显示顺序：">
-                        <el-input v-model="item.sort_order" @blur="validationRule(item,'attrvalue',index+1)" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')"></el-input>
+                        <el-input v-model="item.sort_order" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')" @blur="istrue(item.sort_order,index)"></el-input>
                     </el-form-item>
                 </div>
             </el-form>
@@ -84,46 +84,57 @@ export default {
                 this.required = false
             }
         },
-        //验证属性值等
-        validationRule(obj,str,dex){
-            if(this.attrform.search_show == 1 && !this.attrform.sort_order){
-                this.$message({
-                    message:'在前台显示顺序必填',
-                    type: 'warning'
-                });
+        //校验属性名排序值
+        attrIstrue(num){
+            if(!num){
                 this.attrform.sort_order = 1
-                return false
-            }else{
-                let pre={
-                    attr_id:'',
-                    attr_search_show:'',
-                    attr_sort_order:'',
-                    id:'',
-                    val_search_show:'',
-                    val_sort_order:''
-                }
-                if(str == 'attr'){
-                    pre.attr_id = obj.id
-                    pre.attr_search_show = obj.search_show
-                    pre.attr_sort_order = obj.sort_order
-                }else if(str == 'attrvalue'){
-                    pre.attr_id = this.attrform.id
-                    pre.attr_search_show = this.attrform.search_show
-                    pre.attr_sort_order = this.attrform.sort_order
-                    pre.id = obj.id
-                    pre.val_search_show = obj.search_show,
-                    pre.val_sort_order = obj.sort_order
-                }
-                attrSet(pre).then((res)=>{
-                    if(res.data.code != 200){
-                        this.$message({
-                            message:res.data.msg,
-                            type: 'error'
-                        });
-                    }
-                })
             }
         },
+        istrue(num,index){
+            if(!num){
+                this.attrValueList[index].sort_order = 1
+            }
+        },
+        //验证属性值等
+        // validationRule(obj,str,dex){
+        //     if(this.attrform.search_show == 1 && !this.attrform.sort_order){
+        //         this.$message({
+        //             message:'在前台显示顺序必填',
+        //             type: 'warning'
+        //         });
+        //         this.attrform.sort_order = 1
+        //         return false
+        //     }else{
+        //         let pre={
+        //             attr_id:'',
+        //             attr_search_show:'',
+        //             attr_sort_order:'',
+        //             id:'',
+        //             val_search_show:'',
+        //             val_sort_order:''
+        //         }
+        //         if(str == 'attr'){
+        //             pre.attr_id = obj.id
+        //             pre.attr_search_show = obj.search_show
+        //             pre.attr_sort_order = obj.sort_order
+        //         }else if(str == 'attrvalue'){
+        //             pre.attr_id = this.attrform.id
+        //             pre.attr_search_show = this.attrform.search_show
+        //             pre.attr_sort_order = this.attrform.sort_order
+        //             pre.id = obj.id
+        //             pre.val_search_show = obj.search_show,
+        //             pre.val_sort_order = obj.sort_order
+        //         }
+        //         attrSet(pre).then((res)=>{
+        //             if(res.data.code != 200){
+        //                 this.$message({
+        //                     message:res.data.msg,
+        //                     type: 'error'
+        //                 });
+        //             }
+        //         })
+        //     }
+        // },
         //保存
         saveAttr(){
             var idAttr = []

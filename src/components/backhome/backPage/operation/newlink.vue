@@ -34,7 +34,7 @@
         </el-table>
         <div class="savebtn">
             <el-button type="primary" @click="saveLink()">确定</el-button>
-            <el-button type="info">取消</el-button>
+            <router-link to="/linkword"><el-button type="info">取消</el-button></router-link>
         </div>
     </div>
 </template>
@@ -99,6 +99,11 @@ export default {
                             type: 'success'
                         });
                         this.$router.push({path:'/linkword'})
+                    }else{
+                        this.$message({
+                            message:res.data.msg,
+                            type: 'error'
+                        });
                     }
                 })
             }
