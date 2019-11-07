@@ -15,3 +15,7 @@ export const orderEdit = params =>post("/backend/order/edit",params)
 // 登陆
 export const userLogin = params =>post("/backend/admin/login",params)
 
+//取消订单
+export const cancelorder = params =>post("/backend/order/cancel",params)
+
+export const refundOrder = params =>get("/backend/paypal-refund",params)

@@ -93,6 +93,17 @@ export default {
                     this.wordVisible = false
                     this.name = ''
                     this.getList()
+                }else{
+                    var str =''
+                    for(var i in res.data.msg){
+                        str = res.data.msg[i]
+                    }
+                    this.$message({
+                        message:str[0],
+                        type: 'error'
+                    });
+                    this.wordVisible = false
+                    this.name = ''
                 }
             })
         },

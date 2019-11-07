@@ -85,7 +85,7 @@ export default {
                     var obj = {
                             "acitivity_id":this.multipleSelection[i].id,
                             "link_word_name":this.multipleSelection[i].name,
-                            "status":this.multipleSelection[i].status,
+                            "status":0,
                             "acitivity_start_time":this.multipleSelection[i].start_time,
                             "acitivity_end_time":this.multipleSelection[i].end_time,
                             "url":this.multipleSelection[i].url,

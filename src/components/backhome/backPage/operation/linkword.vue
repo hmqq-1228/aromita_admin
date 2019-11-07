@@ -74,6 +74,11 @@ export default {
                         type: 'success'
                     });
                     this.getList()
+                }else{
+                    this.$message({
+                        message:res.data.msg,
+                        type: 'error'
+                    });
                 }
             })
         },

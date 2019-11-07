@@ -112,7 +112,7 @@
     </div>
 </template>
 <script>
-import {orderList,orderUpdate,orderEdit} from '@/http/order.js'
+import {orderList,orderUpdate,orderEdit,cancelorder,refundOrder} from '@/http/order.js'
 import { stringify } from 'querystring'
 export default {
     data(){
@@ -148,6 +148,7 @@ export default {
                 '50':"Cancelled",
                 '60':"pending"
             },
+            beforeStatus:'',//前订单状态
             orderTable:[],//订单列表
             orderVisible:false,
             orderDetailForm:{
@@ -205,32 +206,70 @@ export default {
         },
         //订单编辑
         Edit(obj){
-            this.orderVisible = true;
             console.log(obj)
+            this.orderVisible = true;
+            this.beforeStatus = obj.orders_status
             this.orderDetailForm = JSON.parse(JSON.stringify(obj))
         },
         //修改订单状态提交
         editorderSub(){
-            let pre={
-                id:this.orderDetailForm.id,
-                orders_status:this.orderDetailForm.orders_status,
-                username:this.username
-            }
-            orderEdit(pre).then((res)=>{
-                if(res.data.code == 200){
-                    this.$message({
-                        message: '修改成功!',
-                        type: 'success'
-                    });
-                    this.orderVisible = false;
-                    this.getorderList()
-                }else{
-                    this.$message({
-                        message:res.data.msg,
-                        type: 'error'
-                    });
+            if(this.beforeStatus == 20 && this.orderDetailForm.orders_status == 50){
+                let pre1 = {
+                    ins_order:this.orderDetailForm.id,
+                    order_id:this.orderDetailForm.orders_number,
+                    order_current_status:this.beforeStatus
                 }
-            })
+                cancelorder(pre1).then((res)=>{
+                    if(res.data.code ==200){
+                        let pre2 ={
+                            transaction_id:this.orderDetailForm.transaction_id,
+                            order_total:this.orderDetailForm.order_total
+                        }
+                        refundOrder(pre2).then((res)=>{
+                            if(res.data.code == 200){
+                                this.$message({
+                                    message: '修改成功!',
+                                    type: 'success'
+                                });
+                                this.orderVisible = false;
+                                this.getorderList()
+                            }else{
+                                this.$message({
+                                    message:res.data.msg,
+                                    type: 'error'
+                                });
+                            }
+                        })
+                    }else{
+                        this.$message({
+                            message:res.data.msg,
+                            type: 'error'
+                        });
+                    }
+                })
+            }else{
+                let pre={
+                    id:this.orderDetailForm.id,
+                    orders_status:this.orderDetailForm.orders_status,
+                    username:this.username
+                }
+                orderEdit(pre).then((res)=>{
+                    if(res.data.code == 200){
+                        this.$message({
+                            message: '修改成功!',
+                            type: 'success'
+                        });
+                        this.orderVisible = false;
+                        this.getorderList()
+                    }else{
+                        this.$message({
+                            message:res.data.msg,
+                            type: 'error'
+                        });
+                    }
+                })
+            }
+            
         }
     }
 }
