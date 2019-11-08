@@ -6,12 +6,12 @@
         </div>
         <el-form ref="emailForm" :rules="rules" :model="emailForm" label-width="140px">
             <el-form-item label="邮箱中文名称：" prop="cn_name">
-                <el-input v-model="emailForm.cn_name" @blur="isTrue"></el-input>
+                <el-input v-model="emailForm.cn_name"></el-input>
             </el-form-item>
             <el-form-item label="邮箱英文名称：" prop="en_name">
                 <el-input v-model="emailForm.en_name"></el-input>
             </el-form-item>
-            <el-form-item label="邮件内容：" prop="content">
+            <el-form-item label="邮件内容：" prop="content" required>
                 <div class="editBox">
                     <el-upload
                         class="avatar-uploader"
@@ -58,6 +58,24 @@ import toolbarOptions from '../toolbarOptions'
 import qs from 'qs'
 export default {
     data(){
+        var cn_name = (rule, value, callback) => {
+            var patt1=/[\u4e00-\u9fa5]+$/
+            if(value != '' && !patt1.test(value)){
+                callback(new Error('邮箱中文名只能是中文'));
+            }else if(value != '' && value.length >50){
+                callback(new Error('长度不能超过50个字符'));
+            }else {
+                callback();
+            }
+        };
+        var en_name = (rule, value, callback) => {
+            var patt1=new RegExp("^[ a-zA-Z]+$");
+            if(value != '' && !patt1.test(value)){
+                callback(new Error('邮箱英文名只能是英文'));
+            }else {
+                callback();
+            }
+        };
         return{
             emailId:'',//编辑邮箱id
             emailForm:{
@@ -94,16 +112,16 @@ export default {
             //校验规则
             rules:{
                 cn_name:[
+                    { validator: cn_name, trigger: 'blur' },
                     { required: true, message: '邮箱中文名必填', trigger: 'blur' },
-                    { min:1, max:50, message: '长度不能超过50个字符', trigger: 'blur' }
                 ],
                 en_name:[
+                    { validator: en_name, trigger: 'blur' },
                     { required: true, message: '邮箱英文名必填', trigger: 'blur' },
-                    { min:1, max:50, message: '长度不能超过50个字符', trigger: 'blur' }
                 ],
-                content:[
-                    { required: true, message: '邮箱内容必填', trigger: 'blur' }
-                ],
+                // content:[
+                //     { required: true, message: '邮箱内容必填', trigger: 'blur' }
+                // ],
                 send_email:[
                     { required: true, message: '发件邮箱必填', trigger: 'blur' },
                     { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
@@ -201,7 +219,15 @@ export default {
             // 显示loading动画
             //this.quillUpdateImg = true
         },
-        handleEditorBlur () {},
+        handleEditorBlur () {
+            console.log(this.emailForm.content)
+            if(!this.emailForm.content){
+                this.$message({
+                    message: '邮件内容不能为空',
+                    type: 'error'
+                });
+            }
+        },
         handleEditorFocus () {}
     }
 }
