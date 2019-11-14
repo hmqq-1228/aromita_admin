@@ -11,7 +11,7 @@
             <el-form-item label="邮箱英文名称：" prop="en_name">
                 <el-input v-model="emailForm.en_name"></el-input>
             </el-form-item>
-            <el-form-item label="邮件内容：" prop="content" required>
+            <el-form-item label="邮件内容：" prop="content">
                 <div class="editBox">
                     <el-upload
                         class="avatar-uploader"
@@ -119,9 +119,9 @@ export default {
                     { validator: en_name, trigger: 'blur' },
                     { required: true, message: '邮箱英文名必填', trigger: 'blur' },
                 ],
-                // content:[
-                //     { required: true, message: '邮箱内容必填', trigger: 'blur' }
-                // ],
+                content:[
+                    { required: true, message: '邮箱内容必填', trigger: 'blur' }
+                ],
                 send_email:[
                     { required: true, message: '发件邮箱必填', trigger: 'blur' },
                     { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
@@ -132,7 +132,6 @@ export default {
     created(){
         this.emailId = this.$route.query.id
         if(this.emailId){
-            console.log(1)
             this.getEmailDetail()
         }
     },
@@ -162,7 +161,6 @@ export default {
             this.$refs[form].validate((valid) => {
                 if(valid){
                     if(this.emailId){
-                        console.log(1)
                         editEmail(this.emailForm).then((res)=>{
                             if(res.data.code == 200){
                                 this.$message({
@@ -220,7 +218,6 @@ export default {
             //this.quillUpdateImg = true
         },
         handleEditorBlur () {
-            console.log(this.emailForm.content)
             if(!this.emailForm.content){
                 this.$message({
                     message: '邮件内容不能为空',

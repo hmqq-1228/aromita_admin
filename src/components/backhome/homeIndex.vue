@@ -40,20 +40,20 @@
         title="修改密码"
         :visible.sync="passVisible"
         width="300px">
-        <el-form>
-          <el-form-item label="旧密码：">
-              <el-input type="password" v-model="oldpassword"></el-input>
+        <el-form :model="passform" :rules="rules" ref="passform">
+          <el-form-item label="旧密码：" prop="password">
+              <el-input type="password" v-model="passform.password"></el-input>
           </el-form-item>
-          <el-form-item label="新密码：">
-              <el-input type="password" v-model="password"></el-input>
+          <el-form-item label="新密码：" prop="newpassword">
+              <el-input type="password" v-model="passform.newpassword"></el-input>
           </el-form-item>
-          <el-form-item label="确认密码：">
-              <el-input type="password" v-model="password"></el-input>
+          <el-form-item label="确认密码：" prop="newpassword_confiramation">
+              <el-input type="password" v-model="passform.newpassword_confiramation"></el-input>
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
           <el-button @click="passVisible = false">取 消</el-button>
-          <el-button type="primary" @click="updateUserPassSub()">确 定</el-button>
+          <el-button type="primary" @click="updateUserPassSub('passform')">确 定</el-button>
         </span>
     </el-dialog>
   </div>
@@ -68,8 +68,22 @@ export default {
       activeRoute: 'index',
       menulist:[],
       passVisible:false,
-      oldpassword:'',
-      password:'',//密码
+      passform:{
+        password:'',
+        newpassword:'',
+        newpassword_confiramation:''
+      },
+      rules:{
+        password:[
+          {required: true, message: '密码必填', trigger: 'blur'},
+        ],
+        newpassword:[
+          {required: true, message: '新密码必填', trigger: 'blur'},
+        ],
+        newpassword_confiramation:[
+          {required: true, message: '请再次输入新密码', trigger: 'blur'},
+        ]
+      }
     }
   },
   watch:{
@@ -89,7 +103,6 @@ export default {
               childList.push(obj)
           }
       }
-
       for(var i=0;i<fristAttr.length;i++){
           var obj = childList.filter(n=>n.parent_id == fristAttr[i].id)
           fristAttr[i]["children"] = obj
@@ -104,6 +117,27 @@ export default {
     //修改密码
     updateUserPass(){
         this.passVisible = true;
+    },
+    //修改密码
+    updateUserPassSub(form){
+      this.$refs[form].validate((valid) => {
+          if(valid){
+              updatepass(this.passform).then((res)=>{
+                if(res.data.code == 200){
+                    this.$message({
+                      type:'success',
+                      message:"修改成功，请重新登录"
+                    })
+                    this.$router.push('/')
+                }else{
+                    this.$message({
+                      type:'error',
+                      message:res.data.msg
+                    })
+                }
+              })
+          }
+      })
     },
     //退出登录
     outLogin () {
