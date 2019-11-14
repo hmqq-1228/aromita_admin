@@ -19,6 +19,15 @@
                 </template>
             </el-table-column>
         </el-table>
+        <div class="pagination">
+            <el-pagination
+                background
+                :page-size="pageSize"
+                layout="prev, pager, next"
+                :total="total"
+                @current-change="changePage">
+            </el-pagination>
+        </div>
         <!-- 编辑/新建角色 -->
         <el-dialog title="角色管理" :visible.sync="editVisible" :show-close="false" width="500px">
             <el-form :model="editForm" label-width="180px" :rules="rules" ref="addFrom">
@@ -53,6 +62,9 @@ export default {
             }
         };
         return{
+            page:1,
+            pageSize:15,
+            total:0,
             list:[],
             //编辑角色
             editVisible:false,
@@ -75,10 +87,18 @@ export default {
         this.getList()
     },
     methods:{
+        //分页
+        changePage(val){
+            this.page = val
+            this.getList()
+        },
         //获取角色列表
         getList(){
-            roleIndex().then((res)=>{
-                this.list = res.data.data
+            roleIndex({page:this.page}).then((res)=>{
+                if(res.data.code == 200){
+                    this.list = res.data.data.data
+                    this.total = res.data.data.total
+                }
             })
         },
         //编辑角色

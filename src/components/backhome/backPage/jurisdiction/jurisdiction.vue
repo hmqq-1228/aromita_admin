@@ -25,7 +25,7 @@
                 <el-button type="primary" @click="addUser()">新 建</el-button>
             </el-form-item>
         </el-form>
-        <el-table :data="list">
+        <el-table :data="list" max-height="740px">
             <el-table-column prop="username" label="用户名"></el-table-column>
             <el-table-column prop="role_name" label="角色"></el-table-column>
             <el-table-column label="状态">
@@ -41,6 +41,16 @@
                 </template>
             </el-table-column>
         </el-table>
+        <!-- 分页 -->
+        <div class="pagination">
+            <el-pagination
+                background
+                :page-size="pageSize"
+                layout="prev, pager, next"
+                :total="total"
+                @current-change="changePage">
+            </el-pagination>
+        </div>
         <!-- 编辑权限弹框 -->
         <el-dialog
             title="编辑"
@@ -106,7 +116,10 @@ import {userIndex,updateUser,resetUserPass,createUser} from "@/http/jurisdiction
 export default {
     data(){
         return{
+            pageSize:15,
+            total:0,
             searchForm:{
+                page:1,
                 role:'',
                 status:'',
                 username:''
@@ -143,9 +156,14 @@ export default {
         this.getList()
     },
     methods:{
+        //分页
+        changePage(val){
+            this.searchForm.page = val
+            this.getList()
+        },
         getList(){
             userIndex(this.searchForm).then((res)=>{
-                this.list = res.data.data.user
+                this.list = res.data.data.user.data
                 this.roleList = res.data.data.role
             })
         },
