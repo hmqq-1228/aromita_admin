@@ -32,6 +32,8 @@ import attributeOrder from '@/components/backhome/backPage/commodity/attributeOr
 //订单管理
 import orderList from '@/components/backhome/backPage/order/orderList.vue'
 import orderDetail from '@/components/backhome/backPage/order/orderDetail.vue'
+import cancelOrder from '@/components/backhome/backPage/order/cancelOrder.vue'
+import cancelorderDetail from '@/components/backhome/backPage/order/cancelorderDetail.vue'
 
 //首页管理
 import banner from '@/components/backhome/backPage/homeManagement/banner.vue'
@@ -249,6 +251,17 @@ export default new Router({
           path: '/orderDetail',
           name: 'orderDetail',
           component: orderDetail
+        },
+        //取消订单列表
+        {
+          path: '/cancelOrder',
+          name: 'cancelOrder',
+          component: cancelOrder
+        },
+        {
+          path: '/cancelorderDetail',
+          name: 'cancelorderDetail',
+          component: cancelorderDetail
         },
         //首页管理
         {

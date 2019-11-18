@@ -102,8 +102,6 @@ export default {
                         message:str[0],
                         type: 'error'
                     });
-                    this.wordVisible = false
-                    this.name = ''
                 }
             })
         },
