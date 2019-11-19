@@ -48,7 +48,7 @@
             <el-table
                 :data="orderTable"
                 style="width: 100%"
-                max-height="700px">
+                max-height="740px">
                 <el-table-column prop="orders_number" label="订单号"></el-table-column>
                 <el-table-column prop="customers_id" label="客户ID" width="60px"></el-table-column>
                 <el-table-column label="订单状态">
@@ -112,7 +112,7 @@
     </div>
 </template>
 <script>
-import {orderList,orderUpdate,orderEdit,cancelorder,refundOrder} from '@/http/order.js'
+import {orderList,orderUpdate,orderEdit,cancelorder,refundOrder,refundInsert} from '@/http/order.js'
 import { stringify } from 'querystring'
 export default {
     data(){
@@ -227,12 +227,22 @@ export default {
                         }
                         refundOrder(pre2).then((res)=>{
                             if(res.data.code == 200){
-                                this.$message({
-                                    message: '修改成功!',
-                                    type: 'success'
-                                });
-                                this.orderVisible = false;
-                                this.getorderList()
+                                refundInsert({orders_id:this.orderDetailForm.id}).then((res)=>{
+                                    if(res.data.code == 200){
+                                        this.$message({
+                                            message: '修改成功!',
+                                            type: 'success'
+                                        });
+                                        this.orderVisible = false;
+                                        this.getorderList()
+                                    }else{
+                                        this.$message({
+                                            message:res.data.msg,
+                                            type: 'error'
+                                        });
+                                    }
+                                })
+                                
                             }else{
                                 this.$message({
                                     message:res.data.msg,
