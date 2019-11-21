@@ -105,7 +105,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="warning" @click="editorderSub()">修 改</el-button>
+                    <el-button type="warning" @click="editorderSub()" :loading="loading">修 改</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
@@ -117,6 +117,7 @@ import { stringify } from 'querystring'
 export default {
     data(){
        return{
+            loading:false,
             total:0,
             pageSize:20,
             ordertime:[],//下单时间
@@ -213,6 +214,7 @@ export default {
         },
         //修改订单状态提交
         editorderSub(){
+            this.loading = true
             if(this.beforeStatus == 20 && this.orderDetailForm.orders_status == 50){
                 let pre1 = {
                     ins_order:this.orderDetailForm.id,
@@ -233,29 +235,39 @@ export default {
                                             message: '修改成功!',
                                             type: 'success'
                                         });
+                                        this.loading = false
                                         this.orderVisible = false;
                                         this.getorderList()
                                     }else{
+                                        this.loading = false
                                         this.$message({
                                             message:res.data.msg,
                                             type: 'error'
                                         });
                                     }
+                                }).catch(()=>{
+                                    this.loading = false
                                 })
                                 
                             }else{
+                                this.loading = false
                                 this.$message({
                                     message:res.data.msg,
                                     type: 'error'
                                 });
                             }
+                        }).catch(()=>{
+                            this.loading = false
                         })
                     }else{
+                        this.loading = false
                         this.$message({
                             message:res.data.msg,
                             type: 'error'
                         });
                     }
+                }).catch(()=>{
+                    this.loading = false
                 })
             }else{
                 let pre={
@@ -269,9 +281,11 @@ export default {
                             message: '修改成功!',
                             type: 'success'
                         });
+                        this.loading = false
                         this.orderVisible = false;
                         this.getorderList()
                     }else{
+                        this.loading = false
                         this.$message({
                             message:res.data.msg,
                             type: 'error'
