@@ -41,10 +41,12 @@
             </div>
             <div class="refundinfo box">
                 <div v-if="refund_info">
-                    <p>退款理由：{{refund_info.season_for_refund}}</p>
+                    <p>退款理由：
+                        <span v-for="(item,index) in season_refund" :key="index">{{season_for_refund[item]}}</span>
+                    </p>
                     <p>退款说明：{{refund_info.refund_instructions}}</p>
                     <p>凭证图片：</p>
-                    <p>审核结果：</p>
+                    <p>审核结果：{{returnstatus[refund_info.status]}}</p>
                     <p>是否退货：{{refund_info.is_return_purchase}}</p>
                     <p>是否退运费：{{refund_info.is_return_ship_fee}}</p>
                     <p>寄回运单号：{{refund_info.return_num}}</p>
@@ -57,7 +59,6 @@
                     <p>回退商品总金额：{{refund_total.final_refund_amount}}</p>
                     <p>回退运费金额：{{refund_total.final_refund_ship_fee}}</p>
                     <p>回退税费：{{refund_total.final_refund_tax}}</p>
-                    <p>回退积分数：</p>
                 </div>
                 <p>交易流水号：{{refund_total.transaction_num}}</p>
             </div>
@@ -65,6 +66,7 @@
     </div>
 </template>
 <script>
+import {SelectContent} from '@/http/after.js'
 export default {
     data(){
         return{
@@ -73,22 +75,34 @@ export default {
             refundproducts:[],//售后订单信息
             refund_info:{},//
             refund_total:{},//退款信息
-            orderdetail:[]
+            orderdetail:[],
+            returnstatus:{},//售后结果
+            season_refund:[],
+            season_for_refund:{},//售后理由
         }
     },
     created(){
         this.id = this.$route.query.id
         if(this.id !=''){
             this.getDetail()
+            this.getSelect()
         }
     },
     methods:{
+        //下拉款列表
+        getSelect(){
+            SelectContent().then((res)=>{
+                this.season_for_refund = res.data.data.season_for_refund
+                this.returnstatus = res.data.data.status
+            })
+        },
         getDetail(){
             this.$axios.get(`/backend/refund/${this.id}`).then((res)=>{
                 if(res.data.code == 200){
                     this.order_info.push(res.data.data.order_info)
                     this.refundproducts = res.data.data.refund_products
                     this.refund_info = res.data.data.refund_info
+                    this.season_refund = JSON.parse(this.refund_info.season_for_refund)
                     this.refund_total = res.data.data.refund_total
                 }
             })
