@@ -76,6 +76,9 @@ import aftersale from '@/components/backhome/backPage/system/aftersale.vue'
 import servicemail from '@/components/backhome/backPage/system/servicemail.vue'
 import addEmail from '@/components/backhome/backPage/system/addEmail.vue'
 
+//售后列表
+import afterlist from '@/components/backhome/backPage/afterSale/afterList.vue'
+import aftersaledetail from '@/components/backhome/backPage/afterSale/aftersaledetail.vue'
 
 Vue.use(Router)
 
@@ -97,6 +100,17 @@ export default new Router({
           path: '/index',
           name: 'Index',
           component: Index
+        },
+        //售后管理
+        {
+          path: '/afterlist',
+          name: 'afterlist',
+          component: afterlist
+        },
+        {
+          path: '/aftersaledetail',
+          name: 'aftersaledetail',
+          component: aftersaledetail
         },
         //日志管理
         {
