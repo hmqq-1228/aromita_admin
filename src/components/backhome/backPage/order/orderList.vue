@@ -207,7 +207,6 @@ export default {
         },
         //订单编辑
         Edit(obj){
-            console.log(obj)
             this.orderVisible = true;
             this.beforeStatus = obj.orders_status
             this.orderDetailForm = JSON.parse(JSON.stringify(obj))
@@ -248,7 +247,6 @@ export default {
                                 }).catch(()=>{
                                     this.loading = false
                                 })
-                                
                             }else{
                                 this.loading = false
                                 this.$message({

@@ -5,7 +5,6 @@
         </div>
         <div class="orderCenter">
             <el-form :inline="true" :model="orderform" class="demo-form-inline">
-                
                 <el-form-item label="售后理由：">
                     <el-select v-model="orderform.season_for_refund" clearable>
                         <el-option v-for="(key,item,index) in season_for_refund" :label="key" :value="item" :key="index"></el-option>

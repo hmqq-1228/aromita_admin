@@ -104,20 +104,31 @@ export default {
         },
         //删除链接词
         deleteLink(id){
-            deleteLinkword({id:id}).then((res)=>{
-                if(res.data.code == 200){
-                    this.$message({
-                        message:'已删除',
-                        type: 'success'
-                    });
-                    this.getList()
-                }else{
-                    this.$message({
-                        message:res.data.msg,
-                        type: 'error'
-                    });
-                }
-            })
+            this.$confirm('确定要删除这条链接词吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                deleteLinkword({id:id}).then((res)=>{
+                    if(res.data.code == 200){
+                        this.$message({
+                            message:'已删除',
+                            type: 'success'
+                        });
+                        this.getList()
+                    }else{
+                        this.$message({
+                            message:res.data.msg,
+                            type: 'error'
+                        });
+                    }
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
+            });
         }
     }
 }

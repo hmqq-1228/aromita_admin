@@ -252,20 +252,31 @@ export default {
         },
         //删除
         remove(id) {
-            this.$axios.delete(`backend/product/category/${id}`,{}).then((res)=>{
-                if(res.data.code == 200){
-                    this.$message({
-                        message: '删除成功',
-                        type: 'success'
-                    });
-                    this.getList()
-                }else{
-                    this.$message({
-                        message:res.data.msg,
-                        type: 'error'
-                    });
-                }
-            })
+            this.$confirm('确定要删除吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$axios.delete(`backend/product/category/${id}`,{}).then((res)=>{
+                    if(res.data.code == 200){
+                        this.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        });
+                        this.getList()
+                    }else{
+                        this.$message({
+                            message:res.data.msg,
+                            type: 'error'
+                        });
+                    }
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
+            });
         }
     }
 }

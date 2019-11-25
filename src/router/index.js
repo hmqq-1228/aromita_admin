@@ -17,6 +17,7 @@ import classification from '@/components/backhome/backPage/category/classificati
 // 客户管理
 import customerList from '@/components/backhome/backPage/customer/customerList.vue'
 import pointsDetail from '@/components/backhome/backPage/customer/pointsDetail.vue'
+import suggestions from '@/components/backhome/backPage/customer/suggestions.vue'
 
 //商品管理
 import commodity from '@/components/backhome/backPage/commodity/commodity.vue'
@@ -55,6 +56,10 @@ import addcoupon from '@/components/backhome/backPage/operation/addcoupon.vue'
 import hotword from '@/components/backhome/backPage/operation/hotword.vue'
 import linkword from '@/components/backhome/backPage/operation/linkword.vue'
 import newlink from '@/components/backhome/backPage/operation/newlink.vue'
+//广告管理
+import advertising from '@/components/backhome/backPage/operation/advertising.vue'
+import floatwinone from '@/components/backhome/backPage/operation/floatwinone.vue'
+import floatwintwo from '@/components/backhome/backPage/operation/floatwintwo.vue'
 
 //权限管理
 import jurisdiction from '@/components/backhome/backPage/jurisdiction/jurisdiction.vue'
@@ -100,6 +105,22 @@ export default new Router({
           path: '/index',
           name: 'Index',
           component: Index
+        },
+        //广告管理 
+        {
+          path: '/advertising',
+          name: 'advertising',
+          component: advertising
+        },
+        {
+          path: '/floatwinone',
+          name: 'floatwinone',
+          component: floatwinone
+        },
+        {
+          path: '/floatwintwo',
+          name: 'floatwintwo',
+          component: floatwintwo
         },
         //售后管理
         {
@@ -195,6 +216,7 @@ export default new Router({
           name: 'classification',
           component: classification
         },
+        //客户管理
         {
           path: '/customerList',
           name: 'customerList',
@@ -204,6 +226,11 @@ export default new Router({
           path: '/pointsDetail',
           name: 'pointsDetail',
           component: pointsDetail
+        },
+        {
+          path: '/suggestions',
+          name: 'suggestions',
+          component: suggestions
         },
         //待上货商品管理
         {

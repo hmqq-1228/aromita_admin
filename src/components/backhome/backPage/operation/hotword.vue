@@ -131,15 +131,26 @@ export default {
         },
         //删除热搜词
         deleteList(id){
-            deleteHotword({id:id}).then((res)=>{
-                if(res.data.code == 200){
-                    this.$message({
-                        message: '删除成功',
-                        type: 'success'
-                    });
-                    this.getList()
-                }
-            })
+            this.$confirm('确定要删除这条热搜词吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                deleteHotword({id:id}).then((res)=>{
+                    if(res.data.code == 200){
+                        this.$message({
+                            message: '删除成功',
+                            type: 'success'
+                        });
+                        this.getList()
+                    }
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
+            });
         }
     }
 }

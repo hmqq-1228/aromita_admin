@@ -120,15 +120,26 @@ export default {
         },
         //单个删除售后列表
         deleteAttr(id){
-            deleteSale({id:id}).then((res)=>{
-                if(res.data.code == 200){
-                    this.$message({
-                        message:'已删除',
-                        type: 'success'
-                    });
-                    this.getList()
-                }
-            })
+            this.$confirm('确定删除吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                deleteSale({id:id}).then((res)=>{
+                    if(res.data.code == 200){
+                        this.$message({
+                            message:'已删除',
+                            type: 'success'
+                        });
+                        this.getList()
+                    }
+                })
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消删除'
+                });          
+            });
         },
         //批量删除
         bothDeleteAttr(){
