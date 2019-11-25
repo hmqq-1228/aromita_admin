@@ -293,6 +293,11 @@ export default {
               });
               that.editVisible = false
               that.coefficientList()
+            }else{
+              this.$message({
+                message:res.data.msg,
+                type: 'error'
+              });
             }
           })
         } else {
