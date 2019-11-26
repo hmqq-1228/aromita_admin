@@ -328,7 +328,6 @@
           column: that.ruleForm.column,
           is_top: that.ruleForm.isMain === true? 20 : 10
         }
-        // console.log('iiiiii', that.ruleForm.imageUrl.split(that.url)[1])
         this.$axios.put("backend/home/tools/" + that.currentId,obj).then((res)=>{
           console.log('kkkkk', res)
           if (res.data.code === 200) {

@@ -237,7 +237,7 @@ export default {
     },
     subCoefficient(){
       var that = this
-      if (that.maxPrice && that.minPrice) {
+      if (that.maxPrice > 0 && that.stepNum > 0) {
         if (that.maxPrice <= that.minPrice) {
           that.$message.warning('区间结束值应大于开始值！')
         } else {
@@ -255,6 +255,11 @@ export default {
                 });
                 that.centerDialogVisible = false
                 that.coefficientList()
+              } else {
+                this.$message({
+                  message: res.data.msg,
+                  type: 'warning'
+                });
               }
             })
           } else {
@@ -262,7 +267,7 @@ export default {
           }
         }
       } else {
-        that.$message.warning('请输入区间的开始值和结束值')
+        that.$message.warning('上货价区间结束值和利润系数应大于0')
       }
     },
     editeData(id, min, max, num){
@@ -276,9 +281,10 @@ export default {
     },
     editCoefficient(){
       var that = this
-      if (that.minPriceEdit >= that.maxPriceEdit) {
-        that.$message.warning('区间结束值应大于开始值！')
-      } else {
+      if (that.maxPriceEdit > 0 && that.stepNumEdit > 0) {
+        if (that.minPriceEdit >= that.maxPriceEdit) {
+          that.$message.warning('区间结束值应大于开始值！')
+        } else {
         if (that.stepNumEdit > 0) {
           var obj = qs.stringify({
             price_min: that.minPriceEdit,
@@ -293,11 +299,19 @@ export default {
               });
               that.editVisible = false
               that.coefficientList()
+            } else {
+              this.$message({
+                message: res.data.msg,
+                type: 'warning'
+              });
             }
           })
         } else {
           that.$message.warning('利润系数应大于0！')
         }
+      }
+    } else {
+        that.$message.warning('上货价区间结束值和利润系数应大于0')
       }
     }
   }
