@@ -16,3 +16,5 @@ export const addNewProduct = params =>post("backend/home/products",params);
 export const shereTools = params =>get("backend/home/tools",params);
 export const addNewSetting = params =>post("backend/home/tools",params);
 
+//用户修改密码
+export const updatepass = params =>post("/backend/admin/updatepass",params)

@@ -81,8 +81,10 @@ export default {
             let arr = []
             res.forEach((item) => {
                 arr.push(item.id)
+                arr.push(item.parent_id)
             })
-            var str = arr.join(',')
+            var arr1 = Array.from(new Set(arr))
+            var str = arr1.join(',')
             this.permission_id = str
         },
         //设置权限

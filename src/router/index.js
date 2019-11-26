@@ -17,6 +17,8 @@ import classification from '@/components/backhome/backPage/category/classificati
 // 客户管理
 import customerList from '@/components/backhome/backPage/customer/customerList.vue'
 import pointsDetail from '@/components/backhome/backPage/customer/pointsDetail.vue'
+import suggestions from '@/components/backhome/backPage/customer/suggestions.vue'
+
 //商品管理
 import commodity from '@/components/backhome/backPage/commodity/commodity.vue'
 import commodityhand from '@/components/backhome/backPage/commodity/commodityhand.vue'
@@ -26,10 +28,13 @@ import skuDetail from '@/components/backhome/backPage/commodity/skuDetail.vue'
 import spuskulist from '@/components/backhome/backPage/commodity/spuskulist.vue'
 import setPictures from '@/components/backhome/backPage/commodity/setPictures.vue'
 import batchNew from '@/components/backhome/backPage/commodity/batchNew.vue'
+import attributeOrder from '@/components/backhome/backPage/commodity/attributeOrder.vue'
 
 //订单管理
 import orderList from '@/components/backhome/backPage/order/orderList.vue'
 import orderDetail from '@/components/backhome/backPage/order/orderDetail.vue'
+import cancelOrder from '@/components/backhome/backPage/order/cancelOrder.vue'
+import cancelorderDetail from '@/components/backhome/backPage/order/cancelorderDetail.vue'
 
 //首页管理
 import banner from '@/components/backhome/backPage/homeManagement/banner.vue'
@@ -48,13 +53,40 @@ import copyright from '@/components/backhome/backPage/homeManagement/copyright.v
 //运营活动
 import coupon from '@/components/backhome/backPage/operation/coupon.vue'
 import addcoupon from '@/components/backhome/backPage/operation/addcoupon.vue'
+import hotword from '@/components/backhome/backPage/operation/hotword.vue'
+import linkword from '@/components/backhome/backPage/operation/linkword.vue'
+import newlink from '@/components/backhome/backPage/operation/newlink.vue'
+//广告管理
+import advertising from '@/components/backhome/backPage/operation/advertising.vue'
+import floatwinone from '@/components/backhome/backPage/operation/floatwinone.vue'
+import floatwintwo from '@/components/backhome/backPage/operation/floatwintwo.vue'
 
 //权限管理
 import jurisdiction from '@/components/backhome/backPage/jurisdiction/jurisdiction.vue'
 import role from '@/components/backhome/backPage/jurisdiction/role.vue'
 import authority from '@/components/backhome/backPage/jurisdiction/authority.vue'
 
+//日志管理
+import journal from '@/components/backhome/backPage/journal/journal.vue'
+import journaldetail from '@/components/backhome/backPage/journal/journaldetail.vue'
+
+//系统设置
+import system from '@/components/backhome/backPage/system/system.vue'
+import screening from '@/components/backhome/backPage/system/screening.vue'
+
+//售后设置
+import aftersale from '@/components/backhome/backPage/system/aftersale.vue'
+
+//邮箱服务设置
+import servicemail from '@/components/backhome/backPage/system/servicemail.vue'
+import addEmail from '@/components/backhome/backPage/system/addEmail.vue'
+
+//售后列表
+import afterlist from '@/components/backhome/backPage/afterSale/afterList.vue'
+import aftersaledetail from '@/components/backhome/backPage/afterSale/aftersaledetail.vue'
+
 Vue.use(Router)
+
 export default new Router({
   routes: [
     //登陆页
@@ -73,6 +105,72 @@ export default new Router({
           path: '/index',
           name: 'Index',
           component: Index
+        },
+        //广告管理 
+        {
+          path: '/advertising',
+          name: 'advertising',
+          component: advertising
+        },
+        {
+          path: '/floatwinone',
+          name: 'floatwinone',
+          component: floatwinone
+        },
+        {
+          path: '/floatwintwo',
+          name: 'floatwintwo',
+          component: floatwintwo
+        },
+        //售后管理
+        {
+          path: '/afterlist',
+          name: 'afterlist',
+          component: afterlist
+        },
+        {
+          path: '/aftersaledetail',
+          name: 'aftersaledetail',
+          component: aftersaledetail
+        },
+        //日志管理
+        {
+          path: '/journal',
+          name: 'journal',
+          component: journal
+        },
+        {
+          path: '/journaldetail',
+          name: 'journaldetail',
+          component: journaldetail
+        },
+        //系统设置
+        {
+          path: '/system',
+          name: 'system',
+          component: system
+        },
+        {
+          path: '/screening',
+          name: 'screening',
+          component: screening
+        },
+        //售后服务
+        {
+          path: '/aftersale',
+          name: 'aftersale',
+          component: aftersale
+        },
+        //服务邮件设置
+        {
+          path: '/servicemail',
+          name: 'servicemail',
+          component: servicemail
+        },
+        {
+          path: '/addEmail',
+          name: 'addEmail',
+          component: addEmail
         },
         //权限管理
         {
@@ -118,6 +216,7 @@ export default new Router({
           name: 'classification',
           component: classification
         },
+        //客户管理
         {
           path: '/customerList',
           name: 'customerList',
@@ -127,6 +226,11 @@ export default new Router({
           path: '/pointsDetail',
           name: 'pointsDetail',
           component: pointsDetail
+        },
+        {
+          path: '/suggestions',
+          name: 'suggestions',
+          component: suggestions
         },
         //待上货商品管理
         {
@@ -160,6 +264,12 @@ export default new Router({
           name: 'batchNew',
           component: batchNew
         },
+        //属性排序
+        {
+          path: '/attributeOrder',
+          name: 'attributeOrder',
+          component: attributeOrder
+        },
         //设置图片
         {
           path:'/setPictures',
@@ -182,6 +292,17 @@ export default new Router({
           path: '/orderDetail',
           name: 'orderDetail',
           component: orderDetail
+        },
+        //取消订单列表
+        {
+          path: '/cancelOrder',
+          name: 'cancelOrder',
+          component: cancelOrder
+        },
+        {
+          path: '/cancelorderDetail',
+          name: 'cancelorderDetail',
+          component: cancelorderDetail
         },
         //首页管理
         {
@@ -254,8 +375,30 @@ export default new Router({
           path: '/addcoupon',
           name: 'addcoupon',
           component: addcoupon
+        },
+        //热搜词
+        {
+          path: '/hotword',
+          name: 'hotword',
+          component: hotword
+        },
+        //链接词 
+        {
+          path: '/linkword',
+          name: 'linkword',
+          component: linkword
+        },
+        {
+          path: '/newlink',
+          name: 'newlink',
+          component: newlink
         }
       ]
     }
   ]
 })
+
+const routerPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return routerPush.call(this, location).catch(error=> error)
+}

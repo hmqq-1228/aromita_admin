@@ -117,6 +117,7 @@ export default {
                         message:'导入成功',
                         type:'success'
                     });
+                    this.$router.push({path:'/commodity'})
                 }
             }).catch(error => {
                 this.loading = false

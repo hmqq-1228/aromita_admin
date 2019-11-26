@@ -25,7 +25,7 @@
                 <el-button type="primary" @click="addUser()">新 建</el-button>
             </el-form-item>
         </el-form>
-        <el-table :data="list">
+        <el-table :data="list" max-height="740px">
             <el-table-column prop="username" label="用户名"></el-table-column>
             <el-table-column prop="role_name" label="角色"></el-table-column>
             <el-table-column label="状态">
@@ -41,6 +41,16 @@
                 </template>
             </el-table-column>
         </el-table>
+        <!-- 分页 -->
+        <div class="pagination">
+            <el-pagination
+                background
+                :page-size="pageSize"
+                layout="prev, pager, next"
+                :total="total"
+                @current-change="changePage">
+            </el-pagination>
+        </div>
         <!-- 编辑权限弹框 -->
         <el-dialog
             title="编辑"
@@ -74,12 +84,12 @@
             title="新建"
             :visible.sync="newDialog"
             width="460px">
-            <el-form :model="addFrom" label-width="120px">
-                <el-form-item label="用户名：">
+            <el-form :model="addFrom" :rules="rules" ref="addFrom" label-width="120px">
+                <el-form-item label="用户名：" prop="username">
                     <el-input v-model="addFrom.username"></el-input>
                 </el-form-item>
-                <el-form-item label="密码：">
-                    <el-input v-model="addFrom.password" type="password"></el-input>
+                <el-form-item label="密码：" prop="password">
+                    <el-input v-model="addFrom.password"></el-input>
                 </el-form-item>
                 <el-form-item label="角色：">
                     <el-select v-model="addFrom.role">
@@ -89,14 +99,14 @@
                 <el-form-item label="是否启用：">
                     <el-switch
                         v-model="addFrom.status"
-                        :active-value="1"
-                        :inactive-value="0">
+                        active-value="1"
+                        inactive-value="0">
                     </el-switch>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="newDialog = false">取 消</el-button>
-                <el-button type="primary" @click="adduserSub()">确 定</el-button>
+                <el-button @click="cancel('addFrom')">取 消</el-button>
+                <el-button type="primary" @click="adduserSub('addFrom')">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -106,7 +116,10 @@ import {userIndex,updateUser,resetUserPass,createUser} from "@/http/jurisdiction
 export default {
     data(){
         return{
+            pageSize:15,
+            total:0,
             searchForm:{
+                page:1,
                 role:'',
                 status:'',
                 username:''
@@ -124,9 +137,18 @@ export default {
             newDialog:false,
             addFrom:{
                 username:'',
-                password:'',
+                password:'123456',
                 role:'',
-                status:'',
+                status:'1',
+            },
+            rules:{
+                username:[
+                    { required: true, message: '用户名必填', trigger: 'blur' },
+                    { min:1, max:30, message: '长度不能超过30个字符', trigger: 'blur' }
+                ],
+                password:[
+                    { required: true, message: '用户密码必填', trigger: 'blur' }
+                ]
             }
         }
     },
@@ -134,9 +156,14 @@ export default {
         this.getList()
     },
     methods:{
+        //分页
+        changePage(val){
+            this.searchForm.page = val
+            this.getList()
+        },
         getList(){
             userIndex(this.searchForm).then((res)=>{
-                this.list = res.data.data.user
+                this.list = res.data.data.user.data
                 this.roleList = res.data.data.role
             })
         },
@@ -170,6 +197,11 @@ export default {
                 }
             })
         },
+        //新建取消按钮
+        cancel(formName){
+            this.$refs[formName].resetFields();
+            this.newDialog = false
+        },
         //重置密码
         resetPass(id){
             this.$confirm('确定要重置密码吗?', '提示', {
@@ -180,7 +212,7 @@ export default {
                 resetUserPass({id:id}).then((res)=>{
                     if(res.data.code == 200){
                         this.$message({
-                            message: '已重置',
+                            message: '密码重置为123456成功',
                             type: 'success'
                         });
                         this.getList()
@@ -196,23 +228,36 @@ export default {
         //新建权限
         addUser(){
             this.newDialog = true
+            this.addFrom.username = ''
+            this.addFrom.role = this.roleList[0].role_name
         },
-        adduserSub(){
-            createUser(this.addFrom).then((res)=>{
-                if(res.data.code == 200){
-                    this.$message({
-                        message: '新建成功',
-                        type: 'success'
-                    });
-                    this.newDialog = false
-                    this.getList()
-                }else{
-                    this.$message({
-                        message:res.data.msg,
-                        type: 'error'
-                    });
+        adduserSub(addFrom){
+            this.$refs[addFrom].validate((valid) => {
+                if (valid) {
+                    createUser(this.addFrom).then((res)=>{
+                        if(res.data.code == 200){
+                            this.$message({
+                                message: '新建成功',
+                                type: 'success'
+                            });
+                            this.newDialog = false
+                            this.getList()
+                        }else{
+                            var msg = res.data.msg
+                            var msgstr = ''
+                            for(var i in msg){
+                                msgstr = msg[i][0]
+                            }
+                            this.$message({
+                                message:msgstr,
+                                type: 'error'
+                            });
+                        }
+                    })
+                } else {
+                    return false;
                 }
-            })
+            });
         }
     }
 }

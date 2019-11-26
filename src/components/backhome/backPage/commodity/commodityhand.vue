@@ -119,6 +119,7 @@
                                 <el-button type="warning" v-if="scope.row.hasAttr == 'HAS_COLOR'" @click="setImages(scope.row.id)">设置图片</el-button>
                                 <el-button type="primary" @click="editSpuList(scope.row.id)">编辑</el-button>
                                 <el-button type="primary" @click="viewSkuList(scope.row.id)">详情</el-button>
+                                <el-button type="success" v-if="scope.row.attrs.length!=0" @click="viewSort(scope.row.id)">属性排序</el-button>
                                 <!-- <el-button type="danger" @click="deleteSpu(scope.row.id)">删除</el-button> -->
                             </template>
                         </el-table-column>
@@ -171,6 +172,10 @@ export default {
         this.getClassII()      
     },
     methods:{
+        //配置属性顺序
+        viewSort(id){
+            this.$router.push({path:'/attributeOrder',query:{id:id}})
+        },
         //sku列表分页器
         changeSkuPage(val){
             this.skusearchForm.page = val

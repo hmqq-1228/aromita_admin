@@ -48,7 +48,7 @@
             <el-table
                 :data="orderTable"
                 style="width: 100%"
-                max-height="700px">
+                max-height="740px">
                 <el-table-column prop="orders_number" label="订单号"></el-table-column>
                 <el-table-column prop="customers_id" label="客户ID" width="60px"></el-table-column>
                 <el-table-column label="订单状态">
@@ -105,18 +105,19 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="warning" @click="editorderSub()">修 改</el-button>
+                    <el-button type="warning" @click="editorderSub()" :loading="loading">修 改</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
     </div>
 </template>
 <script>
-import {orderList,orderUpdate,orderEdit} from '@/http/order.js'
+import {orderList,orderUpdate,orderEdit,cancelorder,refundOrder,refundInsert} from '@/http/order.js'
 import { stringify } from 'querystring'
 export default {
     data(){
        return{
+            loading:false,
             total:0,
             pageSize:20,
             ordertime:[],//下单时间
@@ -148,6 +149,7 @@ export default {
                 '50':"Cancelled",
                 '60':"pending"
             },
+            beforeStatus:'',//前订单状态
             orderTable:[],//订单列表
             orderVisible:false,
             orderDetailForm:{
@@ -206,31 +208,90 @@ export default {
         //订单编辑
         Edit(obj){
             this.orderVisible = true;
-            console.log(obj)
+            this.beforeStatus = obj.orders_status
             this.orderDetailForm = JSON.parse(JSON.stringify(obj))
         },
         //修改订单状态提交
         editorderSub(){
-            let pre={
-                id:this.orderDetailForm.id,
-                orders_status:this.orderDetailForm.orders_status,
-                username:this.username
-            }
-            orderEdit(pre).then((res)=>{
-                if(res.data.code == 200){
-                    this.$message({
-                        message: '修改成功!',
-                        type: 'success'
-                    });
-                    this.orderVisible = false;
-                    this.getorderList()
-                }else{
-                    this.$message({
-                        message:res.data.msg,
-                        type: 'error'
-                    });
+            this.loading = true
+            if(this.beforeStatus == 20 && this.orderDetailForm.orders_status == 50){
+                let pre1 = {
+                    ins_order:this.orderDetailForm.id,
+                    order_id:this.orderDetailForm.orders_number,
+                    order_current_status:this.beforeStatus
                 }
-            })
+                cancelorder(pre1).then((res)=>{
+                    if(res.data.code ==200){
+                        let pre2 ={
+                            transaction_id:this.orderDetailForm.transaction_id,
+                            order_total:this.orderDetailForm.order_total
+                        }
+                        refundOrder(pre2).then((res)=>{
+                            if(res.data.code == 200){
+                                refundInsert({orders_id:this.orderDetailForm.id}).then((res)=>{
+                                    if(res.data.code == 200){
+                                        this.$message({
+                                            message: '修改成功!',
+                                            type: 'success'
+                                        });
+                                        this.loading = false
+                                        this.orderVisible = false;
+                                        this.getorderList()
+                                    }else{
+                                        this.loading = false
+                                        this.$message({
+                                            message:res.data.msg,
+                                            type: 'error'
+                                        });
+                                    }
+                                }).catch(()=>{
+                                    this.loading = false
+                                })
+                            }else{
+                                this.loading = false
+                                this.$message({
+                                    message:res.data.msg,
+                                    type: 'error'
+                                });
+                            }
+                        }).catch(()=>{
+                            this.loading = false
+                        })
+                    }else{
+                        this.loading = false
+                        this.$message({
+                            message:res.data.msg,
+                            type: 'error'
+                        });
+                    }
+                }).catch(()=>{
+                    this.loading = false
+                })
+            }else{
+                let pre={
+                    id:this.orderDetailForm.id,
+                    orders_status:this.orderDetailForm.orders_status,
+                    username:this.username
+                }
+                orderEdit(pre).then((res)=>{
+                    if(res.data.code == 200){
+                        this.$message({
+                            message: '修改成功!',
+                            type: 'success'
+                        });
+                        this.loading = false
+                        this.orderVisible = false;
+                        this.getorderList()
+                    }else{
+                        this.loading = false
+                        this.$message({
+                            message:res.data.msg,
+                            type: 'error'
+                        });
+                    }
+                })
+            }
+            
         }
     }
 }
