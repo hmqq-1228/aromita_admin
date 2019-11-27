@@ -80,8 +80,8 @@
     :visible.sync="editVisible"
     width="400px">
     <div>
-      <div class="item"><div class="name">上货价区间开始($):</div><el-input-number v-model="minPriceEdit" controls-position="right" :min="0"></el-input-number> <i v-if="minPriceEditShow">*</i></div>
-      <div class="item"><div class="name">上货价区间结束($):</div><el-input-number v-model="maxPriceEdit" controls-position="right" :min="0"></el-input-number> <i v-if="maxPriceEditShow">*</i></div>
+      <div class="item"><div class="name">上货价区间开始($):</div><el-input-number v-model="minPriceEdit" controls-position="right" :min="0" disabled></el-input-number> <i v-if="minPriceEditShow">*</i></div>
+      <div class="item"><div class="name">上货价区间结束($):</div><el-input-number v-model="maxPriceEdit" controls-position="right" :min="0" disabled></el-input-number> <i v-if="maxPriceEditShow">*</i></div>
       <div class="item"><div class="name">利润系数:</div><el-input-number v-model="stepNumEdit" controls-position="right" :min="0"></el-input-number> <i v-if="stepNumEditShow">*</i></div>
     </div>
     <span slot="footer" class="dialog-footer">
@@ -192,30 +192,21 @@ export default {
   },
   methods:{
     currentPage (e) {
-      var that = this
-      console.log('size', e)
-      that.pageNum = e
-      that.coefficientList()
+      this.pageNum = e
+      this.coefficientList()
     },
     // 列表
     coefficientList () {
-      var that = this
       var obj = {
         perPage: 15,
-        page: that.pageNum
+        page: this.pageNum
       }
       coefficient(obj).then((res)=>{
-        if(res.data.code === 200){
-          that.tableData = res.data.data.data
-          that.totalNum = res.data.data.total
+        if(res.data.code == 200){
+          this.tableData = res.data.data.data
+          this.totalNum = res.data.data.total
         }
       })
-      // that.$axios.get("backend/product/profitCoefficient", obj).then((res)=>{
-      //   if(res.data.code === 200){
-      //     that.tableData = res.data.data.data
-      //     that.totalNum = res.data.data.total
-      //   }
-      // })
     },
     // 删除
     handleDelete(id){
@@ -239,34 +230,35 @@ export default {
             message: '已取消删除'
           });          
         });
-      
-      
     },
     // 新增
     addNewCoeff(){
-      var that = this
-      that.centerDialogVisible = true
+      this.centerDialogVisible = true
     },
     subCoefficient(){
-      var that = this
-      if (that.maxPrice > 0 && that.stepNum > 0) {
-        if (that.maxPrice <= that.minPrice) {
-          that.$message.warning('区间结束值应大于开始值！')
+      if(this.tableData.length == 0 && this.minPrice !=0){
+        this.$message.warning('创建第一个区间的时候必须从0开始创建')
+        this.minPrice = 0
+        return false
+      }
+      if (this.maxPrice > 0 && this.stepNum > 0) {
+        if (this.maxPrice <= this.minPrice) {
+          this.$message.warning('区间结束值应大于开始值！')
         } else {
-          if (that.stepNum > 0) {
+          if (this.stepNum > 0) {
             var obj = qs.stringify({
-              price_min: that.minPrice,
-              price_max: that.maxPrice,
-              price_coefficient: that.stepNum
+              price_min: this.minPrice,
+              price_max: this.maxPrice,
+              price_coefficient: this.stepNum
             })
-            that.$axios.post("backend/product/profitCoefficient", obj).then((res)=>{
+            this.$axios.post("backend/product/profitCoefficient", obj).then((res)=>{
               if(res.data.code === 200){
                 this.$message({
                   message: '添加成功',
                   type: 'success'
                 });
-                that.centerDialogVisible = false
-                that.coefficientList()
+                this.centerDialogVisible = false
+                this.coefficientList()
               } else {
                 this.$message({
                   message: res.data.msg,
@@ -275,42 +267,39 @@ export default {
               }
             })
           } else {
-            that.$message.warning('利润系数应大于0！')
+            this.$message.warning('利润系数应大于0！')
           }
         }
       } else {
-        that.$message.warning('上货价区间结束值和利润系数应大于0')
+        this.$message.warning('上货价区间结束值和利润系数应大于0')
       }
     },
     editeData(id, min, max, num){
-      var that = this
-      console.log(min, max, num)
-      that.editVisible = true
-      that.coeffId = id
-      that.minPriceEdit = min
-      that.maxPriceEdit = max
-      that.stepNumEdit = num
+      this.editVisible = true
+      this.coeffId = id
+      this.minPriceEdit = min
+      this.maxPriceEdit = max
+      this.stepNumEdit = num
     },
     editCoefficient(){
-      var that = this
-      if (that.maxPriceEdit > 0 && that.stepNumEdit > 0) {
-        if (that.minPriceEdit >= that.maxPriceEdit) {
-          that.$message.warning('区间结束值应大于开始值！')
+      if (this.maxPriceEdit > 0 && this.stepNumEdit > 0) {
+        if (this.minPriceEdit >= this.maxPriceEdit) {
+          this.$message.warning('区间结束值应大于开始值！')
         } else {
-        if (that.stepNumEdit > 0) {
+        if (this.stepNumEdit > 0) {
           var obj = qs.stringify({
-            price_min: that.minPriceEdit,
-            price_max: that.maxPriceEdit,
-            price_coefficient: that.stepNumEdit
+            price_min: this.minPriceEdit,
+            price_max: this.maxPriceEdit,
+            price_coefficient: this.stepNumEdit
           })
-          that.$axios.put("backend/product/profitCoefficient/" + that.coeffId, obj).then((res)=>{
+          this.$axios.put("backend/product/profitCoefficient/" + this.coeffId, obj).then((res)=>{
             if(res.data.code === 200){
               this.$message({
                 message: '修改成功',
                 type: 'success'
               });
-              that.editVisible = false
-              that.coefficientList()
+              this.editVisible = false
+              this.coefficientList()
             } else {
               this.$message({
                 message: res.data.msg,
@@ -319,11 +308,11 @@ export default {
             }
           })
         } else {
-          that.$message.warning('利润系数应大于0！')
+          this.$message.warning('利润系数应大于0！')
         }
       }
     } else {
-        that.$message.warning('上货价区间结束值和利润系数应大于0')
+        this.$message.warning('上货价区间结束值和利润系数应大于0')
       }
     }
   }
