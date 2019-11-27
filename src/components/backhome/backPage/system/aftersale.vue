@@ -13,7 +13,8 @@
             <el-table-column prop="sort_order" label="优先级"></el-table-column>
             <el-table-column label="状态">
                 <template slot-scope="scope">
-                    <span>{{scope.row.status}}</span>
+                    <span v-if="scope.row.status == 1">启用</span>
+                    <span v-if="scope.row.status == 0">关闭</span>
                 </template>
             </el-table-column>
             <el-table-column label="是否上传凭证">
@@ -154,7 +155,6 @@ export default {
                     var id = this.selectId[i].id
                     idattr.push(id)
                 }
-                console.log(idattr)
                 this.$confirm('确定要删除以下售后列表?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

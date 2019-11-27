@@ -16,7 +16,7 @@
         <div class="sortBox">
             <el-form label-width="80px" v-model="attrs">
                 <el-form-item v-for="(item,index) in attrs" :key="index" :label="`${item.name}：`">
-                    <el-input v-model="item.sort"></el-input>
+                    <el-input v-model="item.sort" @blur="sortRule(item,index)"></el-input>
                 </el-form-item>
             </el-form>
         </div>
@@ -46,8 +46,19 @@ export default {
             this.$axios.get(`/backend/product/sku/commonAttributeSort/${this.product_id}`).then((res)=>{
                 if(res.data.code == 200){
                     this.attrs = res.data.data.attrs
+                    for(var i in this.attrs){
+                        if(this.attrs[i].sort == ''){
+                            this.attrs[i].sort = 1
+                        }
+                    }
                 }
             })
+        },
+        //排序值校验
+        sortRule(num,dex){
+            if(num.sort == ''){
+                num.sort = 1
+            }
         },
         //保存排序值
         saveSort(){
