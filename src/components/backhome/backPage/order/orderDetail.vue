@@ -103,8 +103,8 @@
             </div>
             <!-- 订单物流信息 -->
             <h4>订单物流信息</h4>
-            <div v-if="tracking.length!=0" v-for="(item,index) in tracking" :key="index" class="tracking">
-                <h5>运输方式：跟踪号：</h5>
+            <div v-if="tracking && tracking.length!=0" v-for="(item,index) in tracking" :key="index" class="tracking">
+                <h5>运输方式：{{item[0].tracking_shipping_code}}&nbsp;&nbsp;&nbsp;跟踪号：{{item[0].tracking_number}}</h5>
                 <p class="list title">
                     <span>Time</span>
                     <span>Description</span>

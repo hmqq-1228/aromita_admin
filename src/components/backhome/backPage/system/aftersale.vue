@@ -5,7 +5,7 @@
         </div>
         <div class="btn">
             <el-button type="primary" @click="addAfterSale(1,'addform')">新建</el-button>
-            <el-button type="danger" @click="bothDeleteAttr()">批量删除</el-button>
+            <!-- <el-button type="danger" @click="bothDeleteAttr()">批量删除</el-button> -->
         </div>
         <el-table :data="saleList" style="width: 100%" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55"></el-table-column>
@@ -27,7 +27,7 @@
             <el-table-column label="操作">
                 <template slot-scope="scope">
                     <el-button type="primary" @click="editAttr(scope.row.id,2)">编辑</el-button>
-                    <el-button type="danger" @click="deleteAttr(scope.row.id)">删除</el-button>
+                    <!-- <el-button type="danger" @click="deleteAttr(scope.row.id)">删除</el-button> -->
                 </template>
             </el-table-column>
         </el-table>
@@ -39,7 +39,7 @@
             width="400px">
             <el-form :model="addform" label-width="100px" :rules="rules" ref="addform">
                 <el-form-item label="退货原因：" prop="return_reason">
-                    <el-input v-model="addform.return_reason" placeholder="请输入英文"></el-input>
+                    <el-input v-model="addform.return_reason" placeholder="请输入英文" :disabled="this.type == 1?false:true"></el-input>
                 </el-form-item>
                 <el-form-item label="优先级：">
                     <el-input v-model="addform.sort_order"></el-input>

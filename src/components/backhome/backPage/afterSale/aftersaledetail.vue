@@ -7,11 +7,19 @@
             <div class="orderinfo box">
                 <h4>订单信息</h4>
                 <el-table :data="order_info" v-if="order_info">
-                    <el-table-column prop="orders_number" label="订单号"></el-table-column>
+                    <el-table-column prop="orders_number" label="订单号">
+                        <template slot-scope="scope">
+                            <span>{{refund_info.orders_id}}</span>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="customers_id" label="客户ID"></el-table-column>
                     <el-table-column prop="order_total" label="订单金额"></el-table-column>
                     <el-table-column prop="shipping_method" label="选择运输方式"></el-table-column>
-                    <el-table-column prop="orders_status" label="状态"></el-table-column>
+                    <el-table-column label="状态">
+                        <template slot-scope="scope">
+                            <span>{{order_status[scope.row.orders_status]}}</span>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="pay_success_time" label="支付时间"></el-table-column>
                     <el-table-column prop="transaction_id" label="交易ID"></el-table-column>
                     <el-table-column prop="payment_method" label="支付方式"></el-table-column>
@@ -19,6 +27,7 @@
             </div>
             <div class="refundproducts box">
                 <h4>售后信息</h4>
+                <p class="refund_time">申请时间：{{refund_info.created_at}}</p>
                 <el-table :data="refundproducts" v-if="refundproducts">
                     <el-table-column label="Product">
                         <template slot-scope="scope">
@@ -36,23 +45,29 @@
                             </div>
                         </template>
                     </el-table-column>
+                    <el-table-column prop="sku_no" label="SKU编号"></el-table-column>
                     <el-table-column prop="refund_quantity" label="退货数量"></el-table-column>
                 </el-table>
             </div>
             <div class="refundinfo box">
                 <div v-if="refund_info">
                     <p>退款理由：
-                        <span v-for="(item,index) in season_refund" :key="index">{{season_for_refund[item]}}</span>
+                        <span v-for="(item,index) in season_refund" :key="index" class="refundreson">{{season_for_refund[item]}}</span>
                     </p>
                     <p>退款说明：{{refund_info.refund_instructions}}</p>
-                    <p>凭证图片：</p>
+                    <p class="refund_imglist">凭证图片：
+                        <img v-for="(item,index) in JSON.parse(refund_info.evidence_pictures)" :src="item" alt="" :key="index" class="refundimg">
+                    </p>
                     <p>审核结果：{{returnstatus[refund_info.status]}}</p>
-                    <p>是否退货：{{refund_info.is_return_purchase}}</p>
-                    <p>是否退运费：{{refund_info.is_return_ship_fee}}</p>
-                    <p>寄回运单号：{{refund_info.return_num}}</p>
+                    <p v-if="refund_info.status ==50 || refund_info.status==51">拒绝理由：{{refund_info.feedback_for_refund}}</p>
+                    <div v-if="refund_info.status!=50 && refund_info.status!=51">
+                        <p>是否退货：{{refund_info.is_return_purchase == 1?'是':'否'}}</p>
+                        <p>是否退运费：{{refund_info.is_return_ship_fee == 1?'是':'否'}}</p>
+                        <p>寄回运单号：{{refund_info.return_num}}</p>
+                    </div>
                 </div>
             </div>
-            <div class="refundTotal box" v-if="refund_total">
+            <div class="refundTotal box" v-if="refund_total && (refund_info.status!=50 && refund_info.status!=51)">
                 <div>
                     <h5>退款明细：</h5>
                     <p>退款总金额：{{refund_total.final_refund_subtotal}}</p>
@@ -79,6 +94,14 @@ export default {
             returnstatus:{},//售后结果
             season_refund:[],
             season_for_refund:{},//售后理由
+            order_status:{
+                '10':"退款完成",
+                '20':"Processing",
+                '30':"Processing (Payment Review)",
+                '40':"Shipped",
+                '50':"Cancelled",
+                '60':"pending"
+            },
         }
     },
     created(){
@@ -130,5 +153,21 @@ export default {
 }
 .refundTotal p{
     margin-bottom: 20px;
+}
+.refundreson{
+    display: inline-block;
+    margin-right: 10px;
+}
+.refund_imglist{
+    display:flex;
+}
+.refund_imglist .refundimg{
+    width:80px;
+    height: 80px;
+    margin-right: 20px;
+}
+.refund_time{
+    font-size: 12px;
+    margin:5px 0;
 }
 </style>

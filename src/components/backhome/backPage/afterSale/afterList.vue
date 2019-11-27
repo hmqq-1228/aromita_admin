@@ -34,10 +34,20 @@
                 max-height="700px">
                 <el-table-column prop="orders_id" label="订单号"></el-table-column>
                 <el-table-column prop="customers_id" label="客户ID" width="60px"></el-table-column>
-                <el-table-column prop="season_for_refund" label="售后理由"></el-table-column>
+                <el-table-column prop="return_reason" label="售后理由"></el-table-column>
                 <el-table-column prop="refund_result" label="售后结果"></el-table-column>
-                <el-table-column prop="final_refund_amount" label="退款金额（$）"></el-table-column>
-                <el-table-column prop="transaction_num" label="交易流水号"></el-table-column>
+                <el-table-column label="退款金额（$）">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.status == 50 || scope.row.status == 51"> / </span>
+                        <span v-else>{{scope.row.final_refund_amount}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="交易流水号">
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.status == 50 || scope.row.status == 51"> / </span>
+                        <span v-else>{{scope.row.transaction_num}}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <el-button type="primary" @click="orderDetail(scope.row.id)">详情</el-button>
