@@ -29,6 +29,7 @@ import spuskulist from '@/components/backhome/backPage/commodity/spuskulist.vue'
 import setPictures from '@/components/backhome/backPage/commodity/setPictures.vue'
 import batchNew from '@/components/backhome/backPage/commodity/batchNew.vue'
 import attributeOrder from '@/components/backhome/backPage/commodity/attributeOrder.vue'
+import scenetags from '@/components/backhome/backPage/commodity/scenetags.vue'
 
 //订单管理
 import orderList from '@/components/backhome/backPage/order/orderList.vue'
@@ -264,11 +265,17 @@ export default new Router({
           name: 'batchNew',
           component: batchNew
         },
-        //属性排序
+        //属性排序 
         {
           path: '/attributeOrder',
           name: 'attributeOrder',
           component: attributeOrder
+        },
+        //标签列表
+        {
+          path: '/scenetags',
+          name: 'scenetags',
+          component: scenetags
         },
         //设置图片
         {

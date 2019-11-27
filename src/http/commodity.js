@@ -54,3 +54,18 @@ export const batchgetCount = params =>get("/backend/product/sku/getCount",params
 
 //保存属性排序
 export const saveAttrSort = params =>post("/backend/product/sku/settingSaveSort",params)
+
+//标签列表
+export const sceneTag = params =>get("/backend/product/sceneTag",params)
+
+//新建时获取一级标签
+export const TagFirstCategory = params =>get("/backend/product/sceneTag/ajaxFirstCategory",params)
+
+//新建标签
+export const newSceneTag = params =>post("/backend/product/sceneTag",params)
+
+//查看标签
+export const viewSceneTag = params =>get("/backend/product/sceneTag",params)
+
+//编辑标签
+export const updataSceneTag = params =>put("/backend/product/sceneTag",params)

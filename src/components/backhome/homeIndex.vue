@@ -93,6 +93,7 @@ export default {
     this.getScreenHeight()
     var menuList = JSON.parse(localStorage.getItem("menuList"))
     if(menuList){
+      console.log(menuList)
       var fristAttr = []
       var childList = []
       for(var i=0;i<menuList.length;i++){
@@ -108,6 +109,7 @@ export default {
           fristAttr[i]["children"] = obj
       }
       this.menuList = fristAttr
+      console.log(this.menuList)
     }else{
       this.$message.warning("登录已过期，请重新登录")
       this.$router.push('/')
