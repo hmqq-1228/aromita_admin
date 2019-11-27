@@ -222,9 +222,11 @@ export default {
                     // 商品副图绑定
                     var thumbnail_images = res.data.data.thumbnail_images
                     var urlList = []
-                    for(var i=0;i<thumbnail_images.length;i++){
-                        var urlStr ={"url":thumbnail_images[i]}
-                        urlList.push(urlStr)
+                    if(thumbnail_images!= null){
+                        for(var i=0;i<thumbnail_images.length;i++){
+                            var urlStr ={"url":thumbnail_images[i]}
+                            urlList.push(urlStr)
+                        }
                     }
                     this.skuform.thumbnail_images = urlList
 
@@ -302,9 +304,11 @@ export default {
                     //商品副图数据格式更改
                     var thumbnail_images = res.data.data.thumbnail_images
                     var urlList = []
-                    for(var i=0;i<thumbnail_images.length;i++){
-                        var urlStr ={"url":thumbnail_images[i]}
-                        urlList.push(urlStr)
+                    if(thumbnail_images !=null){
+                        for(var i=0;i<thumbnail_images.length;i++){
+                            var urlStr ={"url":thumbnail_images[i]}
+                            urlList.push(urlStr)
+                        }
                     }
                     this.skuform.thumbnail_images = urlList
 
@@ -446,8 +450,11 @@ export default {
                     var imgStr = thumbnail_images[i].url
                     imgattr.push(imgStr)
                 }  
+                myForm.thumbnail_images = imgattr
+            }else{
+                myForm.thumbnail_images = ''
             }
-            myForm.thumbnail_images = imgattr
+            
 
             //处理商品场景图的数据格式
             var sceneimages = myForm.scene_images
@@ -457,8 +464,11 @@ export default {
                     var imgStr = sceneimages[i].url
                     imgattr1.push(imgStr)
                 }  
+                myForm.scene_images = imgattr1
+            }else{
+                myForm.scene_images = ''
             }
-            myForm.scene_images = imgattr1
+            
 
             //添加属性数据
             if(attrs1.length == 0){
