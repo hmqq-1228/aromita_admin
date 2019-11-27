@@ -67,6 +67,7 @@
                                 :file-list="skuform.scene_images"
                                 list-type="picture-card"
                                 :data="sceneType"
+                                :limit="4"
                                 name="image[]"
                                 :on-preview="handlePictureCardPreview"
                                 :on-remove="sceneHandleRemove"
@@ -79,7 +80,7 @@
                             </el-dialog> -->
                         </el-form-item>
                         <el-form-item>
-                            <b class="imgTips">请上传不超过500KB的550*550尺寸的PNG或JPG格式图片！</b>
+                            <b class="imgTips">请上传不超过500KB的550*550尺寸的PNG或JPG格式图片！（最多只能上传四张）</b>
                         </el-form-item>
                         <el-form-item label="SKU单位：">
                             <span>{{skuform.sku_unit}}</span>
@@ -141,6 +142,10 @@
                                     </div>
                                 </div>
                             </el-checkbox-group>
+                        </el-form-item>
+                        <el-form-item label="商品类型：">
+                            <el-radio v-model="skuform.is_shipping_fee" :label='2'>免运费商品</el-radio>
+                            <el-radio v-model="skuform.is_shipping_fee" :label='1'>非免运费商品</el-radio>
                         </el-form-item>
                         <el-form-item label="商品卖点：">
                             <el-input
@@ -455,7 +460,6 @@ export default {
                 myForm.thumbnail_images = ''
             }
             
-
             //处理商品场景图的数据格式
             var sceneimages = myForm.scene_images
             var imgattr1 = []
@@ -601,6 +605,7 @@ export default {
         },
         //场景图上传之前限制
         beforeSceneUpload(file) {
+            console.log(this.skuform.scene_images)
             //const isJPG = file.type === 'image/png,image/jpg,image/jpeg';
             const isLt2M = file.size / 1024 < 500 ;
             // if (!isJPG) {
