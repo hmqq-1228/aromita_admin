@@ -69,3 +69,6 @@ export const viewSceneTag = params =>get("/backend/product/sceneTag",params)
 
 //编辑标签
 export const updataSceneTag = params =>put("/backend/product/sceneTag",params)
+
+//spu设置获取标签
+export const spuTagList = params =>get("/backend/product/sceneTag/spuTagList",params)

@@ -30,7 +30,7 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="在前台显示顺序：">
-                        <el-input v-model="item.sort_order" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')" @blur="istrue(item.sort_order,index)"></el-input>
+                        <el-input v-model="item.sort_order" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')" @blur="istrue(item.sort_order,item.search_show,index)"></el-input>
                     </el-form-item>
                 </div>
             </el-form>
@@ -86,13 +86,24 @@ export default {
         },
         //校验属性名排序值
         attrIstrue(num){
-            if(!num){
+            if(this.attrform.search_show == 1 && !num){
                 this.attrform.sort_order = 1
+            }else if(this.attrform.search_show !=1 && !num){
+                this.attrform.sort_order = ''
             }
         },
-        istrue(num,index){
-            if(!num){
-                this.attrValueList[index].sort_order = 1
+        //校验属性值排序
+        istrue(num,show,index){ 
+            if(this.attrform.search_show == 1 && show == 1 && !num){
+                this.$message({
+                    message:'在前台显示顺序必填',
+                    type: 'warning'
+                });
+            }else if(this.attrform.search_show == 1 && show == 0 && !num){
+                this.attrValueList[index].sort_order = ''
+
+            }else if(this.attrform.search_show == 0 && !num){
+                this.attrValueList[index].sort_order = ''
             }
         },
         //验证属性值等

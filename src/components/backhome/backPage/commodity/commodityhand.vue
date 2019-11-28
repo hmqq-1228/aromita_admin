@@ -105,7 +105,7 @@
                     <el-table
                         :data="spuTable"
                         style="width: 100%"
-                        max-height="700px"
+                        max-height="680px"
                         @selection-change="handleSelectionChangespu">
                         <!-- <el-table-column type="selection" width="45"></el-table-column> -->
                         <el-table-column prop="product_no" label="SPU编号"></el-table-column>

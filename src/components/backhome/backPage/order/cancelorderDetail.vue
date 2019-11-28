@@ -10,7 +10,7 @@
                 <el-table-column prop="customers_id" label="客户ID"></el-table-column>
                 <el-table-column prop="order_total" label="订单金额"></el-table-column>
                 <el-table-column prop="shipping_method" label="选择运输方式"></el-table-column>
-                <el-table-column prop="status" label="状态"></el-table-column>
+                <el-table-column prop="orders_status" label="状态"></el-table-column>
                 <el-table-column prop="pay_success_time" label="支付时间"></el-table-column>
                 <el-table-column prop="transaction_id" label="交易ID"></el-table-column>
                 <el-table-column prop="payment_method" label="支付方式"></el-table-column>
@@ -21,7 +21,7 @@
             <div class="refund" v-if="orderdetail[0]">
                 <b>退款明细：</b>
                 <span>退款总金额：{{orderdetail[0].refund_total}}</span>
-                <span>回退积分数：{{orderdetail[0].return_points}}</span>
+                <span>回退积分数：{{orderdetail[0].Points}}</span>
             </div>
             <br>
             <div v-if="orderdetail[0]">

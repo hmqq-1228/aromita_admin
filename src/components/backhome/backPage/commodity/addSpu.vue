@@ -30,6 +30,17 @@
                         </quill-editor>
                     </div>
                 </el-form-item>
+                <el-form-item label="场景标签：">
+                    <el-tree
+                        :data="taglist"
+                        show-checkbox
+                        node-key="id"
+                        :props="defaultProps"
+                        :default-checked-keys="this.tagId"
+                        ref="tree"
+                        @check-change="handleCheckChange">
+                    </el-tree>
+                </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="addspuSub()" v-if="type == 0">新建</el-button>
                     <el-button type="primary" @click="addspuSub()" v-if="type == 1">修改</el-button>
@@ -39,7 +50,7 @@
     </div>
 </template>
 <script>
-import {addSpuList,uploadUrl,aditSpuList} from '@/http/commodity.js'
+import {addSpuList,uploadUrl,aditSpuList,spuTagList} from '@/http/commodity.js'
 import toolbarOptions from '../toolbarOptions'
 import qs from 'qs'
 export default {
@@ -81,6 +92,14 @@ export default {
                     }
                 }
             },
+            //标签
+            taglist:[],
+            tagId:[],//已选择的标签
+            defaultProps:{
+                children: 'second',
+                label: 'tag_name'
+            },
+            checkTag:[],//选中的标签
         }
     },
     mounted() {
@@ -92,6 +111,7 @@ export default {
             this.getSpuDetail()
             this.type = 1
         }
+        this.gettaglist()
     },
     methods:{
         uploadError() {
@@ -124,6 +144,19 @@ export default {
             var temp = str.split(/[\n,]/g).join(',');
             return temp
         },
+        //获取标签
+        gettaglist(){
+            spuTagList().then((res)=>{
+                if(res.data.code== 200){
+                    this.taglist = res.data.data.data
+                }
+            })
+        },
+        //勾选标签
+        handleCheckChange(data) {
+            let res = this.$refs.tree.getCheckedNodes()
+            this.checkTag = res
+        },
         //获取spu详情
         getSpuDetail(){
             this.$axios.get(`/backend/product/edit/${this.editSpuId}`,{}).then((res)=>{
@@ -138,16 +171,35 @@ export default {
                         arr.push(skunos)
                     }
                     this.addspuform.sku_nos = arr.join(',')
+                    this.tagId = res.data.data.tag_ids.split(',')
                 }
             })
         },
         //新建spu
         addspuSub(){
+            var tagarr = []
+            var tagnamearr = []
+            for(var i=0;i<this.checkTag.length;i++){
+                var tagid = ''
+                var tagname = ''
+                if(this.checkTag[i].parent_id != 0){
+                    tagid = this.checkTag[i].id
+                    tagname = this.checkTag[i].tag_name
+                    tagarr.push(tagid)
+                    tagnamearr.push(tagname)
+                } 
+            }
+            console.log(tagarr)
+            console.log(tagnamearr)
+
             var nos = this.foo(this.addspuform.sku_nos)
             let pre={
                 sku_nos:nos,
-                product_detail:this.addspuform.product_detail
+                product_detail:this.addspuform.product_detail,
+                tag_ids:tagarr.join(','),
+                tag_names:tagnamearr.join(',')
             }
+            
             if(this.type == 0){
                 addSpuList(pre).then((res)=>{
                     if(res.data.code == 200){
@@ -179,7 +231,6 @@ export default {
                     }
                 })
             }
-            
         }
     }
 }

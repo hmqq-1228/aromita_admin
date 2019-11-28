@@ -47,7 +47,7 @@ export default {
                 if(res.data.code == 200){
                     this.attrs = res.data.data.attrs
                     for(var i in this.attrs){
-                        if(this.attrs[i].sort == ''){
+                        if(this.attrs[i].sort == '' || this.attrs[i].sort == 0){
                             this.attrs[i].sort = 1
                         }
                     }

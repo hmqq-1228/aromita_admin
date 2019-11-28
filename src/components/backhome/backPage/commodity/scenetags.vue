@@ -53,7 +53,7 @@
             @close="resetData">
             <el-form :model="tagsform" label-width="120px">
                 <el-form-item label="标签名称：">
-                    <el-input v-model="tagsform.tag_name" placeholder="请输入英文名称" :disabled="this.type == 1?false:true"></el-input>
+                    <el-input v-model="tagsform.tag_name" placeholder="请输入英文名称" :disabled="this.type == 1?false:true" @blur="nameisTrue()"></el-input>
                 </el-form-item>
                 <el-form-item label="父级标签：">
                     <el-select v-model="tagsform.parent_id">
@@ -119,6 +119,18 @@ export default {
         this.getList()
     },  
     methods:{
+        //验证标签要求
+        nameisTrue(){
+            var patt1=new RegExp("^[ a-zA-Z]+$");
+            if(!patt1.test(this.tagsform.tag_name)){
+                this.$message({
+                    message:'标签名称只能是英文',
+                    type: 'error'
+                });
+                this.tagsform.tag_name = ''
+                return false
+            }
+        },
         //排序校验
         sortTest(){
             if(isNaN(Number(this.tagsform.sort))){
@@ -147,7 +159,6 @@ export default {
         getList(){
             sceneTag().then((res)=>{
                 this.list = JSON.parse(JSON.stringify(res.data.data.data))
-                console.log(this.list)
             })
         },
         //新增标签

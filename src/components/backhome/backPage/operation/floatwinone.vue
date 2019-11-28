@@ -29,7 +29,7 @@
                 <el-form-item label="标题链接：">
                     <el-input></el-input>
                 </el-form-item>
-                <el-form-item label="广告背景：">
+                <!-- <el-form-item label="广告背景：">
                     <el-upload
                         class="avatar-uploader"
                         :action="uploadUrl"
@@ -42,7 +42,7 @@
                         <img v-if="adverteform.backimg" :src="adverteform.backimg" class="avatar">
                         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="是否开启倒计时：">
                     <el-radio-group v-model="adverteform.time">
                         <el-radio :label="1">是</el-radio>
