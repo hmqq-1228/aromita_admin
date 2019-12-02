@@ -25,11 +25,12 @@
                 </el-form-item>
                 <el-form-item label="广告时段：">
                     <el-date-picker
-                        v-model="adverteform.time"
+                        v-model="time"
                         type="datetimerange"
                         range-separator="至"
                         start-placeholder="开始日期"
-                        end-placeholder="结束日期">
+                        end-placeholder="结束日期"
+                        value-format="yyyy-MM-dd HH:mm:ss">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item>
@@ -104,19 +105,19 @@ export default {
                     this.getList()
                 }else{
                     this.$message.error(res.data.msg);
+                    this.getList()
                 }
             })
         },
         //分页
         changePage(val){
-            console.log(val)
             this.getList()
         },
         //广告列表
         getList(){
             if(this.time && this.time.length!=0){
-                this.adverteform.ad_start_time = time[0]
-                this.adverteform.ad_end_time = time[1]
+                this.adverteform.ad_start_time = this.time[0]
+                this.adverteform.ad_end_time = this.time[1]
             }else{
                 this.adverteform.ad_start_time = ''
                 this.adverteform.ad_end_time = ''
