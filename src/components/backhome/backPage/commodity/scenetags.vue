@@ -151,9 +151,9 @@ export default {
         resetData(){
             this.tagsform.tag_name = ''
             this.tagsform.parent_id = '',
-            this.tagsform.tag_status = '',
-            this.tagsform.is_show = '',
-            this.tagsform.sort = ''
+            this.tagsform.tag_status = 1,
+            this.tagsform.is_show = 1,
+            this.tagsform.sort = '1'
         },
         //分类列表
         getList(){

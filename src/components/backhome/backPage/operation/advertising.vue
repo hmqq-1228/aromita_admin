@@ -12,9 +12,16 @@
         <div class="orderCenter">
             <el-form :inline="true" :model="adverteform" class="demo-form-inline">
                 <el-form-item label="状态：">
-                    <el-select clearable>
-                        <el-option v-for="(key,item,index) in season_for_refund" :label="key" :value="item" :key="index"></el-option>
+                    <el-select clearable v-model="adverteform.status">
+                        <el-option label="开启" :value="1"></el-option>
+                        <el-option label="关闭" :value="0"></el-option>
                     </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-input clearable placeholder="请输入广告名称" v-model="adverteform.top_ad_name"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-input clearable placeholder="请输入广告标题" v-model="adverteform.top_ad_title"></el-input>
                 </el-form-item>
                 <el-form-item label="广告时段：">
                     <el-date-picker
@@ -26,9 +33,6 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item>
-                    <el-input clearable placeholder="请输入广告名称/广告标题"></el-input>
-                </el-form-item>
-                <el-form-item>
                     <el-button type="primary" @click="onSubmit">查 询</el-button>
                 </el-form-item>
             </el-form>
@@ -36,14 +40,23 @@
                 :data="adverteTable"
                 style="width: 100%"
                 max-height="700px">
-                <el-table-column prop="orders_id" label="广告名称"></el-table-column>
-                <el-table-column prop="customers_id" label="广告标题"></el-table-column>
-                <el-table-column prop="season_for_refund" label="广告开始时间"></el-table-column>
-                <el-table-column prop="refund_result" label="广告结束时间"></el-table-column>
-                <el-table-column prop="final_refund_amount" label="广告状态"></el-table-column>
+                <el-table-column prop="top_ad_name" label="广告名称"></el-table-column>
+                <el-table-column prop="top_ad_title" label="广告标题"></el-table-column>
+                <el-table-column prop="ad_start_time" label="广告开始时间"></el-table-column>
+                <el-table-column prop="ad_end_time" label="广告结束时间"></el-table-column>
+                <el-table-column prop="status" label="广告状态">
+                    <template slot-scope="scope">
+                        <el-switch
+                            v-model="scope.row.status"
+                            :active-value="1"
+                            :inactive-value="0"
+                            @change="changestatus(scope.row)">
+                        </el-switch>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button type="primary">编辑</el-button>
+                        <el-button type="primary" @click="editList(scope.row.id)">编辑</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -60,30 +73,72 @@
     </div>
 </template>
 <script>
+import {advertlist,updatEdit,editadvert} from '@/http/advert.js'
 export default {
     data(){
         return{
             pageSize:15,
             total:0,
+            time:'',
             adverteform:{
                 page:1,
-                time:'',
+                status:'',
+                top_ad_name:'',
+                top_ad_title:'',
+                ad_start_time:'',
+                ad_end_time:''
             },
             adverteTable:[],//广告列表
             season_for_refund:{},//状态
         }
     },
     created(){
-
+        this.getList()
     },
     methods:{
+        //开启或关闭广告
+        changestatus(data){
+            updatEdit(data).then((res)=>{
+                if(res.data.code ==200){
+                    this.$message.success('修改成功');
+                    this.getList()
+                }else{
+                    this.$message.error(res.data.msg);
+                }
+            })
+        },
         //分页
-        changePage(){
-
+        changePage(val){
+            console.log(val)
+            this.getList()
+        },
+        //广告列表
+        getList(){
+            if(this.time && this.time.length!=0){
+                this.adverteform.ad_start_time = time[0]
+                this.adverteform.ad_end_time = time[1]
+            }else{
+                this.adverteform.ad_start_time = ''
+                this.adverteform.ad_end_time = ''
+            }
+            advertlist(this.adverteform).then((res)=>{
+                this.adverteTable = res.data.data.data
+            })
         },
         //查询
         onSubmit(){
-
+            this.adverteform.page = 1
+            this.getList()
+        },
+        //编辑
+        editList(id){
+            editadvert({id:id}).then((res)=>{
+                if(res.data.code == 200){
+                    this.$router.push({path:'/floatwinone',query:{id:id}})
+                }else{
+                    this.$message.error(res.data.msg);
+                }
+            })
         }
     }
 }
