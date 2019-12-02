@@ -52,7 +52,7 @@
             <div class="refundinfo box">
                 <div v-if="refund_info">
                     <p>退款理由：
-                        <span v-for="(item,index) in season_refund" :key="index" class="refundreson">{{season_for_refund[item]}}</span>
+                        <span v-for="(item,index) in season_refund" :key="index" class="refundreson">【{{season_for_refund[item]}}】</span>
                     </p>
                     <p>退款说明：{{refund_info.refund_instructions}}</p>
                     <p class="refund_imglist">凭证图片：

@@ -10,7 +10,11 @@
                 <el-table-column prop="customers_id" label="客户ID"></el-table-column>
                 <el-table-column prop="order_total" label="订单金额"></el-table-column>
                 <el-table-column prop="shipping_method" label="选择运输方式"></el-table-column>
-                <el-table-column prop="orders_status" label="状态"></el-table-column>
+                <el-table-column prop="orders_status" label="状态">
+                    <template slot-scope="scope">
+                        <span>{{order_status[scope.row.orders_status]}}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="pay_success_time" label="支付时间"></el-table-column>
                 <el-table-column prop="transaction_id" label="交易ID"></el-table-column>
                 <el-table-column prop="payment_method" label="支付方式"></el-table-column>
@@ -37,6 +41,14 @@ export default {
         return{
             orders_id:'',
             orderdetail:[],
+            order_status:{
+                '10':"pending",
+                '20':"Processing",
+                '30':"Processing (Payment Review)",
+                '40':"Shipped",
+                '50':"Cancelled",
+                '60':"pending"
+            },
         }
     },
     created(){
