@@ -130,6 +130,8 @@ export default {
                 ad_start_time:'',
                 ad_end_time:''
             },
+            oldform:{},
+            timetype:false,
             //表单规则
             rules:{
                 top_ad_name:[
@@ -154,14 +156,17 @@ export default {
         //改变广告时间
         changetime(){
             console.log(this.time)
+            this.timetype = true
         },
         //编辑广告获取详情
         getdetail(){
             editadvert({id:this.adverid}).then((res)=>{
                 if(res.data.code == 200){
-                    this.adverteform = res.data.data
+                    this.oldform = res.data.data
+                    this.adverteform = JSON.parse(JSON.stringify(res.data.data)) 
                     this.time.push(new Date(this.adverteform.ad_start_time))
                     this.time.push(new Date(this.adverteform.ad_end_time))
+                    console.log(this.time)
                 }else{
                     this.$message.error(res.data.msg);
                 }
@@ -222,7 +227,7 @@ export default {
         },
         //修改广告
         editAdverte(form){
-            if(this.time && this.time.length!=0){
+            if(this.time && this.time.length!=0 && this.timetype == true){
                 this.adverteform.ad_start_time = this.time[0]
                 this.adverteform.ad_end_time = this.time[1]
                 this.$refs[form].validate((valid) => {
@@ -239,6 +244,24 @@ export default {
                         return false;
                     }
                 });
+            }else if(this.time && this.time.length!=0 && this.timetype == false){
+                this.adverteform.ad_start_time = this.oldform.ad_start_time
+                this.adverteform.ad_end_time = this.oldform.ad_end_time
+                this.$refs[form].validate((valid) => {
+                    if (valid) {
+                        updatEdit(this.adverteform).then((res)=>{
+                            if(res.data.code == 200){
+                                this.$message.success('修改成功');
+                                this.$router.push({path:'/advertising'})
+                            }else{
+                                this.$message.error(res.data.msg);
+                            }
+                        })
+                    } else {
+                        return false;
+                    }
+                });
+                
             }else{
                 this.$message.warning('广告时间必填');
                 this.adverteform.ad_start_time = ''
