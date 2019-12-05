@@ -119,7 +119,7 @@ export default {
                 top_ad_name:'',
                 top_ad_title:'',
                 top_ad_fontcolor:'#fff',
-                top_ad_bgcolor:'#fff',
+                top_ad_bgcolor:'#C51015',
                 top_ad_title_url:'',
                 countdown_status:1,
                 top_ad_location:2,
