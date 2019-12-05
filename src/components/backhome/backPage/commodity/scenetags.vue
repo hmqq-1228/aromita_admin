@@ -51,9 +51,9 @@
             :visible.sync="tagsVisible"
             width="600px"
             @close="resetData">
-            <el-form :model="tagsform" label-width="120px">
-                <el-form-item label="标签名称：">
-                    <el-input v-model="tagsform.tag_name" placeholder="请输入英文名称" :disabled="this.type == 1?false:true" @blur="nameisTrue()"></el-input>
+            <el-form :model="tagsform" label-width="120px" :rules="rules" ref="tagsform">
+                <el-form-item label="标签名称：" prop="tag_name">
+                    <el-input v-model="tagsform.tag_name" placeholder="请输入英文名称" :disabled="this.type == 1?false:true"></el-input>
                 </el-form-item>
                 <el-form-item label="父级标签：">
                     <el-select v-model="tagsform.parent_id">
@@ -72,12 +72,12 @@
                         <el-radio :label="0">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="展示顺序：">
-                    <el-input v-model="tagsform.sort" @blur="sortTest()"></el-input>
+                <el-form-item label="展示顺序：" prop="sort">
+                    <el-input v-model="tagsform.sort"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="saveTags" v-if="type == 1">保存</el-button>
-                    <el-button type="primary" @click="updataTags" v-if="type == 2">修改</el-button>
+                    <el-button type="primary" @click="saveTags('tagsform')" v-if="type == 1">保存</el-button>
+                    <el-button type="primary" @click="updataTags('tagsform')" v-if="type == 2">修改</el-button>
                     <el-button type="danger" @click="tagsVisible = false">取消</el-button>
                 </el-form-item>
             </el-form>
@@ -89,6 +89,23 @@ import {sceneTag,TagFirstCategory,newSceneTag,updataSceneTag} from "@/http/commo
 import qs from 'qs'
 export default {
     data(){
+        var tag_name = (rule, value, callback) => {
+            var patt1=new RegExp("^[ a-zA-Z]+$");
+            if(value != '' && !patt1.test(value)){
+                callback(new Error('标签名称只能是英文'));
+            }else{
+                callback();
+            }
+        };
+        var sort = (rule, value, callback) =>{
+            if(isNaN(Number(value))){
+                callback(new Error('排序值必须为数字'))
+            }else if(value < 1){
+                callback(new Error('排序值最小值为1'))
+            }else{
+                callback();
+            }
+        }
         return{
             list:[],
             defaultProps: {
@@ -113,40 +130,22 @@ export default {
                 sort:'1'
             },
             switch:1,
+            rules:{
+                tag_name:[
+                    { required: true, message: '请输入标签名称', trigger: 'blur' },
+                    { min: 1, max: 30, message: '标签不能超过30个字符', trigger: 'blur' },
+                    { validator: tag_name, trigger: 'blur' }
+                ],
+                sort:[
+                    { validator: sort, trigger: 'blur' }
+                ]
+            }
         }
     },
     created(){
         this.getList()
     },  
     methods:{
-        //验证标签要求
-        nameisTrue(){
-            var patt1=new RegExp("^[ a-zA-Z]+$");
-            if(!patt1.test(this.tagsform.tag_name)){
-                this.$message({
-                    message:'标签名称只能是英文',
-                    type: 'error'
-                });
-                this.tagsform.tag_name = ''
-                return false
-            }
-        },
-        //排序校验
-        sortTest(){
-            if(isNaN(Number(this.tagsform.sort))){
-                this.$message({
-                    message: '排序值必须为数字',
-                    type: 'error'
-                });
-                this.tagsform.sort = 1
-            }else if(this.tagsform.sort<1){
-                this.$message({
-                    message: '排序值最小值为1',
-                    type: 'error'
-                });
-                this.tagsform.sort = 1
-            }
-        },
         //恢复表单默认数据
         resetData(){
             this.tagsform.tag_name = ''
@@ -175,20 +174,26 @@ export default {
             })
         },
         //新建标签
-        saveTags(){
-            if(this.tagsform.parent_id == ''){
-                this.tagsform.parent_id = 0
-            }
-            newSceneTag(this.tagsform).then((res)=>{
-                if(res.data.code == 200){
-                    this.$message({
-                        message: '创建成功',
-                        type: 'success'
-                    });
-                    this.tagsVisible = false
-                    this.getList()
+        saveTags(form){
+            this.$refs[form].validate((valid) => {
+                if (valid) {
+                    if(this.tagsform.parent_id == ''){
+                        this.tagsform.parent_id = 0
+                    }
+                    newSceneTag(this.tagsform).then((res)=>{
+                        if(res.data.code == 200){
+                            this.$message({
+                                message: '创建成功',
+                                type: 'success'
+                            });
+                            this.tagsVisible = false
+                            this.getList()
+                        }
+                    })
+                } else {
+                    return false;
                 }
-            })
+            });
         },
         view(type,id){
             this.box_title = '编辑标签'
@@ -212,25 +217,34 @@ export default {
             
         },
         //编辑标签
-        updataTags(){
-            this.$axios.put(`/backend/product/sceneTag/${this.tag_id}`,qs.stringify(this.tagsform)).then((res)=>{
-                if(res.data.code == 200){
-                    this.$message({
-                        message: '修改成功',
-                        type: 'success'
-                    });
-                    this.tagsVisible = false
-                    this.getList()
-                }else{
-                    var msg = res.data.msg
-                    var msgarr = []
-                    for(var i in msg){
-                        msgarr = msg[i]
+        updataTags(form){
+            this.$refs[form].validate((valid) => {
+                if (valid) {
+                    if(this.tagsform.parent_id == ''){
+                        this.tagsform.parent_id = 0
                     }
-                    this.$message({
-                        message:msgarr[0],
-                        type: 'error'
-                    });
+                    this.$axios.put(`/backend/product/sceneTag/${this.tag_id}`,qs.stringify(this.tagsform)).then((res)=>{
+                        if(res.data.code == 200){
+                            this.$message({
+                                message: '修改成功',
+                                type: 'success'
+                            });
+                            this.tagsVisible = false
+                            this.getList()
+                        }else{
+                            var msg = res.data.msg
+                            var msgarr = []
+                            for(var i in msg){
+                                msgarr = msg[i]
+                            }
+                            this.$message({
+                                message:msgarr[0],
+                                type: 'error'
+                            });
+                        }
+                    })
+                } else {
+                    return false;
                 }
             })
         },
