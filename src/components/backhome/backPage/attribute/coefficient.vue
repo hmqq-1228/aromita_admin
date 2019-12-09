@@ -62,6 +62,7 @@
     </el-table>
   </div>
   <el-dialog
+    v-if="centerDialogVisible"
     title="新建利润系数"
     :visible.sync="centerDialogVisible"
     width="400px">
@@ -76,6 +77,7 @@
   </span>
   </el-dialog>
   <el-dialog
+    v-if="editVisible"
     title="修改利润系数"
     :visible.sync="editVisible"
     width="400px">

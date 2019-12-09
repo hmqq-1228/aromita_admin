@@ -33,6 +33,7 @@
         </el-table>
         <!-- 新增售后 -->
         <el-dialog
+            v-if="afterVisible"
             title="添加退货原因"
             :visible.sync="afterVisible"
             :show-close="false"

@@ -37,6 +37,7 @@
       </el-container>
     </el-container>
     <el-dialog
+        v-if="passVisible"
         title="修改密码"
         :visible.sync="passVisible"
         width="300px">

@@ -34,6 +34,7 @@
             </el-tree>
             <!-- 分类详情/编辑弹框 -->
             <el-dialog
+                v-if="categoryVisible"
                 :title="box_title"
                 :visible.sync="categoryVisible"
                 width="600px">

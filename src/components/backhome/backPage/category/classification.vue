@@ -31,6 +31,7 @@
         </div>
         <!-- 对应关系弹框 -->
         <el-dialog
+            v-if="categoryVisible"
             title="对应关系"
             :visible.sync="categoryVisible"
             width="600px">

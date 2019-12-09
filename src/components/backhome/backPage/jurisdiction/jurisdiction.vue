@@ -81,6 +81,7 @@
 
         <!-- 新建权限弹框 -->
         <el-dialog
+            v-if="newDialog"
             title="新建"
             :visible.sync="newDialog"
             width="460px">
