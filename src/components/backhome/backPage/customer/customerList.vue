@@ -45,7 +45,7 @@
         <el-table-column prop="id" label="客户ID"></el-table-column>
         <el-table-column label="姓名">
           <template slot-scope="scope">
-            <span>{{scope.row.firstname}} {{scope.row.lastname}}</span>
+            <span>{{scope.row.firstname}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="email" label="邮箱"></el-table-column>
