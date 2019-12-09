@@ -47,6 +47,7 @@
         </div>
         <!-- 新建标签 -->
         <el-dialog
+            v-if="tagsVisible"
             :title="box_title"
             :visible.sync="tagsVisible"
             width="600px"
@@ -188,6 +189,12 @@ export default {
                             });
                             this.tagsVisible = false
                             this.getList()
+                        }else{
+                            this.$message({
+                                message:res.data.msg,
+                                type: 'error'
+                            });
+                            this.resetData()
                         }
                     })
                 } else {
@@ -196,6 +203,7 @@ export default {
             });
         },
         view(type,id){
+            this.resetData()
             this.box_title = '编辑标签'
             this.type = type
             this.tag_id = id

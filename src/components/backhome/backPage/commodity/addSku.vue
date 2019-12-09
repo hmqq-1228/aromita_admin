@@ -328,7 +328,6 @@ export default {
                     }
                     this.skuform.scene_images = scene_urlList
 
-
                     //一级类目
                     if(res.data.data.first_cate_id == 0 && this.firstList){
                         this.skuform.first_cate_id = this.firstList[0].id
@@ -336,7 +335,9 @@ export default {
                     }else{
                         this.defaultClassII(this.skuform.first_cate_id)
                     }
-                    
+
+                    //是否免邮商品赋默认值
+                    this.skuform.is_shipping_fee = 2
                 }else{
                     this.loading = false
                     this.$message.error(res.data.msg);

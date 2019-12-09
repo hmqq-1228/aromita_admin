@@ -12,7 +12,7 @@
         <div class="orderCenter">
             <el-form :model="adverteform" class="demo-form-inline" label-width="160px" ref="adverteform" :rules="rules">
                 <el-form-item label="广告名称（后台）：" prop="top_ad_name"> 
-                    <el-input v-model="adverteform.top_ad_name" placeholder="请输入广告名称，不超过20个字符"></el-input>
+                    <el-input v-model="adverteform.top_ad_name"></el-input>
                 </el-form-item>
                 <el-form-item label="广告时段：" required>
                     <el-date-picker
@@ -26,7 +26,7 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="广告标题（前台）：" prop="top_ad_title">
-                    <el-input v-model="adverteform.top_ad_title" placeholder="请输入广告标题，不超过50个字符且为英文"></el-input>
+                    <el-input v-model="adverteform.top_ad_title"></el-input>
                 </el-form-item>
                 <el-form-item label="标题链接：">
                     <el-input v-model="adverteform.top_ad_title_url"></el-input>
