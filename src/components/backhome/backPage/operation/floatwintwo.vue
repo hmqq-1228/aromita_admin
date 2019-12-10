@@ -29,7 +29,7 @@
                         </div>
                         <div class="radioBox">
                             <el-radio :label="2">送积分</el-radio>
-                            <el-input placeholder="请输入积分点数" v-model="adverteform.send_points" v-if="adverteform.subscription_welfare == 2" @blur="points()"></el-input>
+                            <el-input placeholder="请输入积分点数" v-model="adverteform.send_points" v-if="adverteform.subscription_welfare == 2"></el-input>
                         </div>
                         <div class="radioBox">
                             <el-radio :label="3">无福利</el-radio>
@@ -61,18 +61,18 @@ export default {
                 subscription_welfare:1,//（1送coupon，2送积分，3无福利）
                 status:1,
                 send_coupon_id:'',
-                send_points:'',
+                send_points:0,
                 id:''
             },
             options: [],//订阅优惠券列表
             subscribe:{},
-            value: '',
             rules:{
                 advertising_subscription_name:[
                     { required: true, message: '广告名称必填', trigger: 'blur' },
                     { min: 1, max: 20, message: '广告名称不能超过20个字符', trigger: 'blur' },
                 ]
-            }
+            },
+            pointsTrue:false,
         }
     },
     created(){
@@ -85,25 +85,25 @@ export default {
                 if(res.data.code == 200){
                     this.options = res.data.data.coupon_name
                     this.adverteform = res.data.data.subscribe[0]
+                    this.adverteform.send_points = Number(this.adverteform.send_points)
                 }
             })
         },
-        //校验积分点数
-        points(){
-            if(isNaN(Number(this.adverteform.send_points))){
-                this.$message({
-                    message: '积分点数必须是数字',
-                    type: 'warning'
-                });
-                this.adverteform.send_points = ''
-                return false
-            }
-        },
-        //保存订阅广告图
+        //保存订阅广告
         subscribeSub(){
-            if(this.adverteform.send_points == '2' && this.adverteform.send_points == ''){
+            //校验积分点数
+            var reg = new RegExp("^(?!0)(?:[0-9]{1,3}|1000)$")
+            console.log(this.adverteform.send_points,typeof(this.adverteform.send_points))
+            if(this.adverteform.subscription_welfare == 2 && this.adverteform.send_points == ''){
                 this.$message({
                     message: '请填写积分点数',
+                    type: 'warning'
+                });
+                return false
+            }else if(!reg.test(Number(this.adverteform.send_points))){
+                console.log(this.adverteform.send_points,typeof(this.adverteform.send_points))
+                this.$message({
+                    message: '积分点数必须是大于0且小于等于1000的整数',
                     type: 'warning'
                 });
                 return false
@@ -114,11 +114,12 @@ export default {
                             message: '设置成功',
                             type: 'success'
                         });
+                        this.getsubscribe()
                     }else{
-                        // this.$message({
-                        //     message: '设置成功',
-                        //     type: 'success'
-                        // });
+                        this.$message({
+                            message: 'res.data.msg',
+                            type: 'error'
+                        });
                     }
                 })
             }

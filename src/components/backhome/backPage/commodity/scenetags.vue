@@ -57,7 +57,7 @@
                     <el-input v-model="tagsform.tag_name" placeholder="请输入英文名称" :disabled="this.type == 1?false:true"></el-input>
                 </el-form-item>
                 <el-form-item label="父级标签：">
-                    <el-select v-model="tagsform.parent_id">
+                    <el-select v-model="tagsform.parent_id" placeholder="None">
                         <el-option v-for="(item,index) in fristList" :key="index" :label="item.tag_name" :value="item.id"></el-option>
                     </el-select>
                 </el-form-item>
@@ -134,7 +134,7 @@ export default {
             rules:{
                 tag_name:[
                     { required: true, message: '请输入标签名称', trigger: 'blur' },
-                    { min: 1, max: 30, message: '标签不能超过30个字符', trigger: 'blur' },
+                    { min: 1, max:15, message: '标签不能超过15个字符', trigger: 'blur' },
                     { validator: tag_name, trigger: 'blur' }
                 ],
                 sort:[

@@ -32,7 +32,7 @@
                 :data="orderTable"
                 style="width: 100%"
                 max-height="700px">
-                <el-table-column prop="orders_id" label="订单号"></el-table-column>
+                <el-table-column prop="orders_number" label="订单号"></el-table-column>
                 <el-table-column prop="customers_id" label="客户ID" width="60px"></el-table-column>
                 <el-table-column prop="return_reason" label="售后理由"></el-table-column>
                 <el-table-column prop="refund_result" label="售后结果"></el-table-column>

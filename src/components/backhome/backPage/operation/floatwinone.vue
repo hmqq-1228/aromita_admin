@@ -28,7 +28,7 @@
                 <el-form-item label="广告标题（前台）：" prop="top_ad_title">
                     <el-input v-model="adverteform.top_ad_title"></el-input>
                 </el-form-item>
-                <el-form-item label="标题链接：">
+                <el-form-item label="标题链接：" prop="top_ad_title_url">
                     <el-input v-model="adverteform.top_ad_title_url"></el-input>
                 </el-form-item>
                 <el-form-item label="是否开启倒计时：">
@@ -51,20 +51,26 @@
                     <el-color-picker v-model="adverteform.top_ad_fontcolor"></el-color-picker>
                 </el-form-item>
                 <el-form-item label="广告详情：">
-                    <el-upload
-                        class="avatar-uploader"
-                        :action="uploadUrl"
-                        :data="detailType"
-                        name="image"
-                        accept=".jpg,.jpeg,.png,.JPG,.JPEG"
-                        :show-file-list="false"
-                        :on-success="handleAvatarSuccess"
-                        :before-upload="beforeAvatarUpload">
-                        <img v-if="adverteform.top_ad_detail_image" :src="adverteform.top_ad_detail_image" class="avatar">
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
+                    <div class="ad_detial">
+                        <el-upload
+                            class="avatar-uploader"
+                            :action="uploadUrl"
+                            :data="detailType"
+                            name="image"
+                            accept=".jpg,.jpeg,.png,.JPG,.JPEG"
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess"
+                            :before-upload="beforeAvatarUpload">
+                            <img v-if="adverteform.top_ad_detail_image" :src="adverteform.top_ad_detail_image" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                        <i class="el-icon-error" v-if="adverteform.top_ad_detail_image" @click="removeImg"></i>
+                    </div>
                 </el-form-item>
-                <el-form-item label="广告链接：">
+                <el-form-item>
+                    <b class="imgTips">请上传1440*500尺寸的PNG或JPG格式图片！</b>
+                </el-form-item>
+                <el-form-item label="广告链接：" prop="top_ad_detail_url">
                     <el-input v-model="adverteform.top_ad_detail_url"></el-input>
                 </el-form-item>
                 <el-form-item label="是否默认广告：">
@@ -141,7 +147,12 @@ export default {
                 top_ad_title:[
                     { validator: adTitle, trigger: 'blur' },
                     { required: true, message: '请输入广告标题', trigger: 'blur' },
-                    // { min: 1, max: 50, message: '不能超过50个字符', trigger: 'blur' }
+                ],
+                top_ad_title_url:[
+                    { type: 'url',message: '请填写正确的网址', trigger: 'blur' }
+                ],
+                top_ad_detail_url:[
+                    { type: 'url',message: '请填写正确的网址', trigger: 'blur' }
                 ]
             }
         }
@@ -200,25 +211,33 @@ export default {
                 return false
             }
         },
+        //移除广告详情图
+        removeImg(){
+            this.adverteform.top_ad_detail_image = ''
+        },
         //新建广告
         saveAdverte(form){
             if(this.time && this.time.length!=0){
                 this.adverteform.ad_start_time = this.time[0]
                 this.adverteform.ad_end_time = this.time[1]
-                this.$refs[form].validate((valid) => {
-                    if (valid) {
-                        addAdvert(this.adverteform).then((res)=>{
-                            if(res.data.code == 200){
-                                this.$message.success('创建成功');
-                                this.$router.push({path:'/advertising'})
-                            }else{
-                                this.$message.error(res.data.msg);
-                            }
-                        })
-                    } else {
-                        return false;
-                    }
-                });
+                if(this.adverteform.top_ad_detail_url!='' && this.adverteform.top_ad_detail_image == ''){
+                    this.$message.warning('请上传链接对应广告详情图');
+                }else{
+                    this.$refs[form].validate((valid) => {
+                        if (valid) {
+                            addAdvert(this.adverteform).then((res)=>{
+                                if(res.data.code == 200){
+                                    this.$message.success('创建成功');
+                                    this.$router.push({path:'/advertising'})
+                                }else{
+                                    this.$message.error(res.data.msg);
+                                }
+                            })
+                        } else {
+                            return false;
+                        }
+                    });
+                }
             }else{
                 this.$message.warning('广告时间必填');
                 this.adverteform.ad_start_time = ''
@@ -299,5 +318,16 @@ export default {
 }
 .floatwinone .demo-form-inline .el-input{
     width: 400px!important;
+}
+.imgTips{
+    font-size: 12px;
+    color:#C51015;
+}
+.ad_detial .el-icon-error{
+    position: absolute;
+    top: -7px;
+    left: 167px;
+    font-size: 20px;
+    cursor: pointer;
 }
 </style>
