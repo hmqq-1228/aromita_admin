@@ -9,7 +9,7 @@
                 <el-table :data="order_info" v-if="order_info">
                     <el-table-column prop="orders_number" label="订单号">
                         <template slot-scope="scope">
-                            <span>{{refund_info.orders_id}}</span>
+                            <span>{{refund_info.orders_number}}</span>
                         </template>
                     </el-table-column>
                     <el-table-column prop="customers_id" label="客户ID"></el-table-column>
