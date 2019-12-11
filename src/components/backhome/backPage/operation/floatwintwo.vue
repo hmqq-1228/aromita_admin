@@ -10,7 +10,7 @@
             </router-link>
         </div>
         <div class="orderCenter">
-            <el-form :model="adverteform" class="demo-form-inline" label-width="160px" :rules="rules">
+            <el-form :model="adverteform" class="demo-form-inline" label-width="160px" :rules="rules" ref="form">
                 <el-form-item label="广告名称（后台）：" prop="advertising_subscription_name">
                     <el-input clearable v-model="adverteform.advertising_subscription_name" placeholder="请输入广告名称/广告标题"></el-input>
                 </el-form-item>
@@ -44,7 +44,7 @@
                     </el-switch>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="subscribeSub()">保存</el-button>
+                    <el-button type="primary" @click="subscribeSub('form')">保存</el-button>
                     <el-button type="danger" @click="cancel()">取消</el-button>
                 </el-form-item>
             </el-form>
@@ -90,39 +90,43 @@ export default {
             })
         },
         //保存订阅广告
-        subscribeSub(){
-            //校验积分点数
-            var reg = new RegExp("^(?!0)(?:[0-9]{1,3}|1000)$")
-            console.log(this.adverteform.send_points,typeof(this.adverteform.send_points))
-            if(this.adverteform.subscription_welfare == 2 && this.adverteform.send_points == ''){
-                this.$message({
-                    message: '请填写积分点数',
-                    type: 'warning'
-                });
-                return false
-            }else if(!reg.test(Number(this.adverteform.send_points))){
-                console.log(this.adverteform.send_points,typeof(this.adverteform.send_points))
-                this.$message({
-                    message: '积分点数必须是大于0且小于等于1000的整数',
-                    type: 'warning'
-                });
-                return false
-            }else{
-                setSubscribe(this.adverteform).then((res)=>{
-                    if(res.data.code == 200){
+        subscribeSub(form){
+            this.$refs[form].validate((valid) => {
+                if (valid) {
+                    //校验积分点数
+                    var reg = new RegExp("^(?!0)(?:[0-9]{1,3}|1000)$")
+                    if(this.adverteform.subscription_welfare == 2 && this.adverteform.send_points == ''){
                         this.$message({
-                            message: '设置成功',
-                            type: 'success'
+                            message: '请填写积分点数',
+                            type: 'warning'
                         });
-                        this.getsubscribe()
+                        return false
+                    }else if(this.adverteform.subscription_welfare == 2 && !reg.test(Number(this.adverteform.send_points))){
+                        this.$message({
+                            message: '积分点数必须是大于0且小于等于1000的整数',
+                            type: 'warning'
+                        });
+                        return false
                     }else{
-                        this.$message({
-                            message: 'res.data.msg',
-                            type: 'error'
-                        });
+                        setSubscribe(this.adverteform).then((res)=>{
+                            if(res.data.code == 200){
+                                this.$message({
+                                    message: '设置成功',
+                                    type: 'success'
+                                });
+                                this.getsubscribe()
+                            }else{
+                                this.$message({
+                                    message: res.data.msg,
+                                    type: 'error'
+                                });
+                            }
+                        })
                     }
-                })
-            }
+                }
+            })
+                
+            
         },
         //取消广告设置
         cancel(){

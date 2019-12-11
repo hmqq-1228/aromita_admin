@@ -163,6 +163,7 @@ export default {
         },
         //新增标签
         append(type){
+            this.resetData()
             this.box_title = '新建标签'
             this.type = type
             this.tagsVisible = true
