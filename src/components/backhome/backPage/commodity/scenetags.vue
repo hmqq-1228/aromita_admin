@@ -179,10 +179,11 @@ export default {
         saveTags(form){
             this.$refs[form].validate((valid) => {
                 if (valid) {
-                    if(this.tagsform.parent_id == ''){
-                        this.tagsform.parent_id = 0
+                    let tagsform1 = JSON.parse(JSON.stringify(this.tagsform))
+                    if(tagsform1.parent_id == ''){
+                        tagsform1.parent_id = 0
                     }
-                    newSceneTag(this.tagsform).then((res)=>{
+                    newSceneTag(tagsform1).then((res)=>{
                         if(res.data.code == 200){
                             this.$message({
                                 message: '创建成功',
@@ -229,10 +230,11 @@ export default {
         updataTags(form){
             this.$refs[form].validate((valid) => {
                 if (valid) {
-                    if(this.tagsform.parent_id == ''){
-                        this.tagsform.parent_id = 0
+                    let tagsform1 = JSON.parse(JSON.stringify(this.tagsform))
+                    if(tagsform1.parent_id == ''){
+                        tagsform1.parent_id = 0
                     }
-                    this.$axios.put(`/backend/product/sceneTag/${this.tag_id}`,qs.stringify(this.tagsform)).then((res)=>{
+                    this.$axios.put(`/backend/product/sceneTag/${this.tag_id}`,qs.stringify(tagsform1)).then((res)=>{
                         if(res.data.code == 200){
                             this.$message({
                                 message: '修改成功',
