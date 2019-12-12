@@ -61,6 +61,10 @@ import newlink from '@/components/backhome/backPage/operation/newlink.vue'
 import advertising from '@/components/backhome/backPage/operation/advertising.vue'
 import floatwinone from '@/components/backhome/backPage/operation/floatwinone.vue'
 import floatwintwo from '@/components/backhome/backPage/operation/floatwintwo.vue'
+//活动模块
+import activeList from '@/components/backhome/backPage/operation/activeList.vue'
+import addActive from '@/components/backhome/backPage/operation/addActive.vue'
+import renovation from '@/components/backhome/backPage/operation/renovation.vue'
 
 //权限管理
 import jurisdiction from '@/components/backhome/backPage/jurisdiction/jurisdiction.vue'
@@ -106,6 +110,22 @@ export default new Router({
           path: '/index',
           name: 'Index',
           component: Index
+        },
+        //活动管理
+        {
+          path: '/activeList',
+          name: 'activeList',
+          component: activeList
+        },
+        {
+          path: '/addActive',
+          name: 'addActive',
+          component: addActive
+        },
+        {
+          path: '/renovation',
+          name: 'renovation',
+          component: renovation
         },
         //广告管理 
         {
