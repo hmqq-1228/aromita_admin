@@ -43,7 +43,7 @@
                     <el-button type="primary" @click="searchList()">搜索</el-button>
                 </el-form-item>
             </el-form>
-            <el-table :data="list">
+            <el-table :data="list" max-height="500px">
                 <el-table-column label="活动名称">
                     <template slot-scope="scope">
                         <span>{{scope.row.res.name}}</span>
@@ -77,7 +77,6 @@
                 <el-table-column label="活动链接">
                     <template slot-scope="scope">
                         <p class="activelink">{{scope.row.res.url}}</p>
-                        
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="460px">
