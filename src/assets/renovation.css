@@ -1,0 +1,116 @@
+.renovation{
+    display: flex;
+    width: 100%;
+}
+/* 组件栏样式 */
+.renovation_left{
+    flex:1;
+    height: 800px;
+    border: 1px solid #e5e5e5;
+    padding: 10px;
+    background: #f7f7f7;
+    box-sizing: border-box;
+}
+.list-group {
+    min-height: 800px;
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+    border: 0;
+}
+.dragArea{
+    align-items: center;
+}
+.list_group_item{
+    text-align: center;
+    width: 120px;
+    height: 80px;
+    background: #e5e5e5;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding-top: 10px;
+    box-sizing: center;
+}
+.list_group_item img{
+    width: 40px;
+    height: 40px;
+}
+
+.list_group_item {
+    cursor: move;
+}
+
+/* 活动广场中间区域样式 */
+.renovation_center{
+    width:1054px;
+    margin:0 10px;
+    border:1px solid #e5e5e5;
+    max-height: 800px;
+    overflow-y: scroll
+}
+.banner img{
+    width:100%;
+}
+.activeTime{
+    height: 37px;
+    line-height: 37px;
+    padding:0 30px;
+    box-sizing: border-box;
+}
+.timecenter span{
+    margin-right: 8px;
+}
+.timecenter i{
+    font-style: normal;
+    width: 22px;
+    height: 22px;
+    line-height: 22px;
+    background: #333333;
+    text-align: center;
+    display: inline-block;
+    font-weight: bolder;
+    margin-right: 4px;
+}
+.commoditycenter{
+    padding:0 36px;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+}
+.list_box{
+    overflow: hidden;
+    padding:23px 45px;
+    box-sizing: border-box;
+    /* background: #fff; */
+}
+.list_box .list{
+    width: 205px;
+    height: 307px;
+    border: 1px solid #E9E9E9;
+    background: #fff;
+    float: left;
+    margin:10px 6px 10px 6px;
+}
+.list_box .list:nth-child(4n){margin-right: 0;}
+
+/* 编辑栏样式 */
+.renovation_right{
+    flex:2;
+    height: 800px;
+    background: #f7f7f7;
+    padding:10px 20px;
+    box-sizing: border-box;
+}
+.renovation_right h3{
+    text-align: center;
+    height:46px;
+    line-height: 46px;
+    font-size: 16px;
+}
+.setcommodity_back{
+    margin-top: 20px;
+}
+.setcommodity_back .avatar-uploader .el-upload{
+    background: #fff!important;
+}

@@ -65,6 +65,7 @@ import floatwintwo from '@/components/backhome/backPage/operation/floatwintwo.vu
 import activeList from '@/components/backhome/backPage/operation/activeList.vue'
 import addActive from '@/components/backhome/backPage/operation/addActive.vue'
 import renovation from '@/components/backhome/backPage/operation/renovation.vue'
+import setCommodity from '@/components/backhome/backPage/operation/setCommodity.vue'
 
 //权限管理
 import jurisdiction from '@/components/backhome/backPage/jurisdiction/jurisdiction.vue'
@@ -126,6 +127,12 @@ export default new Router({
           path: '/renovation',
           name: 'renovation',
           component: renovation
+        },
+        //添加活动商品
+        {
+          path: '/setCommodity',
+          name: 'setCommodity',
+          component: setCommodity
         },
         //广告管理 
         {

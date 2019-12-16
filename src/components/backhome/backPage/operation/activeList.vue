@@ -24,19 +24,23 @@
         <div class="activeTable">
             <el-form :inline="true" :model="activeForm">
                 <el-form-item label="活动名称">
-                    <el-input v-model="activeForm.name"></el-input>
+                    <el-input v-model="activeForm.name" clearable></el-input>
                 </el-form-item>
                 <el-form-item label="活动状态">
-                    <el-select v-model="activeForm.region">
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
+                    <el-select v-model="activeForm.status" clearable>
+                        <el-option label="未开始" value="未开始"></el-option>
+                        <el-option label="进行中" value="进行中"></el-option>
+                        <el-option label="已结束" value="已结束"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="活动类型">
-                    <el-select v-model="activeForm.type">
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
+                    <el-select v-model="activeForm.type" clearable>
+                        <el-option label="一口价" :value="1"></el-option>
+                        <el-option label="百分比" :value="2"></el-option>
                     </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="searchList()">搜索</el-button>
                 </el-form-item>
             </el-form>
             <el-table :data="list">
@@ -47,7 +51,7 @@
                 </el-table-column>
                 <el-table-column label="活动类型">
                     <template slot-scope="scope">
-                        <span>{{scope.row.res.activity_type}}</span>
+                        <span>{{activetype[scope.row.res.activity_type]}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="开始时间">
@@ -72,15 +76,16 @@
                 </el-table-column>
                 <el-table-column label="活动链接">
                     <template slot-scope="scope">
-                        <p>{{scope.row.res.url}}</p>
-                        <el-button type="warning" size="mini" v-if="scope.row.status != '已结束'">复制链接</el-button>
+                        <p class="activelink">{{scope.row.res.url}}</p>
+                        
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" width="400px">
+                <el-table-column label="操作" width="460px">
                     <template slot-scope="scope">
-                       <el-button type="primary" size="mini" v-if="scope.row.status != '已结束'">添加商品</el-button>
+                       <el-button type="primary" size="mini" v-if="scope.row.status != '已结束'" @click="addcommodity(scope.row.res.id,scope.row.res.activity_start_time,scope.row.res.activity_end_time,scope.row.status)">添加商品</el-button>
                        <el-button type="primary" size="mini" v-if="scope.row.status == '未开始'" @click="editList(scope.row.res.id)">编辑</el-button>
                        <el-button type="danger" size="mini" v-if="scope.row.status != '已结束'" @click="stopList(scope.row.res.id)">终止</el-button>
+                       <el-button type="warning" size="mini" v-if="scope.row.status != '已结束'" @click="handleCopy(scope.row.res.url,$event)">复制链接</el-button>
                        <el-button type="success" size="mini" v-if="scope.row.status == '未开始'" @click="setStyle()">活动广场</el-button>
                        <el-button type="info" disabled v-if="scope.row.status == '已结束'">禁止操作</el-button>
                     </template>
@@ -91,6 +96,7 @@
 </template>
 <script>
 import {activeList,activestop} from '@/http/active.js'
+import clip from '@/utils/clipboard'
 export default {
     data(){
         return{
@@ -100,6 +106,10 @@ export default {
                 name:'',
                 type:'',
                 status:''
+            },
+            activetype:{
+                '1':'一口价',
+                '2':'百分比活动'
             }
         }
     },
@@ -107,6 +117,14 @@ export default {
         this.getList()
     },
     methods:{
+        //复制功能
+        handleCopy(text, event) {
+            clip(text, event)
+        },
+        searchList(){
+            this.activeForm.page = 1
+            this.getList()
+        },
         //获取活动列表
         getList(){
             activeList(this.activeForm).then((res)=>{
@@ -115,20 +133,32 @@ export default {
         },
         //活动终止
         stopList(id){
-            activestop({id:id}).then((res)=>{
-                if(res.data.code == 200){
-                    this.$message({
-                        message: '活动已终止',
-                        type: 'success'
-                    });
-                    this.getList()
-                }else{
-                    this.$message({
-                        message:res.data.msg,
-                        type: 'success'
-                    });
-                }
-            })
+            this.$confirm('确定要终止这个活动吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                activestop({id:id}).then((res)=>{
+                    if(res.data.code == 200){
+                        this.$message({
+                            message: '活动已终止',
+                            type: 'success'
+                        });
+                        this.getList()
+                    }else{
+                        this.$message({
+                            message:res.data.msg,
+                            type: 'success'
+                        });
+                    }
+                }) 
+            }).catch(() => {
+                this.$message({
+                    type: 'info',
+                    message: '已取消'
+                });          
+            });
+            
         },
         //活动广场设置
         setStyle(){
@@ -137,6 +167,10 @@ export default {
         //编辑活动
         editList(id){
             this.$router.push({path:'/addActive',query:{id:id}})
+        },
+        //添加商品
+        addcommodity(id,time1,time2,str){
+            this.$router.push({path:'/setCommodity',query:{id:id,time1:time1,time2:time2,str:str}})
         }
     }
 }
@@ -176,5 +210,11 @@ export default {
 }
 .activeTable{
     margin-top: 10px;
+}
+.activelink{
+    width: 160px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
 }
 </style>

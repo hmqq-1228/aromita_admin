@@ -11,3 +11,27 @@ export const activestop = params =>get("/backend/activity/stop",params)
 
 //编辑活动获取详情
 export const activedetail = params =>get("/backend/activity/edit",params)
+
+//修改活动详情
+export const activeUpdate = params =>post("/backend/activity/update",params)
+
+//活动商品列表
+export const activitySku = params =>post("/backend/activitySku/index",params)
+
+//删除活动商品
+export const delactiveSku = params =>post("/backend/activitySku/del",params)
+
+//批量删除活动商品
+export const batchdelactiveSku = params =>post("/backend/activitySku/batchDel",params)
+
+//终止活动商品 
+export const stopactiveSku = params =>post("/backend/activitySku/stop",params)
+
+//批量终止活动商品
+export const batchstopactiveSku = params =>post("/backend/activitySku/batchStop",params)
+
+//添加活动商品弹框
+export const activitySkuindex = params =>post("/backend/activitySku/activitySkuindex",params)
+
+//添加活动商品
+export const addactiveSku = params =>post("/backend/activitySku/activitySkuinsert",params)
