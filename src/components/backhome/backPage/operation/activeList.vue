@@ -85,7 +85,7 @@
                        <el-button type="primary" size="mini" v-if="scope.row.status == '未开始'" @click="editList(scope.row.res.id)">编辑</el-button>
                        <el-button type="danger" size="mini" v-if="scope.row.status != '已结束'" @click="stopList(scope.row.res.id)">终止</el-button>
                        <el-button type="warning" size="mini" v-if="scope.row.status != '已结束'" @click="handleCopy(scope.row.res.url,$event)">复制链接</el-button>
-                       <el-button type="success" size="mini" v-if="scope.row.status == '未开始'" @click="setStyle()">活动广场</el-button>
+                       <el-button type="success" size="mini" v-if="scope.row.status == '未开始'" @click="setStyle(scope.row.res.id)">活动广场</el-button>
                        <el-button type="info" disabled v-if="scope.row.status == '已结束'">禁止操作</el-button>
                     </template>
                 </el-table-column>
@@ -157,11 +157,10 @@ export default {
                     message: '已取消'
                 });          
             });
-            
         },
         //活动广场设置
-        setStyle(){
-            this.$router.push({path:'/renovation'})
+        setStyle(id){
+            this.$router.push({path:'/renovation',query:{id:id}})
         },
         //编辑活动
         editList(id){

@@ -1,3 +1,8 @@
+.saveBtn{
+    text-align: right;
+    padding-right: 40px;
+    margin-bottom: 10px;
+}
 .renovation{
     display: flex;
     width: 100%;
@@ -113,4 +118,7 @@
 }
 .setcommodity_back .avatar-uploader .el-upload{
     background: #fff!important;
+}
+.bannerBtn{
+    text-align: center;
 }

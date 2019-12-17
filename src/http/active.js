@@ -35,3 +35,9 @@ export const activitySkuindex = params =>post("/backend/activitySku/activitySkui
 
 //添加活动商品
 export const addactiveSku = params =>post("/backend/activitySku/activitySkuinsert",params)
+
+//保存活动广场样式
+export const saveActiveStyle = params =>post("/backend/activity/square",params)
+
+//编辑活动广场获取详情
+export const detailStyle = params =>get("/backend//activity/squareEdit",params)

@@ -1,59 +1,134 @@
 <template>
-    <div class="renovation">
-        <div class="renovation_left">
-            <draggable
-                class="dragArea list-group"
-                :list="list1"
-                :group="{ name: 'comp', pull: 'clone', put: false }"
-                @change="log">
-                <div class="list_group_item" v-for="(item,index) in list1" :key="item.id">
-                  <img :src="iconList[index]" alt="">
-                  <p>{{item.name}}</p>
-                </div>
-            </draggable>
-        </div>
-        <div class="renovation_center">
-            <draggable
-                tag="el-collapse"
-                class="list-group"
-                :list="list2"
-                group="comp"
-                @change="log">
-                <div v-for="(item,index) in list2" :key="index">
-                    <!-- 轮播图 -->
-                    <div v-if="item.type == 1" class="banner" @click="setbox(1,index,item)">
-                      <el-carousel height="360px">
-                          <el-carousel-item v-for="(item1,index) in item.imgList" :key="index">
-                              <img :src="item1.imgurl" alt="">
-                          </el-carousel-item>
-                      </el-carousel>
-                    </div>
-                    <!-- 倒计时 -->
-                    <div v-if="item.type ==2" class="activeTime" :style="{'background':item.background}" @click="setbox(2,index,item)">
-                      <div class="timecenter" :style="{'float':item.style.position,'color':item.style.color}">
-                        <span>{{item.txt}}：</span>
-                        <i>01</i>: D <i>05</i>: h <i>24</i>: m <i>28</i>: s
+  <div>
+      <div class="saveBtn">
+        <el-button type="primary" @click="saveStyle">应用活动广场样式</el-button>
+      </div>
+      <div class="renovation">
+          <div class="renovation_left">
+              <draggable
+                  class="dragArea list-group"
+                  :list="list1"
+                  :group="{ name: 'comp', pull: 'clone', put: false }"
+                  @change="log">
+                  <div class="list_group_item" v-for="(item,index) in list1" :key="item.type">
+                    <img :src="iconList[index]" alt="">
+                    <p>{{item.name}}</p>
+                  </div>
+              </draggable>
+          </div>
+          <div class="renovation_center">
+              <draggable
+                  tag="el-collapse"
+                  class="list-group"
+                  :list="list2"
+                  group="comp"
+                  @change="log">
+                  <div v-for="(item,index) in list2" :key="index">
+                      <!-- 轮播图 -->
+                      <div v-if="item.type == 1" class="banner" @click="setbox(1,index,item)">
+                        <el-carousel height="360px">
+                            <el-carousel-item v-for="(item1,index) in item.imgList" :key="index">
+                                <img :src="item1.imgurl" alt="">
+                            </el-carousel-item>
+                        </el-carousel>
                       </div>
-                    </div>
-                    <!-- 商品列表 -->
-                    <div v-if="item.type ==3" class="commoditycenter" :style="{'background-image':`url(${item.background_image})`,'background-color':item.background_color}" @click="setbox(3,index,item)">
-                      <div class="list_box">
-                        <div class="list" v-for="(item1,index1) in item.commodityList" :key="index1">
-                          商品
+                      <!-- 倒计时 -->
+                      <div v-if="item.type ==2" class="activeTime" :style="{'background':item.timeobj.background}" @click="setbox(2,index,item.timeobj)">
+                        <div class="timecenter" :style="{'float':positionstyle[item.timeobj.style.position],'color':item.timeobj.style.color}">
+                          <span>{{item.timeobj.timetxt}}：</span>
+                          <i>01</i> D <i>05</i>: h <i>24</i>: m <i>28</i>: s
                         </div>
                       </div>
+                      <!-- 商品列表 -->
+                      <div v-if="item.type ==3" class="commoditycenter" :style="{'background-image':`url(${item.background_image})`,'background-color':item.background_color}" @click="setbox(3,index,item)">
+                        <div class="list_box">
+                          <div class="list" v-for="(item1,index1) in 8" :key="index1">
+                            <img src="@/assets/images/list1.png" alt="">
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+              </draggable>
+          </div>
+          <div class="renovation_right">
+            <div v-if="setType == 1">
+              <h3>banner图设置</h3>
+              <el-form class="setcommodity_back">
+                  <el-button type="success" @click="addBanner">添加</el-button>
+                  <el-form-item v-for="(item,index) in bannerList" :key="index">
+                      <div>
+                        <h4>上传图片</h4>
+                        <div @click="getImageTypeIndex(index)">
+                            <el-upload
+                                class="avatar-uploader"
+                                :action="uploadUrl"
+                                :data="detailType"
+                                name="image"
+                                accept=".jpg,.jpeg,.png,.JPG,.JPEG"
+                                :show-file-list="false"
+                                :on-success="bannerSuccess"
+                                :before-upload="beforeAvatarUpload">
+                                <img v-if="item.imgurl" :src="item.imgurl" class="avatar">
+                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                            </el-upload>
+                        </div>
+                        <h4>图片链接</h4>
+                        <el-input v-model="item.imgLink"></el-input>
+                      </div>
+                  </el-form-item>
+                  <el-form-item>
+                    <div class="bannerBtn">
+                        <el-button type="primary" @click="savebannerlist">保存</el-button>
+                        <el-button type="danger" @click="delbannerlist">删除</el-button>
                     </div>
-                </div>
-            </draggable>
-        </div>
-        <div class="renovation_right">
-          <div v-if="setType == 1">
-            <h3>banner图设置</h3>
-            <el-form class="setcommodity_back">
-                <el-button type="success" @click="addBanner">添加</el-button>
-                <el-form-item v-for="(item,index) in bannerList" :key="index">
-                    <div>
-                      <h4>上传图片</h4>
+                  </el-form-item>
+                </el-form>
+            </div>
+            <div v-if="setType == 2">
+              <h3>倒计时设置</h3>
+              <el-form v-model="timeform">
+                <el-form-item label="倒计时显示：">
+                  <br>
+                  <div>
+                    <el-radio :label="1" v-model="timeform.showtype">显示距活动开始倒计时</el-radio>
+                    <div v-if="timeform.showtype == 1">
+                      <p>倒计时描述</p> 
+                      <el-input v-model="timeform.timetxt"></el-input>
+                    </div>
+                  </div>
+                  <div>
+                    <el-radio :label="2" v-model="timeform.showtype">显示距活动结束倒计时</el-radio>
+                    <div v-if="timeform.showtype == 2">
+                      <p>倒计时描述</p> 
+                      <el-input v-model="timeform.timetxt"></el-input>
+                    </div>
+                  </div>
+                </el-form-item>
+                <el-form-item label="倒计时字体颜色：">
+                  <el-color-picker v-model="timeform.style.color"></el-color-picker>
+                </el-form-item>
+                <el-form-item label="倒计时区域背景色：">
+                  <el-color-picker v-model="timeform.background"></el-color-picker>
+                </el-form-item>
+                <el-form-item label="倒计时位置：">
+                  <el-radio :label="1" v-model="timeform.style.position">居左</el-radio>
+                  <el-radio :label="2" v-model="timeform.style.position">居中</el-radio>
+                  <el-radio :label="3" v-model="timeform.style.position">居右</el-radio>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" @click="savetimeset">保存</el-button>
+                </el-form-item>
+              </el-form>
+            </div>
+            <div v-if="setType == 3">
+              <h3>商品列表设置</h3>
+              <div>
+                <el-radio-group v-model="commodity_background">
+                  <el-radio :label="1">设置背景图</el-radio>
+                  <el-radio :label="2">设置背景色</el-radio>
+                </el-radio-group>
+                <el-form class="setcommodity_back">
+                  <el-form-item label="上传背景图：" v-if="commodity_background == 1">
                       <el-upload
                           class="avatar-uploader"
                           :action="uploadUrl"
@@ -61,64 +136,33 @@
                           name="image"
                           accept=".jpg,.jpeg,.png,.JPG,.JPEG"
                           :show-file-list="false"
-                          :on-success="bannerSuccess"
+                          :on-success="handleAvatarSuccess"
                           :before-upload="beforeAvatarUpload">
-                          <img v-if="item.imgurl" :src="item.imgurl" class="avatar">
+                          <img v-if="commodity_imgurl" :src="commodity_imgurl" class="avatar">
                           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                       </el-upload>
-                      <h4>图片链接</h4>
-                      <el-input v-model="item.imgLink"></el-input>
-                    </div>
-                </el-form-item>
-                <el-form-item>
-                  <el-button @click="savebannerlist">保存</el-button>
-                </el-form-item>
-              </el-form>
-          </div>
-          <div v-if="setType == 2">
-            <h3>倒计时设置</h3>
-          </div>
-          <div v-if="setType == 3">
-            <h3>商品列表设置</h3>
-            <div>
-              <el-radio-group v-model="commodity_background">
-                <el-radio :label="1">设置背景图</el-radio>
-                <el-radio :label="2">设置背景色</el-radio>
-              </el-radio-group>
-              <el-form class="setcommodity_back">
-                <el-form-item label="上传背景图：" v-if="commodity_background == 1">
-                    <el-upload
-                        class="avatar-uploader"
-                        :action="uploadUrl"
-                        :data="detailType"
-                        name="image"
-                        accept=".jpg,.jpeg,.png,.JPG,.JPEG"
-                        :show-file-list="false"
-                        :on-success="handleAvatarSuccess"
-                        :before-upload="beforeAvatarUpload">
-                        <img v-if="commodity_imgurl" :src="commodity_imgurl" class="avatar">
-                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
-                </el-form-item>
-                <el-form-item label="选择背景颜色：" v-if="commodity_background == 2">
-                    <el-color-picker v-model="commodity_back_color" @change="changecolor"></el-color-picker>
-                </el-form-item>
-              </el-form>
+                  </el-form-item>
+                  <el-form-item label="选择背景颜色：" v-if="commodity_background == 2">
+                      <el-color-picker v-model="commodity_back_color" @change="changecolor"></el-color-picker>
+                  </el-form-item>
+                </el-form>
+              </div>
             </div>
           </div>
-        </div>
-    </div>
+      </div>
+  </div>  
 </template>
-
 <script>
 import draggable from "vuedraggable";
 import {uploadUrl} from '@/http/commodity.js'
+import {saveActiveStyle,detailStyle} from '@/http/active.js'
 export default {
   components: {
     draggable
   },
   data() {
     return {
+      active_id:'',
       //上传商品背景图
       uploadUrl:uploadUrl,
       detailType:{
@@ -132,46 +176,71 @@ export default {
           name: "banner图", 
           type:1, 
           imgList:[
-            {imgurl:'../../../../static/images/1.png',imgLink:''},
-            {imgurl:'../../../../static/images/1.png',imgLink:''},
             {imgurl:'../../../../static/images/1.png',imgLink:''}
           ]
         },
         { 
           name: "倒计时", 
           type: 2, 
-          txt:'距离活动结束',
-          background:'#C51015',
-          style:{
-            color:'#fff',
-            position:'right'
+          timeobj:{
+            showtype:1,
+            timetxt:'距离活动结束',
+            background:'#C51015',
+            style:{
+              color:'#fff',
+              position:1
+            }
           }
         }
       ],
       list2: [
           { 
+            id:0,
             name: "我是商品列表", 
             type: 3,
+            // commodity_background
             background_image:'',
             background_color:'#FF9F26',
-            commodityList:[1,1,1,1,1,1,1,1,1,1] 
           },
       ],
       setType:3,
       dex:0,
-      commodity_background:1,
+      positionstyle:{
+        1:'left',
+        2:'auto',
+        3:'right'
+      },
       //商品设置
+      commodity_background:1,
       commodity_imgurl:'',
       commodity_back_color:'#C51015',
       //banner设置
       bannerList:[{imgurl:'',imgLink:''}],
       bannerdex:0,
+      //倒计时设置
+      timeform:{
+        showtype:1,//倒计时显示类型
+        timetxt:'',
+        background:'#C51015',
+        style:{
+          color:'#fff',
+          position:1
+        }
+      },
       detaildata:{},
       count: 0
     };
   },
   created(){
-    this.setbox(3,0,this.list2[0])
+    this.active_id = this.$route.query.id
+    detailStyle({id:this.active_id}).then((res)=>{
+      var style = res.data.data.activity_style
+      if(style !=''){
+        this.list2 = JSON.parse(res.data.data.activity_style)
+      }else{
+        this.setbox(3,0,this.list2[0])
+      }
+    })
   },
   methods: {
     //设置方法
@@ -179,6 +248,14 @@ export default {
       this.setType = type
       this.dex = dex
       this.detaildata = data
+      if(this.setType == 1){
+        this.bannerList = data.imgList
+      }else if(this.setType == 2){
+        this.timeform = data
+      }else if(this.setType == 3){
+        this.commodity_imgurl = data.background_image
+        this.commodity_back_color = data.background_color
+      }
     },
     //设置商品列表背景图
     handleAvatarSuccess(res,file){
@@ -203,8 +280,8 @@ export default {
       var obj = {imgurl:'',imgLink:''}
       this.bannerList.push(obj)
     },
-    uploadBanner(data,dex){
-      console.log(this.bannerdex)
+    //获取轮播图上传组件index
+    getImageTypeIndex(dex){
       this.bannerdex = dex
     },
     //轮播图上传图片
@@ -213,7 +290,26 @@ export default {
     },
     //banner设置保存
     savebannerlist(){
-      console.log(this.bannerList)
+      console.log(this.dex)
+      this.list2[this.dex].imgList = JSON.parse(JSON.stringify(this.bannerList)) 
+    },
+    //倒计时设置保存
+    savetimeset(){
+      this.list2[this.dex].timeobj = this.timeform
+    },
+    //应用活动广场样式
+    saveStyle(){
+      let pre={
+        id:this.active_id,
+        activity_style:JSON.stringify(this.list2),
+      }
+      saveActiveStyle(pre).then((res)=>{
+        if(res.data.code == 200){
+            this.$message.success('保存成功');
+        }else{
+            this.$message.error(res.data.msg);
+        }
+      })
     },
     log: function(evt) {
       if (evt.added) {
@@ -226,8 +322,8 @@ export default {
       }
     },
     handleChange: function() {},
-    deleteItem: function(index) {
-      this.list2.splice(index, 1);
+    delbannerlist: function(index) {
+      //this.list2.splice(index, 1);
     }
   }
 };
