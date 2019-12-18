@@ -46,7 +46,9 @@ export default {
                 ]
             },
             exportPre:{},
-            export:null
+            export:null,
+            timer:null,
+            exportStatus:0,
         }
     },
     mounted() {
@@ -109,23 +111,33 @@ export default {
         },
         //导入数据
         exportData(){
-            batchgetCount(this.exportPre).then((res)=>{
-                this.loading = true
-                if(res.data.status == 1){
-                    this.loading = false
-                    this.$message({
-                        message:'导入成功',
-                        type:'success'
-                    });
-                    this.$router.push({path:'/commodity'})
-                }
-            }).catch(error => {
-                this.loading = false
-                this.$message({
-                    message:'请求失败，请稍后再试',
-                    type:'error'
-                });
-            })
+            clearInterval(this.timer)
+            if (this.exportStatus == 0) {
+                this.timer = setInterval(() => {
+                    batchgetCount(this.exportPre).then((res)=>{
+                        this.loading = true
+                        if(res.data.status == 1){
+                            this.exportStatus = res.data.status
+                            this.loading = false
+                            this.$message({
+                                message:'导入成功',
+                                type:'success'
+                            });
+                            clearInterval(this.timer)
+                            this.$router.push({path:'/commodity'})
+                        }
+                    }).catch(error => {
+                        this.loading = false
+                        clearInterval(this.timer)
+                        this.$message({
+                            message:'请求失败，请稍后再试',
+                            type:'error'
+                        });
+                    })
+                }, 3000)
+            } else {
+                clearInterval(this.timer)    // 取消定时器
+            }
         }
     }
 }
