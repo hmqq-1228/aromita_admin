@@ -166,7 +166,6 @@ export default {
     methods:{
         //改变广告时间
         changetime(){
-            console.log(this.time)
             this.timetype = true
         },
         //编辑广告获取详情
@@ -177,7 +176,6 @@ export default {
                     this.adverteform = JSON.parse(JSON.stringify(res.data.data)) 
                     this.time.push(new Date(this.adverteform.ad_start_time))
                     this.time.push(new Date(this.adverteform.ad_end_time))
-                    console.log(this.time)
                 }else{
                     this.$message.error(res.data.msg);
                 }

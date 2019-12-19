@@ -85,7 +85,7 @@ export default {
                 ],
                 activity_rule:[
                     { validator:activename, trigger: 'blur' },
-                    {min:1, max:30, message: '活动名称不能超过30个字符', trigger: 'blur'}
+                    {min:1, max:30, message: '活动规则不能超过30个字符', trigger: 'blur'}
                 ]
             },
             timetype:false,

@@ -49,7 +49,7 @@ export default {
             export:null,
             timer:null,
             exportStatus:0,
-            loadingtxt:'正在解析数据，请耐心等待'
+            loadingtxt:'正在解析数据，请耐心等待，已完成1%'
         }
     },
     mounted() {
@@ -126,7 +126,7 @@ export default {
                             clearInterval(this.timer)
                             this.$router.push({path:'/commodity'})
                         }else{
-                            this.loadingtxt = `正在解析数据，请耐心等待,${res.data.msg}`
+                            this.loadingtxt = `正在解析数据，请耐心等待，${res.data.msg}`
                         }
                     }).catch(error => {
                         this.loading = false

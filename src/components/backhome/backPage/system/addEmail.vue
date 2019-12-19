@@ -36,7 +36,7 @@
                 <el-input v-model="emailForm.send_email"></el-input>
             </el-form-item>
             <el-form-item label="发件频率：">
-                <el-input v-model="emailForm.send_rate"></el-input>
+                <el-input v-model="emailForm.send_rate" style="width:120px"></el-input> 秒
             </el-form-item>
             <el-form-item label="状态：">
                 <el-radio-group v-model="emailForm.status">

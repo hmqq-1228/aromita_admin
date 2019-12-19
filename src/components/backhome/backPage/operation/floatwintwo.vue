@@ -18,18 +18,19 @@
                     <el-radio-group v-model="adverteform.subscription_welfare">
                         <div class="radioBox">
                             <el-radio :label="1">送优惠券</el-radio>
-                            <el-select placeholder="请选择优惠券类型" v-model="adverteform.send_coupon_id">
-                                <el-option
+                            <div v-if="adverteform.subscription_welfare == 1">
+                                <el-tag
                                     v-for="item in options"
                                     :key="item.id"
-                                    :label="item.coupon_name"
-                                    :value="item.id">
-                                    </el-option>
-                            </el-select>
+                                    effect="dark"
+                                    type="danger">
+                                    {{item.coupon_name}}
+                                </el-tag>
+                            </div>
                         </div>
                         <div class="radioBox">
                             <el-radio :label="2">送积分</el-radio>
-                            <el-input placeholder="请输入积分点数" v-model="adverteform.send_points" v-if="adverteform.subscription_welfare == 2"></el-input>
+                            <el-input placeholder="请输入积分点数" style="width:100px!important" v-model="adverteform.send_points" v-if="adverteform.subscription_welfare == 2"></el-input>
                         </div>
                         <div class="radioBox">
                             <el-radio :label="3">无福利</el-radio>

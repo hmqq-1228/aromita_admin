@@ -162,6 +162,12 @@ export default {
                     type: 'warning'
                 });
                 return false
+            }else if(this.attrform.search_show == 1 && sort_order.includes("")){
+                this.$message({
+                    message:'属性值在前台显示顺序必填',
+                    type: 'warning'
+                });
+                return false
             }else{
                 let pre={
                     attr_id:this.attrform.id,

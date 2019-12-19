@@ -281,26 +281,26 @@ export default {
 }
 </script>
 <style scope>
-.heade{
+.categoryList .heade{
     display: flex;
     align-items: center;
 }
-.heade h3{
+.categoryList .heade h3{
     margin-right: 20px;
 }
-.treebox{
+.categoryList .treebox{
     max-height: 740px;
     overflow-y: scroll;
     background: #f7f7f7;
 }
-.custom-tree-node{
+.categoryList .custom-tree-node{
   width: 1200px!important;
 }
-.node_name{
+.categoryList .node_name{
   display: inline-block;
   min-width: 800px;
 }
-.categoryBox .el-input{
+.categoryList .categoryBox .el-input{
     width: 200px!important;
 }
 </style>

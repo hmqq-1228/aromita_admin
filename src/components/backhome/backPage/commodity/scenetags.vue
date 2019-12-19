@@ -26,7 +26,8 @@
                         <el-switch
                             v-model="data.tag_status"
                             :active-value="1"
-                            :inactive-value="0"></el-switch>
+                            :inactive-value="0"
+                            @change="changeTagStatus(data.id,data.tag_status)"></el-switch>
                     </span>
                     <span class="node_edit node">
                         <el-button
@@ -147,6 +148,23 @@ export default {
         this.getList()
     },  
     methods:{
+        //改变标签显示状态
+        changeTagStatus(id,status){
+            this.$axios.put(`backend/product/sceneTag/ajaxUpdateStatus/${id}`,qs.stringify({status:status})).then((res)=>{
+                if(res.data.code == 200){
+                    this.$message({
+                        message: '状态已修改',
+                        type: 'success'
+                    });
+                    this.getList()
+                }else{
+                    this.$message({
+                        message:res.data.msg,
+                        type: 'error'
+                    });
+                }
+            })
+        },
         //恢复表单默认数据
         resetData(){
             this.tagsform.tag_name = ''
@@ -290,27 +308,27 @@ export default {
 }
 </script>
 <style scoped>
-.treeboxtitle{
+.scenetags .treeboxtitle{
     width:100%;
     display: flex;
     height: 40px;
     line-height: 40px;
 }
-.treeboxtitle span{
+.scenetags .treeboxtitle span{
     flex:1;
     font-size: 14px;
     font-weight: bolder;
     color: #666;
     text-align: center;
 }
-.custom-tree-node{
+.scenetags .custom-tree-node{
     width: 100%;
     display: flex;
 }
-.custom-tree-node .node_name{
+.scenetags .custom-tree-node .node_name{
     width: 400px;
 }
-.custom-tree-node .node{
+.scenetags .custom-tree-node .node{
     flex:1;
     text-align: center;
 }
