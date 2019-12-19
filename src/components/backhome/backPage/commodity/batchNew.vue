@@ -2,7 +2,7 @@
     <div 
         class="batchNew" 
         v-loading="loading"
-        element-loading-text="正在解析数据，请耐心等待"
+        :element-loading-text="loadingtxt"
         element-loading-spinner="el-icon-loading">
         <div class="heade">
             <h3>批量新建SKU</h3>
@@ -49,6 +49,7 @@ export default {
             export:null,
             timer:null,
             exportStatus:0,
+            loadingtxt:'正在解析数据，请耐心等待'
         }
     },
     mounted() {
@@ -82,7 +83,6 @@ export default {
                     this.errorMsg = ''
                     this.dataMsg = ''
                     if(res.data.code == 200){
-                        this.loading = false
                         this.exportPre={
                             file_id:res.data.data.file_id,
                             count:res.data.data.count
@@ -125,6 +125,8 @@ export default {
                             });
                             clearInterval(this.timer)
                             this.$router.push({path:'/commodity'})
+                        }else{
+                            this.loadingtxt = `正在解析数据，请耐心等待,${res.data.msg}`
                         }
                     }).catch(error => {
                         this.loading = false
