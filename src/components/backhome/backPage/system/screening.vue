@@ -156,28 +156,36 @@ export default {
                 search_show.push(this.attrValueList[i].search_show)
                 sort_order.push(this.attrValueList[i].sort_order)
             }
-            let pre={
-                attr_id:this.attrform.id,
-                attr_search_show:this.attrform.search_show,
-                attr_sort_order:this.attrform.sort_order,
-                id:idAttr.join(','),
-                val_search_show:search_show.join(','),
-                val_sort_order:sort_order.join(',')
-            }
-            attrUpdate(pre).then((res)=>{
-                if(res.data.code == 200){
-                    this.$message({
-                        message:'保存成功',
-                        type: 'success'
-                    });
-                    this.$router.push({path:'/system'})
-                }else{
-                    this.$message({
-                        message:res.data.msg,
-                        type: 'error'
-                    });
+            if(this.attrform.search_show == 1 && !this.attrform.sort_order){
+                this.$message({
+                    message:'属性名在前台显示顺序必填',
+                    type: 'warning'
+                });
+                return false
+            }else{
+                let pre={
+                    attr_id:this.attrform.id,
+                    attr_search_show:this.attrform.search_show,
+                    attr_sort_order:this.attrform.sort_order,
+                    id:idAttr.join(','),
+                    val_search_show:search_show.join(','),
+                    val_sort_order:sort_order.join(',')
                 }
-            })
+                attrUpdate(pre).then((res)=>{
+                    if(res.data.code == 200){
+                        this.$message({
+                            message:'保存成功',
+                            type: 'success'
+                        });
+                        this.$router.push({path:'/system'})
+                    }else{
+                        this.$message({
+                            message:res.data.msg,
+                            type: 'error'
+                        });
+                    }
+                })
+            }
         },
         //取消
         cancelAttr(){

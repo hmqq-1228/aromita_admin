@@ -15,7 +15,9 @@
                     <el-input v-model="activeform.name"></el-input>
                 </el-form-item>
                 <el-form-item label="优惠力度：" prop="activity_intensity">
-                    <el-input v-model="activeform.activity_intensity"></el-input>
+                    <el-input v-model="activeform.activity_intensity" style="width:80px"></el-input>
+                    <span v-if="activeform.activity_type == 2"> % OFF</span>
+                    <span v-if="activeform.activity_type == 1"> $ </span>
                 </el-form-item>
                 <el-form-item label="活动时间：" prop="active_time">
                     <el-date-picker
@@ -25,7 +27,7 @@
                         start-placeholder="开始日期"
                         end-placeholder="结束日期"
                         value-format="yyyy-MM-dd HH:00"
-                        format="yyyy-MM-dd HH"
+                        format="yyyy-MM-dd HH:00"
                         @change ="changetime()">
                     </el-date-picker>
                 </el-form-item>

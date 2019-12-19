@@ -138,7 +138,7 @@ export default {
                     })
                 }, 3000)
             } else {
-                clearInterval(this.timer)    // 取消定时器
+                clearInterval(this.timer) // 取消定时器
             }
         }
     }
