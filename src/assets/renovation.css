@@ -122,3 +122,18 @@
 .bannerBtn{
     text-align: center;
 }
+.imagesBox{
+    overflow: hidden;
+}
+.imagesBox .uploadBox{
+    float: left;
+}
+.imagesBox .delbtn{
+    float: left;
+    margin:70px 0 0 20px;
+}
+.uploadTip{
+    font-size: 12px;
+    color: red;
+    font-weight: bolder;
+}

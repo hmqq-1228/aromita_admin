@@ -33,9 +33,9 @@
                         </el-carousel>
                       </div>
                       <!-- 倒计时 -->
-                      <div v-if="item.type ==2" class="activeTime" :style="{'background':item.timeobj.background}" @click="setbox(2,index,item.timeobj)">
+                      <div v-if="item.type ==2" class="activeTime" :style="{'background':item.timeobj.background}" @click="setbox(2,index,item)">
                         <div class="timecenter" :style="{'float':positionstyle[item.timeobj.style.position],'color':item.timeobj.style.color}">
-                          <span>{{item.timeobj.timetxt}}：</span>
+                          <span>{{item.timeobj.time_info_list[0].timetxt}}：</span>
                           <i>01</i> D <i>05</i>: h <i>24</i>: m <i>28</i>: s
                         </div>
                       </div>
@@ -58,20 +58,24 @@
                   <el-form-item v-for="(item,index) in bannerList" :key="index">
                       <div>
                         <h4>上传图片</h4>
-                        <div @click="getImageTypeIndex(index)">
-                            <el-upload
-                                class="avatar-uploader"
-                                :action="uploadUrl"
-                                :data="detailType"
-                                name="image"
-                                accept=".jpg,.jpeg,.png,.JPG,.JPEG"
-                                :show-file-list="false"
-                                :on-success="bannerSuccess"
-                                :before-upload="beforeAvatarUpload">
-                                <img v-if="item.imgurl" :src="item.imgurl" class="avatar">
-                                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                            </el-upload>
+                        <div class="imagesBox">
+                           <div @click="getImageTypeIndex(index)" class="uploadBox">
+                              <el-upload
+                                  class="avatar-uploader"
+                                  :action="uploadUrl"
+                                  :data="detailType"
+                                  name="image"
+                                  accept=".jpg,.jpeg,.png,.JPG,.JPEG"
+                                  :show-file-list="false"
+                                  :on-success="bannerSuccess"
+                                  :before-upload="beforeAvatarUpload">
+                                  <img v-if="item.imgurl" :src="item.imgurl" class="avatar">
+                                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                              </el-upload>
+                          </div>
+                          <el-button type="danger" class="delbtn" @click="delbanner(index)" v-if="index!=0">删除</el-button>
                         </div>
+                        <p class="uploadTip">建议尺寸：宽度1440px,高度500px </p>
                         <h4>图片链接</h4>
                         <el-input v-model="item.imgLink"></el-input>
                       </div>
@@ -79,7 +83,7 @@
                   <el-form-item>
                     <div class="bannerBtn">
                         <el-button type="primary" @click="savebannerlist">保存</el-button>
-                        <el-button type="danger" @click="delbannerlist">删除</el-button>
+                        <el-button type="danger" @click="dellist">删除</el-button>
                     </div>
                   </el-form-item>
                 </el-form>
@@ -89,20 +93,12 @@
               <el-form v-model="timeform">
                 <el-form-item label="倒计时显示：">
                   <br>
-                  <div>
-                    <el-radio :label="1" v-model="timeform.showtype">显示距活动开始倒计时</el-radio>
-                    <div v-if="timeform.showtype == 1">
-                      <p>倒计时描述</p> 
-                      <el-input v-model="timeform.timetxt"></el-input>
-                    </div>
-                  </div>
-                  <div>
-                    <el-radio :label="2" v-model="timeform.showtype">显示距活动结束倒计时</el-radio>
-                    <div v-if="timeform.showtype == 2">
-                      <p>倒计时描述</p> 
-                      <el-input v-model="timeform.timetxt"></el-input>
-                    </div>
-                  </div>
+                  <el-checkbox-group v-model="time_info_type" @change="changetimetype">
+                      <div v-for="(item,index) in time_info" :key="index" class="shipsort">
+                          <el-checkbox :label="item.type">{{item.typetxt}}</el-checkbox>
+                          <el-input v-model="item.timetxt" placeholder="倒计时描述"></el-input>
+                      </div>
+                  </el-checkbox-group>
                 </el-form-item>
                 <el-form-item label="倒计时字体颜色：">
                   <el-color-picker v-model="timeform.style.color"></el-color-picker>
@@ -117,6 +113,7 @@
                 </el-form-item>
                 <el-form-item>
                   <el-button type="primary" @click="savetimeset">保存</el-button>
+                  <el-button type="danger" @click="dellist">删除</el-button>
                 </el-form-item>
               </el-form>
             </div>
@@ -166,7 +163,7 @@ export default {
       //上传商品背景图
       uploadUrl:uploadUrl,
       detailType:{
-          type:'square'
+          type:'banner'
       },
       iconList:[
           "../../../../static/images/banner.png","../../../../static/images/time.png"
@@ -183,8 +180,13 @@ export default {
           name: "倒计时", 
           type: 2, 
           timeobj:{
-            showtype:1,
-            timetxt:'距离活动结束',
+            time_info_list:[
+              {
+                type:1,
+                typetxt:"距离活动开始倒计时：",
+                timetxt:'距离活动开始',
+              },
+            ],
             background:'#C51015',
             style:{
               color:'#fff',
@@ -218,9 +220,22 @@ export default {
       bannerList:[{imgurl:'',imgLink:''}],
       bannerdex:0,
       //倒计时设置
+      time_info_type:[],//勾选的倒计时类型
+      time_info:[//倒计时显示类型
+          {
+            type:1,
+            typetxt:"距离活动开始倒计时：",
+            timetxt:'',
+          },
+          {
+            type:2,
+            typetxt:"距离活动结束倒计时：",
+            timetxt:'',
+          }
+      ],
+      time_info_list:[],//勾选后倒计时类型和文案
       timeform:{
-        showtype:1,//倒计时显示类型
-        timetxt:'',
+        time_info_list:[],
         background:'#C51015',
         style:{
           color:'#fff',
@@ -243,6 +258,10 @@ export default {
     })
   },
   methods: {
+    //改变倒计时显示type
+    changetimetype(){
+
+    },
     //设置方法
     setbox(type,dex,data){
       this.setType = type
@@ -251,7 +270,27 @@ export default {
       if(this.setType == 1){
         this.bannerList = data.imgList
       }else if(this.setType == 2){
-        this.timeform = data
+        this.time_info_type = []
+        this.timeform = JSON.parse(JSON.stringify(data.timeobj))
+        //勾选倒计时类型数据回显
+        var list = this.timeform.time_info_list
+        var arr = []
+        for(var i=0;i<list.length;i++){
+          var type = list[i].type
+          arr.push(type)
+        }
+        this.time_info_type = arr
+        console.log(list)
+        for(var i=0;i<this.time_info.length;i++){
+          for(var j=0;j<list.length;j++){
+            if(this.time_info[i].type == list[j].type){
+              this.time_info[i].timetxt = list[j].timetxt
+            }else{
+              this.time_info[i].timetxt = ''
+            }
+          }
+        }
+        console.log(this.time_info)
       }else if(this.setType == 3){
         this.commodity_imgurl = data.background_image
         this.commodity_back_color = data.background_color
@@ -265,8 +304,34 @@ export default {
       this.detaildata.background_image = img
       this.list2[this.dex] = this.detaildata
     },
-    beforeAvatarUpload(){
-      
+    beforeAvatarUpload(file){
+      const isLt2M = file.size / 1024 < 500 ;
+      if (!isLt2M) {
+        // this.$message.error('商品图片大小不能超过500kb!');
+        // $('.tip').addClass('error')
+      } else {
+        // $('.tip').removeClass('error')
+      }
+      var _this = this;
+      const isSize = new Promise(function(resolve, reject) {
+        let width = 1440;
+        let height = 500;
+        let _URL = window.URL || window.webkitURL;
+        let img = new Image();
+        img.onload = function() {
+          let valid = img.width == width && img.height == height;
+          valid ? resolve() : reject();
+        }
+        img.src = _URL.createObjectURL(file);
+      }).then(() => {
+        // $('.tip').removeClass('error')
+        return file;
+      }, () => {
+        // $('.tip').addClass('error')
+        this.$message.error('商品图片宽高必须是1440*500!');
+        return false
+      });
+      return isSize && isLt2M;
     },
     //设置商品列表背景色
     changecolor(){
@@ -286,16 +351,30 @@ export default {
     },
     //轮播图上传图片
     bannerSuccess(res,file){
-      this.bannerList[this.bannerdex].imgurl = res.data
+      if(res.data.code == 200){
+        this.bannerList[this.bannerdex].imgurl = JSON.parse(JSON.stringify(res.data))
+      }
     },
     //banner设置保存
     savebannerlist(){
-      console.log(this.dex)
       this.list2[this.dex].imgList = JSON.parse(JSON.stringify(this.bannerList)) 
     },
     //倒计时设置保存
     savetimeset(){
-      this.list2[this.dex].timeobj = this.timeform
+      console.log(this.time_info_type)
+      console.log(this.time_info)
+      var arr = []
+      for(var i=0;i<this.time_info.length;i++){
+        for(var j=0;j<this.time_info_type.length;j++){
+          if(this.time_info[i].type == this.time_info_type[j]){
+            var obj = this.time_info[i]
+            arr.push(obj)
+          }
+        }
+      }
+      console.log(arr)
+      this.timeform.time_info_list = arr
+      this.list2[this.dex].timeobj = JSON.parse(JSON.stringify(this.timeform))
     },
     //应用活动广场样式
     saveStyle(){
@@ -322,8 +401,13 @@ export default {
       }
     },
     handleChange: function() {},
-    delbannerlist: function(index) {
-      //this.list2.splice(index, 1);
+    //删除组件
+    dellist() {
+      this.list2.splice(this.dex, 1);
+    },
+    //轮播图单个删除
+    delbanner(dex){
+      this.bannerList.splice(dex,1)
     }
   }
 };
