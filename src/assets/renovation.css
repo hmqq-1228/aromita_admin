@@ -87,7 +87,6 @@
     overflow: hidden;
     padding:23px 45px;
     box-sizing: border-box;
-    /* background: #fff; */
 }
 .list_box .list{
     width: 205px;
@@ -106,6 +105,7 @@
     background: #f7f7f7;
     padding:10px 20px;
     box-sizing: border-box;
+    overflow-y: scroll;
 }
 .renovation_right h3{
     text-align: center;

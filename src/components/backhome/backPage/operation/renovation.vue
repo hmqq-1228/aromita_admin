@@ -33,8 +33,8 @@
                         </el-carousel>
                       </div>
                       <!-- 倒计时 -->
-                      <div v-if="item.type ==2" class="activeTime" :style="{'background':item.timeobj.background}" @click="setbox(2,index,item)">
-                        <div class="timecenter" :style="{'float':positionstyle[item.timeobj.style.position],'color':item.timeobj.style.color}">
+                      <div v-if="item.type ==2" class="activeTime" :style="{'background':item.timeobj.background,'text-align':positionstyle[item.timeobj.style.position]}" @click="setbox(2,index,item)">
+                        <div class="timecenter" :style="{'color':item.timeobj.style.color}">
                           <span>{{item.timeobj.time_info_list[0].timetxt}}：</span>
                           <i>01</i> D <i>05</i>: h <i>24</i>: m <i>28</i>: s
                         </div>
@@ -52,9 +52,9 @@
           </div>
           <div class="renovation_right">
             <div v-if="setType == 1">
-              <h3>banner图设置</h3>
+              <h3>banner图设置（最多只能设置3张图）</h3>
               <el-form class="setcommodity_back">
-                  <el-button type="success" @click="addBanner">添加</el-button>
+                  <el-button type="success" @click="addBanner" :disabled="this.bannerList.length >= 3 ? true:false">添加</el-button>
                   <el-form-item v-for="(item,index) in bannerList" :key="index">
                       <div>
                         <h4>上传图片</h4>
@@ -209,7 +209,7 @@ export default {
       dex:0,
       positionstyle:{
         1:'left',
-        2:'auto',
+        2:'center',
         3:'right'
       },
       //商品设置
@@ -280,16 +280,11 @@ export default {
           arr.push(type)
         }
         this.time_info_type = arr
-        console.log(list)
+
         for(var i=0;i<this.time_info.length;i++){
-          for(var j=0;j<list.length;j++){
-            if(this.time_info[i].type == list[j].type){
-              this.time_info[i].timetxt = list[j].timetxt
-            }else{
-              this.time_info[i].timetxt = ''
-            }
-          }
+          list.filter(n=>n.type == this.time_info[i].type ?this.time_info[i].timetxt = n.timetxt:'')
         }
+
         console.log(this.time_info)
       }else if(this.setType == 3){
         this.commodity_imgurl = data.background_image
@@ -342,7 +337,7 @@ export default {
     },
     //添加轮播图（最多三张）
     addBanner(){
-      var obj = {imgurl:'',imgLink:''}
+      var obj = {imgurl:'../../../../static/images/1.png',imgLink:''}
       this.bannerList.push(obj)
     },
     //获取轮播图上传组件index
