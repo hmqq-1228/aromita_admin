@@ -81,7 +81,7 @@
                 </el-table-column>
                 <el-table-column label="操作" width="460px">
                     <template slot-scope="scope">
-                       <el-button type="primary" size="mini" v-if="scope.row.status != '已结束'" @click="addcommodity(scope.row.res.id,scope.row.res.activity_start_time,scope.row.res.activity_end_time,scope.row.status)">添加商品</el-button>
+                       <el-button type="primary" size="mini" v-if="scope.row.status != '已结束'" @click="addcommodity(scope.row.res.id,scope.row.res.activity_start_time,scope.row.res.activity_end_time,scope.row.status)">活动商品</el-button>
                        <el-button type="primary" size="mini" v-if="scope.row.status == '未开始'" @click="editList(scope.row.res.id)">编辑</el-button>
                        <el-button type="danger" size="mini" v-if="scope.row.status != '已结束'" @click="stopList(scope.row.res.id)">终止</el-button>
                        <el-button type="warning" size="mini" v-if="scope.row.status != '已结束'" @click="handleCopy(scope.row.res.url,$event)">复制链接</el-button>

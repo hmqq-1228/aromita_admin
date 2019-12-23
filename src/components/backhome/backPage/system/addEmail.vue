@@ -168,6 +168,11 @@ export default {
                                     type: 'success'
                                 });
                                 this.$router.push({path:"/servicemail"})
+                            }else if(res.data.code == 101){
+                                this.$message({
+                                    message: '邮箱的中文名字不能重复',
+                                    type: 'error'
+                                });
                             }else{
                                 this.$message.error(res.data.msg)
                             }
@@ -180,6 +185,11 @@ export default {
                                     type: 'success'
                                 });
                                 this.$router.push({path:"/servicemail"})
+                            }else if(res.data.code == 101){
+                                this.$message({
+                                    message: '邮箱的中文名字不能重复',
+                                    type: 'error'
+                                });
                             }else{
                                 this.$message.error(res.data.msg)
                             }

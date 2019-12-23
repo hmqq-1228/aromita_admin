@@ -1,7 +1,7 @@
 <template>
     <div class="setCommodity">
         <div class="btn">
-            <el-button type="primary" @click="addCommodity">添加商品</el-button>
+            <el-button type="primary" v-if="activeStr == '未开始'" @click="addCommodity">添加商品</el-button>
             <el-button type="danger" v-if="activeStr == '未开始'" @click="bothdel">批量删除商品</el-button>
             <el-button type="danger" v-if="activeStr == '进行中'" @click="bothstop">批量终止商品</el-button>
         </div>
@@ -10,7 +10,7 @@
             style="width: 100%"
             max-height="760px"
             @selection-change="handleSelectionChange">
-            <el-table-column type="selection" width="45"></el-table-column>
+            <el-table-column type="selection" width="45" :selectable="selectInit"></el-table-column>
             <el-table-column prop="sku_no" label="SKU编号"></el-table-column>
             <el-table-column prop="sku_name" label="商品名称"></el-table-column>
             <el-table-column label="商品图片">
@@ -18,9 +18,21 @@
                     <img :src="scope.row.sku_image" alt="" class="skuimg">
                 </template>
             </el-table-column>
-            <el-table-column prop="sku_price" label="商品原价"></el-table-column>
-            <el-table-column prop="activity_price" label="活动价"></el-table-column>
-            <el-table-column prop="sku_status" label="商品活动状态"></el-table-column>
+            <el-table-column prop="sku_price" label="商品原价">
+                <template slot-scope="scope">
+                    <span>$ {{scope.row.sku_price}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column prop="activity_price" label="活动价">
+                <template slot-scope="scope">
+                    <span>$ {{scope.row.activity_price}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column label="商品活动状态">
+                <template slot-scope="scope">
+                    <span>{{sku_status_list[scope.row.sku_status]}}</span>
+                </template>
+            </el-table-column>
             <el-table-column prop="" label="结束时间">
                 <template slot-scope="scope">
                     <span v-if="scope.row.stop_time">{{scope.row.stop_time}}</span>
@@ -30,7 +42,7 @@
             <el-table-column label="操作">
                 <template slot-scope="scope">
                     <el-button type="danger" v-if="activeStr == '未开始'" @click="deleteList(scope.row.activity_id,scope.row.sku_id)">删除</el-button>
-                    <el-button type="danger" v-if="activeStr == '进行中'" @click="termination(scope.row.activity_id,scope.row.sku_id)">终止</el-button>
+                    <el-button type="danger" v-if="activeStr == '进行中'" @click="termination(scope.row.activity_id,scope.row.sku_id)" :disabled="scope.row.sku_status == 2?true:false">终止</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -47,11 +59,12 @@
         <el-dialog
             title="添加商品"
             :visible.sync="commodityVisible"
-            width="900px">
+            width="900px"
+            @closed	="closevisible()">
             <el-form :inline="true" :model="addform">
                 <el-form-item label="商品二级类别">
-                    <el-select v-model="addform.second_cate_id">
-                        <el-option v-for="item in secondCategory" :key="item.id" :value="item.id">{{item.cate_name}}</el-option>
+                    <el-select v-model="addform.second_cate_id" clearable>
+                        <el-option v-for="item in secondCategory" :key="item.id" :value="item.id" :label="item.cate_name">{{item.cate_name}}</el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item>
@@ -69,7 +82,11 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="sku_no" label="SKU"></el-table-column>
-                <el-table-column prop="sku_name" label="商品名称"></el-table-column>
+                <el-table-column prop="sku_name" label="商品名称">
+                    <template slot-scope="scope">
+                        <p class="sku_name">{{scope.row.sku_name}}</p>
+                    </template>
+                </el-table-column>
                 <el-table-column label="商品图片">
                     <template slot-scope="scope">
                         <img :src="scope.row.sku_image" alt="" width="80px" height="80px">
@@ -113,6 +130,10 @@ export default {
                 sku_no:''
             },
             skuid:[],
+            sku_status_list:{
+                1:"正常进行",
+                2:"终止"
+            }
         }
     },
     created(){
@@ -126,6 +147,13 @@ export default {
         }
     },
     methods:{
+        selectInit(row,index){
+            if(row.sku_status==2){
+                return false  //不可勾选
+            }else{    
+                return true  //可勾选
+            }
+        },
         handleSelectionChange(val){
             var skuidarr = []
             for(var i=0;i<val.length;i++){
@@ -133,7 +161,6 @@ export default {
                 skuidarr.push(skuid)
             }
             this.skuid = skuidarr
-            console.log(this.skuid)
         },
         getskulist(){
             activitySku({activity_id:this.activity_id,page:this.page}).then((res)=>{
@@ -160,7 +187,7 @@ export default {
             })
         },
         changepage(val){
-            this.addform.page =val
+            this.addform.page = val
             this.getcommodityList()
         },
         //搜索
@@ -194,6 +221,10 @@ export default {
                     });
                 }
             })
+        },
+        //关闭添加商品弹框
+        closevisible(){
+            this.getskulist()
         },
         //删除商品
         deleteList(active_id,sku_id){
@@ -287,6 +318,7 @@ export default {
                 });          
             });
         },
+        //批量终止商品
         bothstop(){
             if(this.skuid.length == 0){
                 this.$message({
@@ -336,5 +368,12 @@ export default {
 .pagination{
     margin-top: 10px;
     text-align: right;
+}
+.sku_name{
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp:2;
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 </style>
