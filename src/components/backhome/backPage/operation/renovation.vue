@@ -35,7 +35,7 @@
                       <!-- 倒计时 -->
                       <div v-if="item.type ==2" class="activeTime" :style="{'background':item.timeobj.background,'text-align':positionstyle[item.timeobj.style.position]}" @click="setbox(2,index,item)">
                         <div class="timecenter" :style="{'color':item.timeobj.style.color}">
-                          <span>{{item.timeobj.time_info_list[0].timetxt}}：</span>
+                          <span v-if="item.timeobj.time_info_list.length!=0">{{item.timeobj.time_info_list[0].timetxt}}：</span>
                           <i>01</i> D <i>05</i>: h <i>24</i>: m <i>28</i>: s
                         </div>
                       </div>
@@ -300,13 +300,13 @@ export default {
       this.list2[this.dex] = this.detaildata
     },
     beforeAvatarUpload(file){
-      const isLt2M = file.size / 1024 < 500 ;
-      if (!isLt2M) {
-        // this.$message.error('商品图片大小不能超过500kb!');
-        // $('.tip').addClass('error')
-      } else {
-        // $('.tip').removeClass('error')
-      }
+      // const isLt2M = file.size / 1024 < 500 ;
+      // if (!isLt2M) {
+      //   // this.$message.error('商品图片大小不能超过500kb!');
+      //   // $('.tip').addClass('error')
+      // } else {
+      //   // $('.tip').removeClass('error')
+      // }
       var _this = this;
       const isSize = new Promise(function(resolve, reject) {
         let width = 1440;
@@ -326,7 +326,7 @@ export default {
         this.$message.error('商品图片宽高必须是1440*500!');
         return false
       });
-      return isSize && isLt2M;
+      return isSize;
     },
     //设置商品列表背景色
     changecolor(){
@@ -343,12 +343,16 @@ export default {
     //获取轮播图上传组件index
     getImageTypeIndex(dex){
       this.bannerdex = dex
+      console.log(this.bannerdex)
     },
     //轮播图上传图片
     bannerSuccess(res,file){
-      if(res.data.code == 200){
-        this.bannerList[this.bannerdex].imgurl = JSON.parse(JSON.stringify(res.data))
+      console.log(res)
+      if(res.code == 200){
+        console.log(1)
+        this.bannerList[this.bannerdex].imgurl = res.data
       }
+      console.log(this.bannerList)
     },
     //banner设置保存
     savebannerlist(){
