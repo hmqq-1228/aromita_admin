@@ -46,7 +46,7 @@
             <el-table :data="list" max-height="540px">
                 <el-table-column label="活动名称">
                     <template slot-scope="scope">
-                        <span @click="viewdetail(scope.row.res.id)" class="active_name">{{scope.row.name}}</span>
+                        <span @click="viewdetail(scope.row.id)" class="active_name">{{scope.row.name}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="活动类型">
