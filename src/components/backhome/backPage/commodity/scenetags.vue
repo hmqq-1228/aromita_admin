@@ -319,7 +319,9 @@ export default {
     font-size: 14px;
     font-weight: bolder;
     color: #666;
-    text-align: center;
+    display: inline-block;
+    padding-left: 30px;
+    /* text-align: center; */
 }
 .scenetags .custom-tree-node{
     width: 100%;
@@ -330,6 +332,7 @@ export default {
 }
 .scenetags .custom-tree-node .node{
     flex:1;
-    text-align: center;
+    padding-left: 50px;
+    /* text-align: center; */
 }
 </style>

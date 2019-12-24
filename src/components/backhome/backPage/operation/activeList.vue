@@ -43,30 +43,30 @@
                     <el-button type="primary" @click="searchList()">搜索</el-button>
                 </el-form-item>
             </el-form>
-            <el-table :data="list" max-height="500px">
+            <el-table :data="list" max-height="540px">
                 <el-table-column label="活动名称">
                     <template slot-scope="scope">
-                        <span>{{scope.row.res.name}}</span>
+                        <span @click="viewdetail(scope.row.res.id)" class="active_name">{{scope.row.name}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="活动类型">
                     <template slot-scope="scope">
-                        <span>{{activetype[scope.row.res.activity_type]}}</span>
+                        <span>{{activetype[scope.row.activity_type]}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="开始时间">
                     <template slot-scope="scope">
-                        <span>{{scope.row.res.activity_start_time}}</span>
+                        <span>{{scope.row.activity_start_time}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="结束时间">
                     <template slot-scope="scope">
-                        <span>{{scope.row.res.activity_end_time}}</span>
+                        <span>{{scope.row.activity_end_time}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="活动规则">
                     <template slot-scope="scope">
-                        <span>{{scope.row.res.activity_rule}}</span>
+                        <span>{{scope.row.activity_rule}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column label="活动状态" width="80px">
@@ -76,20 +76,29 @@
                 </el-table-column>
                 <el-table-column label="活动链接">
                     <template slot-scope="scope">
-                        <p class="activelink">{{scope.row.res.url}}</p>
+                        <p class="activelink">{{scope.row.url}}</p>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="460px">
                     <template slot-scope="scope">
-                       <el-button type="primary" size="mini" v-if="scope.row.status != '已结束'" @click="addcommodity(scope.row.res.id,scope.row.res.activity_start_time,scope.row.res.activity_end_time,scope.row.status)">活动商品</el-button>
-                       <el-button type="primary" size="mini" v-if="scope.row.status == '未开始'" @click="editList(scope.row.res.id)">编辑</el-button>
-                       <el-button type="danger" size="mini" v-if="scope.row.status != '已结束'" @click="stopList(scope.row.res.id)">终止</el-button>
-                       <el-button type="warning" size="mini" v-if="scope.row.status != '已结束'" @click="handleCopy(scope.row.res.url,$event)">复制链接</el-button>
-                       <el-button type="success" size="mini" v-if="scope.row.status == '未开始'" @click="setStyle(scope.row.res.id)">活动广场</el-button>
-                       <el-button type="info" disabled v-if="scope.row.status == '已结束'">禁止操作</el-button>
+                       <el-button type="primary" size="mini" @click="addcommodity(scope.row.id,scope.row.activity_start_time,scope.row.activity_end_time,scope.row.status)">活动商品</el-button>
+                       <el-button type="primary" size="mini" v-if="scope.row.status == '未开始'" @click="editList(scope.row.id)">编辑</el-button>
+                       <el-button type="danger" size="mini" v-if="scope.row.status != '已结束'" @click="stopList(scope.row.id)">终止</el-button>
+                       <el-button type="warning" size="mini" v-if="scope.row.status != '已结束'" @click="handleCopy(scope.row.url,$event)">复制链接</el-button>
+                       <el-button type="success" size="mini" @click="setStyle(scope.row.id,scope.row.status)">活动广场</el-button>
+                       <!-- <el-button type="info"  v-if="scope.row.status == '已结束'">禁止操作</el-button> -->
                     </template>
                 </el-table-column>
             </el-table>
+            <div class="pagination">
+                <el-pagination
+                    background
+                    layout="prev, pager, next"
+                    :total="listTotal"
+                    :page-size="15"
+                    @current-change="changepage">
+                </el-pagination>
+            </div>
         </div>
     </div>
 </template>
@@ -99,6 +108,7 @@ import clip from '@/utils/clipboard'
 export default {
     data(){
         return{
+            listTotal:0,
             list:[],
             activeForm:{
                 page:1,
@@ -116,6 +126,10 @@ export default {
         this.getList()
     },
     methods:{
+        //查看活动详情
+        viewdetail(id){
+            this.$router.push({path:'/activedetial',query:{id:id}})
+        },
         //复制功能
         handleCopy(text, event) {
             clip(text, event)
@@ -124,10 +138,16 @@ export default {
             this.activeForm.page = 1
             this.getList()
         },
+        //列表分页
+        changepage(val){
+            this.activeForm.page = val
+            this.getList()
+        },
         //获取活动列表
         getList(){
             activeList(this.activeForm).then((res)=>{
-                this.list = res.data.data
+                this.list = res.data.data.data
+                this.listTotal = res.data.data.total
             })
         },
         //活动终止
@@ -159,8 +179,8 @@ export default {
             });
         },
         //活动广场设置
-        setStyle(id){
-            this.$router.push({path:'/renovation',query:{id:id}})
+        setStyle(id,str){
+            this.$router.push({path:'/renovation',query:{id:id,str:str}})
         },
         //编辑活动
         editList(id){
@@ -214,5 +234,11 @@ export default {
     overflow: hidden;
     text-overflow:ellipsis;
     white-space: nowrap;
+}
+.active_name{
+    cursor: pointer;
+}
+.active_name:hover{
+    color: firebrick;
 }
 </style>

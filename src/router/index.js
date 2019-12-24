@@ -66,6 +66,7 @@ import activeList from '@/components/backhome/backPage/operation/activeList.vue'
 import addActive from '@/components/backhome/backPage/operation/addActive.vue'
 import renovation from '@/components/backhome/backPage/operation/renovation.vue'
 import setCommodity from '@/components/backhome/backPage/operation/setCommodity.vue'
+import activedetial from '@/components/backhome/backPage/operation/activedetial.vue'
 
 //权限管理
 import jurisdiction from '@/components/backhome/backPage/jurisdiction/jurisdiction.vue'
@@ -117,6 +118,11 @@ export default new Router({
           path: '/activeList',
           name: 'activeList',
           component: activeList
+        },
+        {
+          path: '/activedetial',
+          name: 'activedetial',
+          component: activedetial
         },
         {
           path: '/addActive',

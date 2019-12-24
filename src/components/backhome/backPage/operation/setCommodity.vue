@@ -10,7 +10,7 @@
             style="width: 100%"
             max-height="760px"
             @selection-change="handleSelectionChange">
-            <el-table-column type="selection" width="45" :selectable="selectInit"></el-table-column>
+            <el-table-column type="selection" width="45" :selectable="selectInit" v-if="activeStr != '已结束'"></el-table-column>
             <el-table-column prop="sku_no" label="SKU编号"></el-table-column>
             <el-table-column prop="sku_name" label="商品名称"></el-table-column>
             <el-table-column label="商品图片">
@@ -30,7 +30,9 @@
             </el-table-column>
             <el-table-column label="商品活动状态">
                 <template slot-scope="scope">
-                    <span>{{sku_status_list[scope.row.sku_status]}}</span>
+                    <span v-if="scope.row.sku_status == 1 && activeStr == '未开始'">未开始</span>
+                    <span v-else-if="scope.row.sku_status == 1 && activeStr == '进行中'">进行中</span>
+                    <span v-else>已结束</span>
                 </template>
             </el-table-column>
             <el-table-column prop="" label="结束时间">
@@ -39,7 +41,7 @@
                     <span v-else> / </span>
                 </template>
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" v-if="activeStr != '已结束'">
                 <template slot-scope="scope">
                     <el-button type="danger" v-if="activeStr == '未开始'" @click="deleteList(scope.row.activity_id,scope.row.sku_id)">删除</el-button>
                     <el-button type="danger" v-if="activeStr == '进行中'" @click="termination(scope.row.activity_id,scope.row.sku_id)" :disabled="scope.row.sku_status == 2?true:false">终止</el-button>
@@ -130,10 +132,6 @@ export default {
                 sku_no:''
             },
             skuid:[],
-            sku_status_list:{
-                1:"正常进行",
-                2:"终止"
-            }
         }
     },
     created(){

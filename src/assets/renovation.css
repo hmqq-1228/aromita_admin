@@ -3,6 +3,13 @@
     padding-right: 40px;
     margin-bottom: 10px;
 }
+.activeTip{
+    width: 100%;
+    text-align: center;
+    font-weight: bolder;
+    font-size: 16px;
+    color: red;
+}
 .renovation{
     display: flex;
     width: 100%;
@@ -53,6 +60,19 @@
     border:1px solid #e5e5e5;
     max-height: 800px;
     overflow-y: scroll
+}
+.banner{
+    position: relative;
+}
+.banner .bannerTxt{
+    position: absolute;
+    top: 140px;
+    width:200px;
+    left: 50%;
+    margin-left: -100px;
+    text-align: center;
+    color: #666;
+    font-size: 18px;
 }
 .banner img{
     width:100%;

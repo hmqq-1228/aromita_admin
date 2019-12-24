@@ -1,7 +1,8 @@
 <template>
   <div>
       <div class="saveBtn">
-        <el-button type="primary" @click="saveStyle">应用活动广场样式</el-button>
+        <el-button type="primary" @click="saveStyle" v-if="activestr == '未开始'">应用活动广场样式</el-button>
+        <p class="activeTip" v-else>进行中和已结束活动编辑无效。</p>
       </div>
       <div class="renovation">
           <div class="renovation_left">
@@ -31,6 +32,7 @@
                                 <img :src="item1.imgurl" alt="">
                             </el-carousel-item>
                         </el-carousel>
+                        <p class="bannerTxt"><i class="el-icon-picture-outline"></i> 请上传轮播图</p>
                       </div>
                       <!-- 倒计时 -->
                       <div v-if="item.type ==2" class="activeTime" :style="{'background':item.timeobj.background,'text-align':positionstyle[item.timeobj.style.position]}" @click="setbox(2,index,item)">
@@ -50,7 +52,7 @@
                   </div>
               </draggable>
           </div>
-          <div class="renovation_right">
+          <div class="renovation_right" v-if="elementList == true">
             <div v-if="setType == 1">
               <h3>banner图设置（最多只能设置3张图）</h3>
               <el-form class="setcommodity_back">
@@ -96,7 +98,8 @@
                   <el-checkbox-group v-model="time_info_type" @change="changetimetype">
                       <div v-for="(item,index) in time_info" :key="index" class="shipsort">
                           <el-checkbox :label="item.type">{{item.typetxt}}</el-checkbox>
-                          <el-input v-model="item.timetxt" placeholder="倒计时描述"></el-input>
+                          <el-input v-if="time_info_type.find(n =>n == item.type)" v-model="item.timetxt" placeholder="倒计时描述"></el-input>
+                          <el-input v-else placeholder="倒计时描述"></el-input>
                       </div>
                   </el-checkbox-group>
                 </el-form-item>
@@ -112,8 +115,10 @@
                   <el-radio :label="3" v-model="timeform.style.position">居右</el-radio>
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" @click="savetimeset">保存</el-button>
-                  <el-button type="danger" @click="dellist">删除</el-button>
+                    <div class="bannerBtn">
+                      <el-button type="primary" @click="savetimeset">保存</el-button>
+                      <el-button type="danger" @click="dellist">删除</el-button>
+                    </div>
                 </el-form-item>
               </el-form>
             </div>
@@ -146,6 +151,9 @@
               </div>
             </div>
           </div>
+          <div class="renovation_right" v-else>
+            <h3>请选择要设置的组件</h3> 
+          </div>
       </div>
   </div>  
 </template>
@@ -159,6 +167,7 @@ export default {
   },
   data() {
     return {
+      activestr:'未开始',
       active_id:'',
       //上传商品背景图
       uploadUrl:uploadUrl,
@@ -173,7 +182,7 @@ export default {
           name: "banner图", 
           type:1, 
           imgList:[
-            {imgurl:'../../../../static/images/1.png',imgLink:''}
+            {imgurl:'',imgLink:''}
           ]
         },
         { 
@@ -184,12 +193,12 @@ export default {
               {
                 type:1,
                 typetxt:"距离活动开始倒计时：",
-                timetxt:'距离活动开始',
+                timetxt:'Upcoming Sales',
               },
             ],
             background:'#C51015',
             style:{
-              color:'#fff',
+              color:'#ffffff',
               position:1
             }
           }
@@ -238,16 +247,18 @@ export default {
         time_info_list:[],
         background:'#C51015',
         style:{
-          color:'#fff',
+          color:'#ffffff',
           position:1
         }
       },
       detaildata:{},
-      count: 0
+      count: 0,
+      elementList:false,
     };
   },
   created(){
     this.active_id = this.$route.query.id
+    this.activestr = this.$route.query.str
     detailStyle({id:this.active_id}).then((res)=>{
       var style = res.data.data.activity_style
       if(style !=''){
@@ -260,13 +271,26 @@ export default {
   methods: {
     //改变倒计时显示type
     changetimetype(){
-
+      console.log(this.time_info_type)
+      if(this.time_info_type.length == 0){
+        this.list2.splice(this.dex, 1);
+        this.elementList = false
+      }else{
+        for(var i=0;i<this.time_info.length;i++){
+          // for(var j=0;j<this.time_info_type.length;j++){
+          //   if(this.time_info[i].type != this.time_info_type[j]){
+          //     this.time_info[i].timetxt = ''
+          //   }
+          // }
+        }
+      }
     },
     //设置方法
     setbox(type,dex,data){
       this.setType = type
       this.dex = dex
       this.detaildata = data
+      this.elementList = true
       if(this.setType == 1){
         this.bannerList = data.imgList
       }else if(this.setType == 2){
@@ -284,8 +308,6 @@ export default {
         for(var i=0;i<this.time_info.length;i++){
           list.filter(n=>n.type == this.time_info[i].type ?this.time_info[i].timetxt = n.timetxt:'')
         }
-
-        console.log(this.time_info)
       }else if(this.setType == 3){
         this.commodity_imgurl = data.background_image
         this.commodity_back_color = data.background_color
@@ -337,31 +359,29 @@ export default {
     },
     //添加轮播图（最多三张）
     addBanner(){
-      var obj = {imgurl:'../../../../static/images/1.png',imgLink:''}
+      var obj = {imgurl:'',imgLink:''}
       this.bannerList.push(obj)
     },
     //获取轮播图上传组件index
     getImageTypeIndex(dex){
       this.bannerdex = dex
-      console.log(this.bannerdex)
     },
     //轮播图上传图片
     bannerSuccess(res,file){
-      console.log(res)
       if(res.code == 200){
-        console.log(1)
         this.bannerList[this.bannerdex].imgurl = res.data
       }
-      console.log(this.bannerList)
     },
     //banner设置保存
     savebannerlist(){
-      this.list2[this.dex].imgList = JSON.parse(JSON.stringify(this.bannerList)) 
+      if(this.bannerList.find((n)=>n.imgurl == '')){
+        this.$message.error("请上传轮播图")
+      }else{
+        this.list2[this.dex].imgList = JSON.parse(JSON.stringify(this.bannerList))
+      }
     },
-    //倒计时设置保存
+    //倒计时设置保存 [\u4e00-\u9fa5]
     savetimeset(){
-      console.log(this.time_info_type)
-      console.log(this.time_info)
       var arr = []
       for(var i=0;i<this.time_info.length;i++){
         for(var j=0;j<this.time_info_type.length;j++){
@@ -371,23 +391,45 @@ export default {
           }
         }
       }
-      console.log(arr)
-      this.timeform.time_info_list = arr
-      this.list2[this.dex].timeobj = JSON.parse(JSON.stringify(this.timeform))
+
+      for(var m =0;m<arr.length;m++){
+        var patt = new RegExp("^[a-zA-Z _%&',;=?$]{0,50}$");
+        if(arr[m].timetxt == ''){
+          this.$message.error("请输入倒计时描述")
+          return false
+        }else if(arr[m].timetxt != '' && !patt.test(arr[m].timetxt)){
+          this.$message.error("倒计时描述只能是英文，且字符长度不能超过50个字符")
+          return false
+        }else{
+          this.timeform.time_info_list = arr
+          this.list2[this.dex].timeobj = JSON.parse(JSON.stringify(this.timeform))
+        }
+      }
+      
+      
     },
     //应用活动广场样式
     saveStyle(){
-      let pre={
-        id:this.active_id,
-        activity_style:JSON.stringify(this.list2),
-      }
-      saveActiveStyle(pre).then((res)=>{
-        if(res.data.code == 200){
-            this.$message.success('保存成功');
+      console.log(this.list2)
+      var imgarr = this.list2.filter(n=>n.type == 1)
+      for(var i=0;i<imgarr.length;i++){
+        if(imgarr[i].imgList.find(n => n.imgurl == '')){
+          this.$message.error("请上传轮播图")
+          return false
         }else{
-            this.$message.error(res.data.msg);
+          let pre={
+            id:this.active_id,
+            activity_style:JSON.stringify(this.list2),
+          }
+          saveActiveStyle(pre).then((res)=>{
+            if(res.data.code == 200){
+                this.$message.success('保存成功');
+            }else{
+                this.$message.error(res.data.msg);
+            }
+          })
         }
-      })
+      }
     },
     log: function(evt) {
       if (evt.added) {
@@ -403,6 +445,7 @@ export default {
     //删除组件
     dellist() {
       this.list2.splice(this.dex, 1);
+      this.elementList = false
     },
     //轮播图单个删除
     delbanner(dex){

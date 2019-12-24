@@ -18,6 +18,9 @@ export const activeUpdate = params =>post("/backend/activity/update",params)
 //活动商品列表
 export const activitySku = params =>post("/backend/activitySku/index",params)
 
+//活动详情
+export const activelistdetail = params =>post("/backend/activity/detail",params)
+
 //删除活动商品
 export const delactiveSku = params =>post("/backend/activitySku/del",params)
 
@@ -37,7 +40,8 @@ export const activitySkuindex = params =>post("/backend/activitySku/activitySkui
 export const addactiveSku = params =>post("/backend/activitySku/activitySkuinsert",params)
 
 //保存活动广场样式
-export const saveActiveStyle = params =>post("/backend/activity/square",params)
+export const saveActiveStyle = params =>post("/backend/activity/square",params) 
 
 //编辑活动广场获取详情
 export const detailStyle = params =>get("/backend//activity/squareEdit",params)
+
