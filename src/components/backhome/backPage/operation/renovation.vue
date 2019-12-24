@@ -271,18 +271,9 @@ export default {
   methods: {
     //改变倒计时显示type
     changetimetype(){
-      console.log(this.time_info_type)
       if(this.time_info_type.length == 0){
         this.list2.splice(this.dex, 1);
         this.elementList = false
-      }else{
-        for(var i=0;i<this.time_info.length;i++){
-          // for(var j=0;j<this.time_info_type.length;j++){
-          //   if(this.time_info[i].type != this.time_info_type[j]){
-          //     this.time_info[i].timetxt = ''
-          //   }
-          // }
-        }
       }
     },
     //设置方法
@@ -292,7 +283,7 @@ export default {
       this.detaildata = data
       this.elementList = true
       if(this.setType == 1){
-        this.bannerList = data.imgList
+        this.bannerList = JSON.parse(JSON.stringify(data.imgList))
       }else if(this.setType == 2){
         this.time_info_type = []
         this.timeform = JSON.parse(JSON.stringify(data.timeobj))
@@ -408,28 +399,39 @@ export default {
       
       
     },
-    //应用活动广场样式
+    //应用活动广场样式校验
     saveStyle(){
-      console.log(this.list2)
-      var imgarr = this.list2.filter(n=>n.type == 1)
-      for(var i=0;i<imgarr.length;i++){
-        if(imgarr[i].imgList.find(n => n.imgurl == '')){
-          this.$message.error("请上传轮播图")
-          return false
-        }else{
-          let pre={
-            id:this.active_id,
-            activity_style:JSON.stringify(this.list2),
-          }
-          saveActiveStyle(pre).then((res)=>{
-            if(res.data.code == 200){
-                this.$message.success('保存成功');
-            }else{
-                this.$message.error(res.data.msg);
-            }
-          })
+      var arr1 = []
+      for(var i=0;i<this.list2.length;i++){
+        if(this.list2[i].type == 1){
+          var img = this.list2[i].imgList
+          arr1.push(img)
         }
       }
+      var arr2 = []
+      for(var j=0;j<arr1.length;j++){
+        var img1 = arr1[j]
+        arr2.push(...img1)
+      }
+      if(arr2.find(n =>n.imgurl == '')){
+        this.$message.error('请上传轮播图');
+      }else{
+        this.saveStyleSub()
+      }
+    },
+    //应用活动广场
+    saveStyleSub(){
+      let pre={
+        id:this.active_id,
+        activity_style:JSON.stringify(this.list2),
+      }
+      saveActiveStyle(pre).then((res)=>{
+        if(res.data.code == 200){
+            this.$message.success('保存成功');
+        }else{
+            this.$message.error(res.data.msg);
+        }
+      })
     },
     log: function(evt) {
       if (evt.added) {
