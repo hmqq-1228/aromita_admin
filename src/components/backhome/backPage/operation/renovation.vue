@@ -104,7 +104,7 @@
                   </el-checkbox-group>
                 </el-form-item>
                 <el-form-item label="倒计时字体颜色：">
-                  <el-color-picker v-model="timeform.style.color"></el-color-picker>
+                  <el-color-picker v-model="timeform['style'].color"></el-color-picker>
                 </el-form-item>
                 <el-form-item label="倒计时区域背景色：">
                   <el-color-picker v-model="timeform.background"></el-color-picker>
@@ -189,6 +189,7 @@ export default {
           name: "倒计时", 
           type: 2, 
           timeobj:{
+            color:'#FFFFFF',
             time_info_list:[
               {
                 type:1,
@@ -198,7 +199,7 @@ export default {
             ],
             background:'#C51015',
             style:{
-              color:'#ffffff',
+              color:'#FFFFFF',
               position:1
             }
           }
@@ -247,7 +248,7 @@ export default {
         time_info_list:[],
         background:'#C51015',
         style:{
-          color:'#ffffff',
+          color:'#FFFFFF',
           position:1
         }
       },
@@ -365,10 +366,17 @@ export default {
     },
     //banner设置保存
     savebannerlist(){
-      if(this.bannerList.find((n)=>n.imgurl == '')){
-        this.$message.error("请上传轮播图")
-      }else{
-        this.list2[this.dex].imgList = JSON.parse(JSON.stringify(this.bannerList))
+      var patt = new RegExp('[a-zA-z]+://[^s]*')
+      for(var i=0;i<this.bannerList.length;i++){
+        if(this.bannerList[i].imgurl == ''){
+          this.$message.error("请上传轮播图")
+          return false
+        }else if(this.bannerList[i].imgLink!='' && !patt.test(this.bannerList[i].imgLink)){
+          this.$message.error("请输入合法链接")
+          return false
+        }else{
+          this.list2[this.dex].imgList = JSON.parse(JSON.stringify(this.bannerList))
+        }
       }
     },
     //倒计时设置保存 [\u4e00-\u9fa5]

@@ -14,8 +14,8 @@
                 <el-form-item label="活动名称：" prop="name">
                     <el-input v-model="activeform.name"></el-input>
                 </el-form-item>
-                <el-form-item label="优惠力度：" prop="activity_intensity">
-                    <el-input v-model="activeform.activity_intensity" style="width:80px"></el-input>
+                <el-form-item label="优惠力度：" :prop="'activity_intensity'+activeform.activity_type">
+                    <el-input v-model="activeform[`activity_intensity${activeform.activity_type}`]" style="width:80px"></el-input>
                     <span v-if="activeform.activity_type == 2"> % OFF</span>
                     <span v-if="activeform.activity_type == 1"> $ </span>
                 </el-form-item>
@@ -28,6 +28,7 @@
                         end-placeholder="结束日期"
                         value-format="yyyy-MM-dd HH:00"
                         format="yyyy-MM-dd HH:00"
+                        :picker-options="pickerOptionsToday"
                         @change ="changetime()">
                     </el-date-picker>
                 </el-form-item>
@@ -60,25 +61,61 @@ export default {
                 callback();
             }
         }
+
+        var intensity1 =(rule,value,callback)=>{
+            var reg1 = new RegExp('^(([0-9]+|0)\.([0-9]{1,2})$)|^([^0][0-9]+|0)$')//匹配最多保留两位小数
+            if(!value){
+                callback(new Error('请输入优惠力度'))
+            }else if(value != '' && !reg1.test(Number(value))){
+                console.log(value)
+                callback(new Error('一口价活动，优惠力度最多只能有两位小数'))
+            }else{
+                callback()
+            }
+        }
+
+        var intensity2 =(rule,value,callback)=>{
+            var reg2 = new RegExp('^[1-9][0-9]*$')//匹配正整数
+            if(!value){
+                callback(new Error('请输入优惠力度'))
+            }else if(value != '' && !reg2.test(Number(value))){
+                callback(new Error('百分比活动，优惠力度只能是整数'))
+            }else{
+                callback()
+            }
+        }
+
+        
         return{
+            pickerOptionsToday: {
+                disabledDate(time) {
+                    return time.getTime() < Date.now() - 8.64e7;
+                }
+            },
             activeId:'',//活动id
             activeform:{
                 active_time:[],
                 name:'',
                 activity_type:2,
                 activity_intensity:'',
+                activity_intensity1:'',
+                activity_intensity2:'',
                 activity_start_time:'',
                 activity_end_time:'',
                 activity_rule:''
             },
+            oldform:{},
             rules:{
                 name:[
                     { validator:activename, trigger: 'blur' },
                     { required: true, message: '请输入活动名称', trigger: 'blur' },
                     { min:1, max:20, message: '活动名称不能超过20个字符', trigger: 'blur' }
                 ],
-                activity_intensity:[
-                    { required: true, message: '请输入优惠力度', trigger: 'blur' },
+                activity_intensity1:[
+                    { validator:intensity1, trigger: 'blur' },
+                ],
+                activity_intensity2:[
+                    { validator:intensity2, trigger: 'blur' },
                 ],
                 active_time:[
                     { required: true, message: '请选择活动时间', trigger: 'blur' },
@@ -108,7 +145,10 @@ export default {
         getdetail(){
             activedetail({id:this.activeId}).then((res)=>{
                 this.activeform = res.data.data
-                console.log(this.activeform)
+                this.oldform = res.data.data
+                this.$set(this.activeform,'activity_intensity1','')
+                this.$set(this.activeform,'activity_intensity2','')
+                this.activeform[`activity_intensity${this.activeform.activity_type}`] = this.activeform.activity_intensity
                 var activetime = []
                 activetime.push(new Date(this.activeform.activity_start_time))
                 activetime.push(new Date(this.activeform.activity_end_time))
@@ -117,10 +157,23 @@ export default {
         },
         //编辑活动详情
         updataActive(form){
+            if(this.activeform.active_time && this.activeform.active_time.length!=0 && this.timetype == true){
+                this.activeform.activity_start_time = this.activeform.active_time[0]
+                this.activeform.activity_end_time = this.activeform.active_time[1]
+                this.editActive(form)
+            }else if(this.activeform.active_time && this.activeform.active_time.length!=0 && this.timetype == false){
+                this.activeform.activity_start_time = this.oldform.activity_start_time
+                this.activeform.activity_end_time = this.oldform.activity_end_time
+                this.editActive(form)
+            }else{
+                this.$message.warning('广告时间必填');
+            }
+        },
+        //编辑活动
+        editActive(form){
             this.$refs[form].validate((valid) => {
                 if (valid) {
-                    this.activeform.activity_start_time = this.activeform.active_time[0]
-                    this.activeform.activity_end_time = this.activeform.active_time[1]
+                    this.activeform.activity_intensity = this.activeform[`activity_intensity${this.activeform.activity_type}`] 
                     activeUpdate(this.activeform).then((res)=>{
                         if(res.data.code == 200){
                             this.$message({
@@ -166,6 +219,18 @@ export default {
                     return false;
                 }
             });
+        },
+        //优惠力度校验
+        intensityReg(){
+            console.log(this.activeform.activity_intensity)
+            var patt1 = new RegExp('^[1-9]\d*$')//匹配正整数
+            var patt2 = new RegExp('^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$')//匹配最多保留两位小数
+            if(!patt1.test(Number(this.activeform.activity_intensity))){
+                this.$message.error("优惠力度必须是整数")
+                this.activeform.activity_intensity = ''
+            }else{
+                console.log(3)
+            }
         },
         //新建取消
         cancelActive(){

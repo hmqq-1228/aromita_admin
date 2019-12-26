@@ -124,7 +124,7 @@ export default {
             adverteform:{
                 top_ad_name:'',
                 top_ad_title:'',
-                top_ad_fontcolor:'#fff',
+                top_ad_fontcolor:'#FFFFFF',
                 top_ad_bgcolor:'#C51015',
                 top_ad_title_url:'',
                 countdown_status:1,
@@ -277,8 +277,7 @@ export default {
                     } else {
                         return false;
                     }
-                });
-                
+                });                
             }else{
                 this.$message.warning('广告时间必填');
                 this.adverteform.ad_start_time = ''

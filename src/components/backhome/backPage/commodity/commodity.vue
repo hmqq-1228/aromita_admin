@@ -59,7 +59,8 @@
                         :data="skuTable"
                         style="width: 100%"
                         max-height="680px"
-                        v-loading="skuLoading">
+                        v-loading="skuLoading"
+                        @sort-change='tableSortChange'>
                         <!-- <el-table-column type="selection" width="45"></el-table-column> -->
                         <el-table-column prop="date" label="商品" width="280px">
                             <template slot-scope="scope">
@@ -84,7 +85,7 @@
                                 <span>{{scope.row.inventory_allow_update == 0?'不允许':'允许'}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="inventory" label="库存"></el-table-column>
+                        <el-table-column prop="inventory" label="库存" sortable='custom'></el-table-column>
                         <el-table-column label="操作" width="310px">
                             <template slot-scope="scope">
                                 <el-button type="warning" v-if="scope.row.sku_status == 0" @click="UpperOrLower(scope.row.id,1)">上架</el-button>
@@ -173,6 +174,10 @@ import {categoryList,ClassII} from '@/http/category.js'
 export default {
     data(){
         return{
+            custom:{
+                prop:'inventory',
+                order:'descending'
+            },
             skuLoading:false,
             pageSize:50,
             skutotal:0,//总量
@@ -186,7 +191,7 @@ export default {
                 product_no:'',
                 sku_name:'',
                 sku_no:'',
-                sku_status:''
+                sku_status:'',
             },
             skuStatus:-1,//sku商品状态
             firstList:[],//一级类目
@@ -290,6 +295,18 @@ export default {
         searchSkuList(){
             this.skusearchForm.page = 1
             this.skuStatus = Number(this.skusearchForm.sku_status)
+            this.getskuList()
+        },
+        //sku列表库存排序
+        tableSortChange(column) {
+            this.skusearchForm.page = 1
+            if (column.order === 'descending') {
+                this.skusearchForm.col = column.prop
+                this.skusearchForm.sort = 'desc'
+            } else {
+                this.skusearchForm.col = column.prop
+                this.skusearchForm.sort = 'asc'
+            }
             this.getskuList()
         },
         //sku列表

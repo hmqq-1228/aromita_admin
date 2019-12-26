@@ -59,6 +59,7 @@
         </div>
         <!-- 添加商品弹框 -->
         <el-dialog
+            v-if="commodityVisible == true"
             title="添加商品"
             :visible.sync="commodityVisible"
             width="900px"
@@ -172,6 +173,8 @@ export default {
         },
         //添加商品弹框
         addCommodity(){
+            this.addform.second_cate_id = ''
+            this.addform.sku_no = ''
             this.commodityVisible = true
             this.addid = []
             this.getcommodityList()
