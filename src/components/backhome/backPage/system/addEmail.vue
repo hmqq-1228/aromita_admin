@@ -6,7 +6,7 @@
         </div>
         <el-form ref="emailForm" :rules="rules" :model="emailForm" label-width="140px">
             <el-form-item label="邮箱中文名称：" prop="cn_name">
-                <el-input v-model="emailForm.cn_name"></el-input>
+                <el-input v-model="emailForm.cn_name" :disabled="emailId?true:false"></el-input>
             </el-form-item>
             <el-form-item label="邮箱英文名称：" prop="en_name">
                 <el-input v-model="emailForm.en_name"></el-input>
