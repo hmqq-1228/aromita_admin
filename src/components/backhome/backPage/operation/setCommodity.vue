@@ -37,7 +37,9 @@
             </el-table-column>
             <el-table-column prop="" label="结束时间">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.stop_time">{{scope.row.stop_time}}</span>
+                    <span v-if="scope.row.stop_time!=null">{{scope.row.stop_time}}</span>
+                    <span v-else-if="scope.row.stop_time == null && active_end_time && !active_stop_time">{{active_end_time}}</span>
+                    <span v-else-if="scope.row.stop_time == null && active_stop_time">{{active_stop_time}}</span>
                     <span v-else> / </span>
                 </template>
             </el-table-column>
@@ -114,6 +116,8 @@ import {activitySku,activitySkuindex,addactiveSku,delactiveSku,batchdelactiveSku
 export default {
     data(){
         return{
+            active_stop_time:'',
+            active_end_time:'',
             activeStr:'',
             page:1,
             total:0,
@@ -136,6 +140,8 @@ export default {
         }
     },
     created(){
+        this.active_stop_time = this.$route.query.time3
+        this.active_end_time = this.$route.query.time2
         this.activity_id = this.$route.query.id
         this.addform.activity_id = this.$route.query.id
         this.addform.activity_start_time = this.$route.query.time1

@@ -89,7 +89,7 @@ export default {
         return{
             pickerOptionsToday: {
                 disabledDate(time) {
-                    return time.getTime() < Date.now() - 8.64e7;
+                    return time.getTime() < Date.now();
                 }
             },
             activeId:'',//活动id
@@ -198,6 +198,7 @@ export default {
         saveActive(form){
             this.$refs[form].validate((valid) => {
                 if (valid) {
+                    this.activeform.activity_intensity = this.activeform[`activity_intensity${this.activeform.activity_type}`]
                     this.activeform.activity_start_time = this.activeform.active_time[0]
                     this.activeform.activity_end_time = this.activeform.active_time[1]
                     newActive(this.activeform).then((res)=>{

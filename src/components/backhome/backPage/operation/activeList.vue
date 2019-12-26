@@ -81,12 +81,11 @@
                 </el-table-column>
                 <el-table-column label="操作" width="460px">
                     <template slot-scope="scope">
-                       <el-button type="primary" size="mini" @click="addcommodity(scope.row.id,scope.row.activity_start_time,scope.row.activity_end_time,scope.row.status)">活动商品</el-button>
+                       <el-button type="primary" size="mini" @click="addcommodity(scope.row.id,scope.row.activity_start_time,scope.row.activity_end_time,scope.row.activity_stop_time,scope.row.status)">活动商品</el-button>
                        <el-button type="primary" size="mini" v-if="scope.row.status == '未开始'" @click="editList(scope.row.id)">编辑</el-button>
                        <el-button type="danger" size="mini" v-if="scope.row.status != '已结束'" @click="stopList(scope.row.id)">终止</el-button>
                        <el-button type="warning" size="mini" v-if="scope.row.status != '已结束'" @click="handleCopy(scope.row.url,$event)">复制链接</el-button>
                        <el-button type="success" size="mini" @click="setStyle(scope.row.id,scope.row.status)">活动广场</el-button>
-                       <!-- <el-button type="info"  v-if="scope.row.status == '已结束'">禁止操作</el-button> -->
                     </template>
                 </el-table-column>
             </el-table>
@@ -186,9 +185,9 @@ export default {
         editList(id){
             this.$router.push({path:'/addActive',query:{id:id}})
         },
-        //添加商品
-        addcommodity(id,time1,time2,str){
-            this.$router.push({path:'/setCommodity',query:{id:id,time1:time1,time2:time2,str:str}})
+        //添加商品 
+        addcommodity(id,time1,time2,time3,str){
+            this.$router.push({path:'/setCommodity',query:{id:id,time1:time1,time2:time2,time3:time3,str:str}})
         }
     }
 }
