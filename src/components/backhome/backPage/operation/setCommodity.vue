@@ -37,10 +37,15 @@
             </el-table-column>
             <el-table-column prop="" label="结束时间">
                 <template slot-scope="scope">
-                    <span v-if="scope.row.stop_time!=null">{{scope.row.stop_time}}</span>
-                    <span v-else-if="scope.row.stop_time == null && active_end_time && !active_stop_time">{{active_end_time}}</span>
-                    <span v-else-if="scope.row.stop_time == null && active_stop_time">{{active_stop_time}}</span>
-                    <span v-else> / </span>
+                    <span v-if="activeStr == '已结束'">
+                        <span v-if="scope.row.stop_time!=null">{{scope.row.stop_time}}</span>
+                        <span v-else-if="scope.row.stop_time == null && active_end_time && !active_stop_time">{{active_end_time}}</span>
+                        <span v-else-if="scope.row.stop_time == null && active_stop_time">{{active_stop_time}}</span>
+                    </span>
+                    <span v-else>
+                        <span v-if="scope.row.stop_time!=null">{{scope.row.stop_time}}</span>
+                        <span v-else> / </span>
+                    </span>
                 </template>
             </el-table-column>
             <el-table-column label="操作" v-if="activeStr != '已结束'">
