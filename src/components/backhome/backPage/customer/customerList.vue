@@ -59,7 +59,7 @@
           label="操作">
           <template slot-scope="scope">
             <el-button type="text" size="small" @click="toPointsDetail(scope.row.id)">积分明细</el-button>
-            <el-button type="text" size="small" @click="resetPassword(scope.row.email)">重置密码</el-button>
+            <el-button type="text" size="small" @click="resetPassword(scope.row.email)">找回密码</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -160,7 +160,7 @@ export default {
     },
     //重置密码
     resetPassword (email) {
-      this.$confirm('重置密码邮件发送给客户后，请引导客户完成重置密码后续步骤, 是否继续?', '提示', {
+      this.$confirm('找回密码邮件发送给客户后，请引导客户完成找回密码后续步骤, 是否继续?', '提示', {
           confirmButtonText: '继续',
           cancelButtonText: '取消',
           type: 'warning'
@@ -169,7 +169,7 @@ export default {
               if(res.data.code == 200){
                 this.$message({
                   type: 'success',
-                  message: '密码已重置!'
+                  message: '已发送！'
                 });
               }else{
                 this.$message({

@@ -69,6 +69,8 @@ export default {
             }else if(value != '' && !reg1.test(Number(value))){
                 console.log(value)
                 callback(new Error('一口价活动，优惠力度最多只能有两位小数'))
+            }else if(value > 100 || value <= 0){
+                callback(new Error('优惠力度必须大于0且小于等于100'))
             }else{
                 callback()
             }
@@ -79,12 +81,13 @@ export default {
             if(!value){
                 callback(new Error('请输入优惠力度'))
             }else if(value != '' && !reg2.test(Number(value))){
-                callback(new Error('百分比活动，优惠力度只能是整数'))
+                callback(new Error('百分比活动，优惠力度只能是正整数'))
+            }else if(value > 100 || value <= 0){
+                callback(new Error('优惠力度必须大于0且小于等于100'))
             }else{
                 callback()
             }
         }
-
         
         return{
             pickerOptionsToday: {
