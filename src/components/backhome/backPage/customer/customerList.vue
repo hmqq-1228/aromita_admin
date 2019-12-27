@@ -59,7 +59,7 @@
           label="操作">
           <template slot-scope="scope">
             <el-button type="text" size="small" @click="toPointsDetail(scope.row.id)">积分明细</el-button>
-            <el-button type="text" size="small" @click="resetPassword()">重置密码</el-button>
+            <el-button type="text" size="small" @click="resetPassword(scope.row.email)">重置密码</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import {customerList} from '@/http/customer.js'
+import {customerList,resetpass} from '@/http/customer.js'
 export default {
   data() {
     return {
@@ -159,13 +159,31 @@ export default {
       })
     },
     //重置密码
-    resetPassword () {
-      this.$alert('已发送重置密码邮件给客户，请引导客户完成重置密码后续步骤', '密码重置', {
-        confirmButtonText: '知道了',
-        callback: action => {
-
-        }
-      });
+    resetPassword (email) {
+      this.$confirm('重置密码邮件发送给客户后，请引导客户完成重置密码后续步骤, 是否继续?', '提示', {
+          confirmButtonText: '继续',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          resetpass({email:email}).then((res)=>{
+              if(res.data.code == 200){
+                this.$message({
+                  type: 'success',
+                  message: '密码已重置!'
+                });
+              }else{
+                this.$message({
+                  type: 'error',
+                  message: res.data.msg
+                });
+              }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });          
+        });
     },
     //客户积分明细
     toPointsDetail (id) {
