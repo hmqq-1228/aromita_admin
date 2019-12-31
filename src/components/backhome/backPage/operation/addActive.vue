@@ -52,6 +52,7 @@
             title="提示"
             :visible.sync="activeskuvisible"
             width="500px">
+            <h3 style="color:red;font-size:12px;">以下商品在该活动时间内有参加其他活动，请手动删除后再调整活动时间</h3>
             <div class="sku_box">
                 <span v-for="(item,index) in sku_no_list" :key="index">
                     {{item.sku_no}}
