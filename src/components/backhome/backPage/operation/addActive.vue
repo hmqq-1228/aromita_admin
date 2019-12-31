@@ -47,6 +47,20 @@
                 </el-form-item>
             </el-form>
         </div>
+        <!-- 错误的sku编码 -->
+        <el-dialog
+            title="提示"
+            :visible.sync="activeskuvisible"
+            width="500px">
+            <div class="sku_box">
+                <span v-for="(item,index) in sku_no_list" :key="index">
+                    {{item.sku_no}}
+                </span>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="activeskuvisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -67,7 +81,6 @@ export default {
             if(!value){
                 callback(new Error('请输入优惠力度'))
             }else if(value != '' && !reg1.test(Number(value))){
-                console.log(value)
                 callback(new Error('一口价活动，优惠力度只能是数字且最多只能有两位小数'))
             }else if(value > 100 || value <= 0){
                 callback(new Error('优惠力度必须大于0且小于等于100'))
@@ -129,6 +142,8 @@ export default {
                 ]
             },
             timetype:false,
+            activeskuvisible:false,//错误的sku编号弹框
+            sku_no_list:[]
         }
     },
     created(){
@@ -141,8 +156,6 @@ export default {
         //修改活动时间
         changetime(){
             this.timetype = true
-            console.log(1)
-            console.log(this.activeform.active_time)
         },
         //编辑活动，获取详情
         getdetail(){
@@ -184,6 +197,9 @@ export default {
                                 type: 'success'
                             });
                             this.$router.push({path:'/activeList'})
+                        }else if(res.data.code == 103){
+                            this.activeskuvisible = true
+                            this.sku_no_list = res.data.data
                         }else{
                             this.$message({
                                 message:res.data.msg,
@@ -226,7 +242,6 @@ export default {
         },
         //优惠力度校验
         intensityReg(){
-            console.log(this.activeform.activity_intensity)
             var patt1 = new RegExp('^[1-9]\d*$')//匹配正整数
             var patt2 = new RegExp('^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$')//匹配最多保留两位小数
             if(!patt1.test(Number(this.activeform.activity_intensity))){
@@ -246,5 +261,13 @@ export default {
 <style scoped>
 .addActiveCenter{
     width: 500px;
+}
+.sku_box{
+    width: 460px;
+}
+.sku_box span{
+    display: inline-block;
+    width:105px;
+    margin:0 5px;
 }
 </style>

@@ -66,11 +66,10 @@
         </div>
         <!-- 添加商品弹框 -->
         <el-dialog
-            v-if="commodityVisible == true"
             title="添加商品"
             :visible.sync="commodityVisible"
             width="900px"
-            @closed	="closevisible()">
+            @closed	="closevisible">
             <el-form :inline="true" :model="addform">
                 <el-form-item label="商品二级类别">
                     <el-select v-model="addform.second_cate_id" clearable>
@@ -236,6 +235,7 @@ export default {
         },
         //关闭添加商品弹框
         closevisible(){
+            console.log(1)
             this.getskulist()
         },
         //删除商品
