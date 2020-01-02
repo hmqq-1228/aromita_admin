@@ -20,6 +20,12 @@
                                 <el-option label="补货中" :value='2'></el-option>
                             </el-select>
                         </el-form-item>
+                        <el-form-item label="启用/禁用：">
+                            <el-select v-model="skusearchForm.is_delete" clearable>
+                                <el-option label="启用" value='N'></el-option>
+                                <el-option label="禁用" value='Y'></el-option>
+                            </el-select>
+                        </el-form-item>
                         <el-form-item>
                             <el-input v-model="skusearchForm.product_no" clearable placeholder="请输入SPU编号"></el-input>
                         </el-form-item>
@@ -48,12 +54,12 @@
                         <!-- <el-form-item>
                             <el-button type="danger" @click="batchdelete()">批量删除</el-button>
                         </el-form-item> -->
-                        <el-form-item v-if="this.skuStatus == 0">
+                        <!-- <el-form-item v-if="this.skuStatus == 0">
                             <el-button type="warning" @click="batchUpperOrLower(1)">批量上架</el-button>
                         </el-form-item>
                         <el-form-item v-if="this.skuStatus === 1">
                             <el-button type="danger" @click="batchUpperOrLower(0)">批量下架</el-button>
-                        </el-form-item>
+                        </el-form-item> -->
                     </el-form>
                     <el-table
                         :data="skuTable"
@@ -192,6 +198,7 @@ export default {
                 sku_name:'',
                 sku_no:'',
                 sku_status:'',
+                is_delete:''
             },
             skuStatus:-1,//sku商品状态
             firstList:[],//一级类目
@@ -579,6 +586,7 @@ export default {
 </script>
 <style>
     .skuCenter .el-input{width:200px!important}
+    .skuCenter .el-select .el-input{width:120px!important;}
     .sku{
         display: flex;
         width: 240px;
