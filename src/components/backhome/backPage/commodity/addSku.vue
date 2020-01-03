@@ -41,7 +41,7 @@
                                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>
                         </el-form-item>
-                        <el-form-item label="商品副图：">
+                        <el-form-item label="商品副图（选填）：">
                             <el-upload
                                 :action="uploadUrl"
                                 :file-list="skuform.thumbnail_images"
@@ -61,7 +61,7 @@
                         <el-form-item>
                             <b class="imgTips">请上传不超过500KB的1024*1024尺寸的PNG或JPG格式图片！</b>
                         </el-form-item>
-                        <el-form-item label="商品场景图（非必填）：">
+                        <el-form-item label="商品场景图（选填）：">
                             <el-upload
                                 :action="uploadUrl"
                                 :file-list="skuform.scene_images"
