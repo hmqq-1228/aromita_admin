@@ -55,11 +55,11 @@
                         <span>{{listStatus[scope.$index]}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="date" label="操作">
+                <el-table-column prop="date" label="操作" width="260px">
                     <template slot-scope="scope">
-                        <!-- <el-button type="primary">查看</el-button> -->
+                        <el-button type="success" v-if="listStatus[scope.$index] != '已结束' && scope.row.coupon_type == 'F'" @click="_setCoupon(scope.row.id,scope.row.coupon_type)">设置为订阅coupon</el-button>
+                        <el-button type="danger" v-if="listStatus[scope.$index] != '已结束' && scope.row.coupon_type == 'N'" @click="_setCoupon(scope.row.id,scope.row.coupon_type)">设置为注册coupon</el-button>
                         <el-button type="primary" v-if="listStatus[scope.$index] == '发放中'" @click="stopList(scope.row.id)">终止</el-button>
-                        <!-- <el-button type="primary" v-else disabled>终止</el-button> -->
                         <el-button type="danger" v-else-if="listStatus[scope.$index] == '待发放'" @click="delList(scope.row.id)">删除</el-button>
                         <el-button type="info" v-else disabled>不可操作</el-button>
                     </template>
@@ -78,7 +78,7 @@
     </div>
 </template>
 <script>
-import {couponList,delCoupon,stopCoupon} from '@/http/coupon.js'
+import {couponList,delCoupon,stopCoupon,setcoupon} from '@/http/coupon.js'
 export default {
     data(){
         return{
@@ -118,6 +118,12 @@ export default {
                 this.couponTable = res.data.data.data.data
                 this.listStatus = res.data.data.status
                 this.total = res.data.data.data.total
+            })
+        },
+        //设置优惠券
+        _setCoupon(id,type){
+            setcoupon({id:id,type:type}).then((res)=>{
+
             })
         },
         //查询优惠券列表

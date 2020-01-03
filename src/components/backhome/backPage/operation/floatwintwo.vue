@@ -18,7 +18,7 @@
                     <el-radio-group v-model="adverteform.subscription_welfare">
                         <div class="radioBox">
                             <el-radio :label="1">送优惠券</el-radio>
-                            <div v-if="adverteform.subscription_welfare == 1">
+                            <div v-if="adverteform.subscription_welfare == 1 && options.length !=0">
                                 <el-tag
                                     v-for="item in options"
                                     :key="item.id"
@@ -61,7 +61,7 @@ export default {
                 advertising_subscription_name:'',
                 subscription_welfare:1,//（1送coupon，2送积分，3无福利）
                 status:1,
-                send_coupon_id:'',
+                send_coupon_id:0,
                 send_points:0,
                 id:''
             },
@@ -86,6 +86,9 @@ export default {
                 if(res.data.code == 200){
                     this.options = res.data.data.coupon_name
                     this.adverteform = res.data.data.subscribe[0]
+                    if(this.options == []){
+                        this.adverteform.send_coupon_id = 0
+                    }
                     this.adverteform.send_points = Number(this.adverteform.send_points)
                 }
             })

@@ -83,8 +83,8 @@ export default {
                 callback(new Error('请输入优惠力度'))
             }else if(value != '' && !reg1.test(Number(value))){
                 callback(new Error('一口价活动，优惠力度只能是数字且最多只能有两位小数'))
-            }else if(value > 100 || value <= 0){
-                callback(new Error('优惠力度必须大于0且小于等于100'))
+            }else if(value <= 0){
+                callback(new Error('优惠力度必须大于0'))
             }else{
                 callback()
             }

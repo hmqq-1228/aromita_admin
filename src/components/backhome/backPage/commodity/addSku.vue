@@ -9,7 +9,7 @@
             <h3 v-if="this.editSkuId">编辑SKU</h3>
         </div>
         <div class="addSkuDetail">
-            <el-form :model="skuform" :rules="rules" label-width="140px" class="demo-ruleForm">
+            <el-form :model="skuform" :rules="rules" label-width="180px" class="demo-ruleForm">
                 <el-form-item label="商品编号：" v-if="!this.editSkuId">
                     <el-autocomplete
                         v-model="sku_no"
@@ -61,7 +61,7 @@
                         <el-form-item>
                             <b class="imgTips">请上传不超过500KB的1024*1024尺寸的PNG或JPG格式图片！</b>
                         </el-form-item>
-                        <el-form-item label="商品场景图：">
+                        <el-form-item label="商品场景图（非必填）：">
                             <el-upload
                                 :action="uploadUrl"
                                 :file-list="skuform.scene_images"
