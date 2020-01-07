@@ -99,7 +99,7 @@
                                 <el-button type="primary" @click="skuDetail(scope.row.id)">详情</el-button>
                                 <el-button type="primary" @click="editorAddSku(scope.row.id)">编辑</el-button>
                                 <!-- <el-button type="danger" @click="deleteSku(scope.row.id)">删除</el-button> -->
-                                <el-button type="danger" v-if="scope.row.is_delete == 0" @click="disableSku(scope.row.id)">禁用</el-button>
+                                <el-button type="danger" v-if="scope.row.is_delete == 0 && scope.row.sku_status == 0" @click="disableSku(scope.row.id)">禁用</el-button>
                                 <el-button type="success" v-if="scope.row.is_delete == 1" @click="enableSku(scope.row.id)">启用</el-button>
                             </template>
                         </el-table-column>
