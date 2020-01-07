@@ -32,7 +32,13 @@
                 </el-form-item>
             </el-form>
             <el-table :data="couponTable" max-height="740px">
-                <el-table-column prop="coupon_name" label="优惠券名称"></el-table-column>
+                <el-table-column label="优惠券名称">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.coupon_name}}</span> &nbsp;&nbsp;&nbsp;
+                        <el-tag type="danger" v-if="scope.row.is_register_send == 1">注册优惠券</el-tag>
+                        <el-tag type="danger" v-if="scope.row.is_subscribe_send == 1">订阅优惠券</el-tag>
+                    </template>
+                </el-table-column>
                 <el-table-column label="创建类型">
                     <template slot-scope="scope">
                         {{couponType[scope.row.coupon_type]}}
@@ -123,7 +129,18 @@ export default {
         //设置优惠券
         _setCoupon(id,type){
             setcoupon({id:id,type:type}).then((res)=>{
-
+                if(res.data.code == 200){
+                    this.$message({
+                        type: 'success',
+                        message: '设置成功!'
+                    });
+                    this.getList()
+                }else{
+                    this.$message({
+                        type: 'error',
+                        message:res.data.msg
+                    });
+                }
             })
         },
         //查询优惠券列表
