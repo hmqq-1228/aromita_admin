@@ -136,7 +136,7 @@ export default {
                             type:'error'
                         });
                     })
-                }, 3000)
+                }, 6000)
             } else {
                 clearInterval(this.timer) // 取消定时器
             }
