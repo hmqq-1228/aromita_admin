@@ -6,7 +6,7 @@
         </div>
         <el-form ref="emailForm" :rules="rules" :model="emailForm" label-width="140px">
             <el-form-item label="邮箱中文名称：" prop="cn_name">
-                <el-input v-model="emailForm.cn_name"></el-input>
+                <el-input v-model="emailForm.cn_name" :disabled="emailId?true:false"></el-input>
             </el-form-item>
             <el-form-item label="邮箱英文名称：" prop="en_name">
                 <el-input v-model="emailForm.en_name"></el-input>
@@ -35,8 +35,8 @@
             <el-form-item label="发件邮箱：" prop="send_email">
                 <el-input v-model="emailForm.send_email"></el-input>
             </el-form-item>
-            <el-form-item label="发件频率：">
-                <el-input v-model="emailForm.send_rate"></el-input>
+            <el-form-item label="发件间隔：">
+                <el-input v-model="emailForm.send_rate" style="width:120px"></el-input> <span style="color:#606266">秒</span> 
             </el-form-item>
             <el-form-item label="状态：">
                 <el-radio-group v-model="emailForm.status">
@@ -168,6 +168,11 @@ export default {
                                     type: 'success'
                                 });
                                 this.$router.push({path:"/servicemail"})
+                            }else if(res.data.code == 101){
+                                this.$message({
+                                    message: '邮箱的中文名字不能重复',
+                                    type: 'error'
+                                });
                             }else{
                                 this.$message.error(res.data.msg)
                             }
@@ -180,6 +185,11 @@ export default {
                                     type: 'success'
                                 });
                                 this.$router.push({path:"/servicemail"})
+                            }else if(res.data.code == 101){
+                                this.$message({
+                                    message: '邮箱的中文名字不能重复',
+                                    type: 'error'
+                                });
                             }else{
                                 this.$message.error(res.data.msg)
                             }

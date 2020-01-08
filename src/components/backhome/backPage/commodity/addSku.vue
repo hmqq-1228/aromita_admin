@@ -9,7 +9,7 @@
             <h3 v-if="this.editSkuId">编辑SKU</h3>
         </div>
         <div class="addSkuDetail">
-            <el-form :model="skuform" :rules="rules" label-width="140px" class="demo-ruleForm">
+            <el-form :model="skuform" :rules="rules" label-width="180px" class="demo-ruleForm">
                 <el-form-item label="商品编号：" v-if="!this.editSkuId">
                     <el-autocomplete
                         v-model="sku_no"
@@ -41,7 +41,7 @@
                                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                             </el-upload>
                         </el-form-item>
-                        <el-form-item label="商品副图：">
+                        <el-form-item label="商品副图（选填）：">
                             <el-upload
                                 :action="uploadUrl"
                                 :file-list="skuform.thumbnail_images"
@@ -60,6 +60,27 @@
                         </el-form-item>
                         <el-form-item>
                             <b class="imgTips">请上传不超过500KB的1024*1024尺寸的PNG或JPG格式图片！</b>
+                        </el-form-item>
+                        <el-form-item label="商品场景图（选填）：">
+                            <el-upload
+                                :action="uploadUrl"
+                                :file-list="skuform.scene_images"
+                                list-type="picture-card"
+                                :data="sceneType"
+                                :limit="4"
+                                name="image[]"
+                                :on-preview="handlePictureCardPreview"
+                                :on-remove="sceneHandleRemove"
+                                :before-upload="beforeSceneUpload"
+                                :on-success="sceneSuccess">
+                                <i class="el-icon-plus"></i>
+                            </el-upload>
+                            <!-- <el-dialog :visible.sync="dialogVisible">
+                                <img width="100%" :src="dialogImageUrl" alt="">
+                            </el-dialog> -->
+                        </el-form-item>
+                        <el-form-item>
+                            <b class="imgTips">请上传不超过500KB的550*550尺寸的PNG或JPG格式图片！（最多只能上传四张）</b>
                         </el-form-item>
                         <el-form-item label="SKU单位：">
                             <span>{{skuform.sku_unit}}</span>
@@ -122,6 +143,10 @@
                                 </div>
                             </el-checkbox-group>
                         </el-form-item>
+                        <el-form-item label="商品类型：">
+                            <el-radio v-model="skuform.is_shipping_fee" :label='2'>免运费商品</el-radio>
+                            <el-radio v-model="skuform.is_shipping_fee" :label='1'>非免运费商品</el-radio>
+                        </el-form-item>
                         <el-form-item label="商品卖点：">
                             <el-input
                                 type="textarea"
@@ -170,9 +195,12 @@ export default {
             mainType:{
                 type:'main'
             },
-            //商品副图
+            //商品副图  
             thumbType:{
                 type:'thumbnail'
+            },
+            sceneType:{
+                type:'scene'
             },
             dialogImageUrl: '',
             dialogVisible: false
@@ -195,13 +223,29 @@ export default {
                     this.loading = false
                     this.skuform = res.data.data
                     this.sku_no = res.data.data.sku_no
+
+                    // 商品副图绑定
                     var thumbnail_images = res.data.data.thumbnail_images
                     var urlList = []
-                    for(var i=0;i<thumbnail_images.length;i++){
-                        var urlStr ={"url":thumbnail_images[i]}
-                        urlList.push(urlStr)
+                    if(thumbnail_images!= null){
+                        for(var i=0;i<thumbnail_images.length;i++){
+                            var urlStr ={"url":thumbnail_images[i]}
+                            urlList.push(urlStr)
+                        }
                     }
                     this.skuform.thumbnail_images = urlList
+
+                    // 商品场景图绑定
+                    var scene_images = res.data.data.scene_images
+                    var scene_urlList = []
+                    if(scene_images!= null){
+                        for(var i=0;i<scene_images.length;i++){
+                            var scene_urlStr ={"url":scene_images[i]}
+                            scene_urlList.push(scene_urlStr)
+                        }
+                    }
+                    this.skuform.scene_images = scene_urlList
+
                     this.defaultClassII(this.skuform.first_cate_id)
                     var attr = []
                     if(res.data.data.sku_attrs != ''){
@@ -265,11 +309,25 @@ export default {
                     //商品副图数据格式更改
                     var thumbnail_images = res.data.data.thumbnail_images
                     var urlList = []
-                    for(var i=0;i<thumbnail_images.length;i++){
-                        var urlStr ={"url":thumbnail_images[i]}
-                        urlList.push(urlStr)
+                    if(thumbnail_images !=null){
+                        for(var i=0;i<thumbnail_images.length;i++){
+                            var urlStr ={"url":thumbnail_images[i]}
+                            urlList.push(urlStr)
+                        }
                     }
                     this.skuform.thumbnail_images = urlList
+
+                    //商品场景图数据格式更改
+                    var scene_images = res.data.data.scene_images
+                    var scene_urlList = []
+                    if(scene_images!= null){
+                        for(var i=0;i<scene_images.length;i++){
+                            var scene_urlStr ={"url":scene_images[i]}
+                            scene_urlList.push(scene_urlStr)
+                        }
+                    }
+                    this.skuform.scene_images = scene_urlList
+
                     //一级类目
                     if(res.data.data.first_cate_id == 0 && this.firstList){
                         this.skuform.first_cate_id = this.firstList[0].id
@@ -277,7 +335,9 @@ export default {
                     }else{
                         this.defaultClassII(this.skuform.first_cate_id)
                     }
-                    
+
+                    //是否免邮商品赋默认值
+                    this.skuform.is_shipping_fee = 2
                 }else{
                     this.loading = false
                     this.$message.error(res.data.msg);
@@ -386,14 +446,35 @@ export default {
                 attrs1.push(JSON.stringify(newObj))
             }
             var myForm = JSON.parse(JSON.stringify(this.skuform))
+            
+            console.log(myForm)
             //处理副图的数据格式
             var thumbnail_images = myForm.thumbnail_images
             var imgattr = []
-            for(var i=0;i<thumbnail_images.length;i++){
-                var imgStr = thumbnail_images[i].url
-                imgattr.push(imgStr)
+            if(thumbnail_images && thumbnail_images.length!=0){
+                for(var i=0;i<thumbnail_images.length;i++){
+                    var imgStr = thumbnail_images[i].url
+                    imgattr.push(imgStr)
+                }  
+                myForm.thumbnail_images = imgattr
+            }else{
+                myForm.thumbnail_images = ''
             }
-            myForm.thumbnail_images = imgattr
+            
+            //处理商品场景图的数据格式
+            var sceneimages = myForm.scene_images
+            var imgattr1 = []
+            if(sceneimages && sceneimages.length!=0){
+                for(var i=0;i<sceneimages.length;i++){
+                    var imgStr = sceneimages[i].url
+                    imgattr1.push(imgStr)
+                }  
+                myForm.scene_images = imgattr1
+            }else{
+                myForm.scene_images = ''
+            }
+            
+
             //添加属性数据
             if(attrs1.length == 0){
                 this.$set(myForm,'attrs','')
@@ -496,7 +577,6 @@ export default {
                 _this.$message.error('商品图片宽高必须是1024*1024!');
                 return false
             });
-
             return isSize && isLt2M;
         },
         //商品副图移除
@@ -523,36 +603,63 @@ export default {
                 this.skuform.thumbnail_images = JSON.parse(JSON.stringify(this.skuform.thumbnail_images))
                 return false
             }
-        }
+        },
+        //场景图上传之前限制
+        beforeSceneUpload(file) {
+            console.log(this.skuform.scene_images)
+            //const isJPG = file.type === 'image/png,image/jpg,image/jpeg';
+            const isLt2M = file.size / 1024 < 500 ;
+            // if (!isJPG) {
+            //     this.$message.error('商品图片只能是 JPG 、PNG 格式!');
+            // }
+            if (!isLt2M) {
+                this.$message.error('商品图片大小不能超过500kb!');
+            }
+            var _this = this;
+            const isSize = new Promise(function(resolve, reject) {
+                let width = 550;
+                let height = 550;
+                let _URL = window.URL || window.webkitURL;
+                let img = new Image();
+                img.onload = function() {
+                    let valid = img.width == width && img.height == height;
+                    valid ? resolve() : reject();
+                }
+                img.src = _URL.createObjectURL(file);
+            }).then(() => {
+                return file;
+            }, () => {
+                _this.$message.error('商品图片宽高必须是550*550!');
+                return false
+            });
+            return isSize && isLt2M;
+        },
+        //场景图上传成功
+        sceneSuccess(res,file,fileList){
+            if(res.code == 200){
+                this.skuform.scene_images.push({"url":res.data[0]})
+            }else{
+                this.skuform.scene_images = JSON.parse(JSON.stringify(this.skuform.scene_images))
+                return false
+            }
+        },
+        //商品副图移除
+        sceneHandleRemove(file, fileList) {
+            var arr = this.skuform.scene_images
+            var Brr = []
+            arr.forEach((value,index,arr)=>{
+                if(value != file){
+                    Brr.push(value)
+                }  
+            })
+            this.skuform.scene_images = Brr
+        },
     }
 }
 </script>
 <style>
 .addsku{
     min-height:90vh;
-}
-.avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-}
-.avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    line-height: 178px;
-    text-align: center;
-}
-.avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
 }
 .addSkuDetail .el-input{
     width: 340px!important;

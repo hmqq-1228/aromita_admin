@@ -52,6 +52,7 @@
     </el-table>
   </div>
   <el-dialog
+    v-if="dialogVisible"
     title="添加属性值"
     :visible.sync="dialogVisible"
     width="400px">

@@ -10,66 +10,292 @@
             </router-link>
         </div>
         <div class="orderCenter">
-            <el-form :model="adverteform" class="demo-form-inline" label-width="160px">
-                <el-form-item label="广告名称（后台）：">
-                    <el-input></el-input>
+            <el-form :model="adverteform" class="demo-form-inline" label-width="160px" ref="adverteform" :rules="rules">
+                <el-form-item label="广告名称（后台）：" prop="top_ad_name"> 
+                    <el-input v-model="adverteform.top_ad_name"></el-input>
                 </el-form-item>
-                <el-form-item label="广告时段：">
+                <el-form-item label="广告时段：" required>
                     <el-date-picker
-                        v-model="adverteform.time"
+                        v-model="time"
                         type="datetimerange"
                         range-separator="至"
                         start-placeholder="开始日期"
-                        end-placeholder="结束日期">
+                        end-placeholder="结束日期"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        @change ="changetime()">
                     </el-date-picker>
                 </el-form-item>
-                <el-form-item label="广告标题（前台）：">
-                    <el-input></el-input>
+                <el-form-item label="广告标题（前台）：" prop="top_ad_title">
+                    <el-input v-model="adverteform.top_ad_title"></el-input>
                 </el-form-item>
-                <el-form-item label="标题链接：">
-                    <el-input></el-input>
-                </el-form-item>
-                <el-form-item label="广告背景：">
-
+                <el-form-item label="标题链接：" prop="top_ad_title_url">
+                    <el-input v-model="adverteform.top_ad_title_url"></el-input>
                 </el-form-item>
                 <el-form-item label="是否开启倒计时：">
-                    
+                    <el-radio-group v-model="adverteform.countdown_status">
+                        <el-radio :label="1">是</el-radio>
+                        <el-radio :label="0">否</el-radio>
+                    </el-radio-group>
                 </el-form-item>
                 <el-form-item label="广告位置：">
-                    
+                    <el-radio-group v-model="adverteform.top_ad_location">
+                        <el-radio :label="2">左对齐</el-radio>
+                        <el-radio :label="1">居中</el-radio>
+                        <el-radio :label="0">右对齐</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="广告背景色：">
+                    <el-color-picker v-model="adverteform.top_ad_bgcolor"></el-color-picker>
+                </el-form-item>
+                <el-form-item label="字体颜色：">
+                    <el-color-picker v-model="adverteform.top_ad_fontcolor"></el-color-picker>
                 </el-form-item>
                 <el-form-item label="广告详情：">
-                    
-                </el-form-item>
-                <el-form-item label="广告链接：">
-                    <el-input></el-input>
-                </el-form-item>
-                <el-form-item label="是否默认广告：">
-                    
-                </el-form-item>
-                <el-form-item label="广告状态：">
-                    
+                    <div class="ad_detial">
+                        <el-upload
+                            class="avatar-uploader"
+                            :action="uploadUrl"
+                            :data="detailType"
+                            name="image"
+                            accept=".jpg,.jpeg,.png,.JPG,.JPEG"
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess"
+                            :before-upload="beforeAvatarUpload">
+                            <img v-if="adverteform.top_ad_detail_image" :src="adverteform.top_ad_detail_image" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                        <i class="el-icon-error" v-if="adverteform.top_ad_detail_image" @click="removeImg"></i>
+                    </div>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary">保存</el-button>
-                    <el-button type="danger">取消</el-button>
+                    <b class="imgTips">请上传1440*500尺寸的PNG或JPG格式图片！</b>
+                </el-form-item>
+                <el-form-item label="广告链接：" prop="top_ad_detail_url">
+                    <el-input v-model="adverteform.top_ad_detail_url"></el-input>
+                </el-form-item>
+                <el-form-item label="是否默认广告：">
+                    <el-radio-group v-model="adverteform.is_default">
+                        <el-radio :label="1">是</el-radio>
+                        <el-radio :label="0">否</el-radio>
+                    </el-radio-group>
+                </el-form-item>
+                <el-form-item label="广告状态：">
+                    <el-switch
+                        v-model="adverteform.status"
+                        :active-value="1"
+                        :inactive-value="0">
+                    </el-switch>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="saveAdverte('adverteform')" v-if="!adverid">保存</el-button>
+                    <el-button type="primary" @click="editAdverte('adverteform')" v-if="adverid">修改</el-button>
+                    <el-button type="danger" @click="cancel()">取消</el-button>
                 </el-form-item>
             </el-form>
         </div>
     </div>
 </template>
 <script>
+import {uploadUrl} from '@/http/commodity.js'
+import {addAdvert,editadvert,updatEdit} from '@/http/advert.js'
 export default {
     data(){
+        var adTitle = (rule, value, callback) => {
+            var patt1=new RegExp("^[ a-zA-Z]+$");
+            if(value === ''){
+                callback(new Error('请输入广告标题'));
+            }else if(value!='' && value.length > 50){
+                console.log(value.length)
+                callback(new Error('广告标题不能超过50个字符'));
+            } else if(!patt1.test(value)){
+                callback(new Error('广告标题只能为英文'));
+            } else {
+                callback()
+            }
+        };
         return{
-            adverteform:{}
+            adverid:'',//广告id
+            //上传商品背景图
+            uploadUrl:uploadUrl,
+            detailType:{
+                type:'topaddetail'
+            },
+            time:[],//广告时间
+            adverteform:{
+                top_ad_name:'',
+                top_ad_title:'',
+                top_ad_fontcolor:'#FFFFFF',
+                top_ad_bgcolor:'#C51015',
+                top_ad_title_url:'',
+                countdown_status:1,
+                top_ad_location:2,
+                top_ad_detail_image:'',
+                top_ad_detail_url:'',
+                is_default:0,
+                status:1,
+                ad_start_time:'',
+                ad_end_time:''
+            },
+            oldform:{},
+            timetype:false,
+            //表单规则
+            rules:{
+                top_ad_name:[
+                    { required: true, message: '请输入广告名称', trigger: 'blur' },
+                    { min: 1, max: 20, message: '不能超过20个字符', trigger: 'blur' }
+                ],
+                top_ad_title:[
+                    { validator: adTitle, trigger: 'blur' },
+                    { required: true, message: '请输入广告标题', trigger: 'blur' },
+                ],
+                top_ad_title_url:[
+                    { type: 'url',message: '请填写正确的网址', trigger: 'blur' }
+                ],
+                top_ad_detail_url:[
+                    { type: 'url',message: '请填写正确的网址', trigger: 'blur' }
+                ]
+            }
         }
     },
     created(){
-
+        this.adverid = this.$route.query.id
+        if(this.adverid){
+            this.getdetail()
+        }
     },
     methods:{
-
+        //改变广告时间
+        changetime(){
+            this.timetype = true
+        },
+        //编辑广告获取详情
+        getdetail(){
+            editadvert({id:this.adverid}).then((res)=>{
+                if(res.data.code == 200){
+                    this.oldform = res.data.data
+                    this.adverteform = JSON.parse(JSON.stringify(res.data.data)) 
+                    this.time.push(new Date(this.adverteform.ad_start_time))
+                    this.time.push(new Date(this.adverteform.ad_end_time))
+                }else{
+                    this.$message.error(res.data.msg);
+                }
+            })
+        },
+        //商品图片上传之前限制
+        beforeAvatarUpload(file) {
+            var _this = this;
+            const isSize = new Promise(function(resolve, reject) {
+                let width = 1440;
+                let height = 500;
+                let _URL = window.URL || window.webkitURL;
+                let img = new Image();
+                img.onload = function() {
+                    let valid = img.width == width && img.height == height;
+                    valid ? resolve() : reject();
+                }
+                img.src = _URL.createObjectURL(file);
+            }).then(() => {
+                return file;
+            }, () => {
+                _this.$message.error('广告详情图片宽高必须是1440*500!');
+                return false
+            });
+            return isSize
+        },
+        handleAvatarSuccess(res, file) {
+            if(res.code == 200){
+                this.adverteform.top_ad_detail_image = res.data
+            }else{
+                return false
+            }
+        },
+        //移除广告详情图
+        removeImg(){
+            this.adverteform.top_ad_detail_image = ''
+        },
+        //新建广告
+        saveAdverte(form){
+            if(this.time && this.time.length!=0){
+                this.adverteform.ad_start_time = this.time[0]
+                this.adverteform.ad_end_time = this.time[1]
+                if(this.adverteform.top_ad_detail_url!='' && this.adverteform.top_ad_detail_image == ''){
+                    this.$message.warning('请上传链接对应广告详情图');
+                }else{
+                    this.$refs[form].validate((valid) => {
+                        if (valid) {
+                            addAdvert(this.adverteform).then((res)=>{
+                                if(res.data.code == 200){
+                                    this.$message.success('创建成功');
+                                    this.$router.push({path:'/advertising'})
+                                }else{
+                                    this.$message.error(res.data.msg);
+                                }
+                            })
+                        } else {
+                            return false;
+                        }
+                    });
+                }
+            }else{
+                this.$message.warning('广告时间必填');
+                this.adverteform.ad_start_time = ''
+                this.adverteform.ad_end_time = ''
+            }
+        },
+        //修改广告
+        editAdverte(form){
+            if(this.time && this.time.length!=0 && this.timetype == true){
+                this.adverteform.ad_start_time = this.time[0]
+                this.adverteform.ad_end_time = this.time[1]
+                this.$refs[form].validate((valid) => {
+                    if (valid) {
+                        updatEdit(this.adverteform).then((res)=>{
+                            if(res.data.code == 200){
+                                this.$message.success('修改成功');
+                                this.$router.push({path:'/advertising'})
+                            }else{
+                                this.$message.error(res.data.msg);
+                            }
+                        })
+                    } else {
+                        return false;
+                    }
+                });
+            }else if(this.time && this.time.length!=0 && this.timetype == false){
+                this.adverteform.ad_start_time = this.oldform.ad_start_time
+                this.adverteform.ad_end_time = this.oldform.ad_end_time
+                this.$refs[form].validate((valid) => {
+                    if (valid) {
+                        updatEdit(this.adverteform).then((res)=>{
+                            if(res.data.code == 200){
+                                this.$message.success('修改成功');
+                                this.$router.push({path:'/advertising'})
+                            }else{
+                                this.$message.error(res.data.msg);
+                            }
+                        })
+                    } else {
+                        return false;
+                    }
+                });                
+            }else{
+                this.$message.warning('广告时间必填');
+                this.adverteform.ad_start_time = ''
+                this.adverteform.ad_end_time = ''
+            }
+        },
+        //取消广告设置
+        cancel(){
+            this.$confirm('广告设置还没有保存，确定取消吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$router.push({path:'/advertising'})
+            }).catch(() => {
+                          
+            });
+        }
     }
 }
 </script>
@@ -87,7 +313,18 @@ export default {
 .floatwinone .header a{
     margin-right: 20px;
 }
-.demo-form-inline .el-input{
+.floatwinone .demo-form-inline .el-input{
     width: 400px!important;
+}
+.imgTips{
+    font-size: 12px;
+    color:#C51015;
+}
+.ad_detial .el-icon-error{
+    position: absolute;
+    top: -7px;
+    left: 167px;
+    font-size: 20px;
+    cursor: pointer;
 }
 </style>

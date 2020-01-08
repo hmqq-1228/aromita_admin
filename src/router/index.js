@@ -29,6 +29,7 @@ import spuskulist from '@/components/backhome/backPage/commodity/spuskulist.vue'
 import setPictures from '@/components/backhome/backPage/commodity/setPictures.vue'
 import batchNew from '@/components/backhome/backPage/commodity/batchNew.vue'
 import attributeOrder from '@/components/backhome/backPage/commodity/attributeOrder.vue'
+import scenetags from '@/components/backhome/backPage/commodity/scenetags.vue'
 
 //订单管理
 import orderList from '@/components/backhome/backPage/order/orderList.vue'
@@ -60,6 +61,12 @@ import newlink from '@/components/backhome/backPage/operation/newlink.vue'
 import advertising from '@/components/backhome/backPage/operation/advertising.vue'
 import floatwinone from '@/components/backhome/backPage/operation/floatwinone.vue'
 import floatwintwo from '@/components/backhome/backPage/operation/floatwintwo.vue'
+//活动模块
+import activeList from '@/components/backhome/backPage/operation/activeList.vue'
+import addActive from '@/components/backhome/backPage/operation/addActive.vue'
+import renovation from '@/components/backhome/backPage/operation/renovation.vue'
+import setCommodity from '@/components/backhome/backPage/operation/setCommodity.vue'
+import activedetial from '@/components/backhome/backPage/operation/activedetial.vue'
 
 //权限管理
 import jurisdiction from '@/components/backhome/backPage/jurisdiction/jurisdiction.vue'
@@ -105,6 +112,33 @@ export default new Router({
           path: '/index',
           name: 'Index',
           component: Index
+        },
+        //活动管理
+        {
+          path: '/activeList',
+          name: 'activeList',
+          component: activeList
+        },
+        {
+          path: '/activedetial',
+          name: 'activedetial',
+          component: activedetial
+        },
+        {
+          path: '/addActive',
+          name: 'addActive',
+          component: addActive
+        },
+        {
+          path: '/renovation',
+          name: 'renovation',
+          component: renovation
+        },
+        //添加活动商品
+        {
+          path: '/setCommodity',
+          name: 'setCommodity',
+          component: setCommodity
         },
         //广告管理 
         {
@@ -264,11 +298,17 @@ export default new Router({
           name: 'batchNew',
           component: batchNew
         },
-        //属性排序
+        //属性排序 
         {
           path: '/attributeOrder',
           name: 'attributeOrder',
           component: attributeOrder
+        },
+        //标签列表
+        {
+          path: '/scenetags',
+          name: 'scenetags',
+          component: scenetags
         },
         //设置图片
         {

@@ -29,7 +29,7 @@
             </el-pagination>
         </div>
         <!-- 编辑/新建角色 -->
-        <el-dialog title="角色管理" :visible.sync="editVisible" :show-close="false" width="500px">
+        <el-dialog title="角色管理" v-if="editVisible" :visible.sync="editVisible" :show-close="false" width="500px">
             <el-form :model="editForm" label-width="180px" :rules="rules" ref="addFrom">
                 <el-form-item label="角色名（要求中文）：" prop="role_name">
                     <el-input v-model="editForm.role_name"></el-input>

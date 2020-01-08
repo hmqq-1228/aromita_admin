@@ -11,3 +11,6 @@ export const delCoupon = params =>post("/backend/coupon/delete",params)
 
 //终止优惠券
 export const stopCoupon = params =>post("/backend/coupon/stop",params)
+
+//设置优惠券
+export const setcoupon = params =>post("/backend/coupon/set",params)

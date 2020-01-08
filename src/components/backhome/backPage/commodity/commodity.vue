@@ -20,6 +20,12 @@
                                 <el-option label="补货中" :value='2'></el-option>
                             </el-select>
                         </el-form-item>
+                        <el-form-item label="启用/禁用：">
+                            <el-select v-model="skusearchForm.is_delete" clearable>
+                                <el-option label="启用" value='N'></el-option>
+                                <el-option label="禁用" value='Y'></el-option>
+                            </el-select>
+                        </el-form-item>
                         <el-form-item>
                             <el-input v-model="skusearchForm.product_no" clearable placeholder="请输入SPU编号"></el-input>
                         </el-form-item>
@@ -48,18 +54,19 @@
                         <!-- <el-form-item>
                             <el-button type="danger" @click="batchdelete()">批量删除</el-button>
                         </el-form-item> -->
-                        <el-form-item v-if="this.skuStatus == 0">
+                        <!-- <el-form-item v-if="this.skuStatus == 0">
                             <el-button type="warning" @click="batchUpperOrLower(1)">批量上架</el-button>
                         </el-form-item>
                         <el-form-item v-if="this.skuStatus === 1">
                             <el-button type="danger" @click="batchUpperOrLower(0)">批量下架</el-button>
-                        </el-form-item>
+                        </el-form-item> -->
                     </el-form>
                     <el-table
                         :data="skuTable"
                         style="width: 100%"
                         max-height="680px"
-                        v-loading="skuLoading">
+                        v-loading="skuLoading"
+                        @sort-change='tableSortChange'>
                         <!-- <el-table-column type="selection" width="45"></el-table-column> -->
                         <el-table-column prop="date" label="商品" width="280px">
                             <template slot-scope="scope">
@@ -84,7 +91,7 @@
                                 <span>{{scope.row.inventory_allow_update == 0?'不允许':'允许'}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="inventory" label="库存"></el-table-column>
+                        <el-table-column prop="inventory" label="库存" sortable='custom'></el-table-column>
                         <el-table-column label="操作" width="310px">
                             <template slot-scope="scope">
                                 <el-button type="warning" v-if="scope.row.sku_status == 0" @click="UpperOrLower(scope.row.id,1)">上架</el-button>
@@ -92,7 +99,7 @@
                                 <el-button type="primary" @click="skuDetail(scope.row.id)">详情</el-button>
                                 <el-button type="primary" @click="editorAddSku(scope.row.id)">编辑</el-button>
                                 <!-- <el-button type="danger" @click="deleteSku(scope.row.id)">删除</el-button> -->
-                                <el-button type="danger" v-if="scope.row.is_delete == 0" @click="disableSku(scope.row.id)">禁用</el-button>
+                                <el-button type="danger" v-if="scope.row.is_delete == 0 && scope.row.sku_status == 0" @click="disableSku(scope.row.id)">禁用</el-button>
                                 <el-button type="success" v-if="scope.row.is_delete == 1" @click="enableSku(scope.row.id)">启用</el-button>
                             </template>
                         </el-table-column>
@@ -173,6 +180,10 @@ import {categoryList,ClassII} from '@/http/category.js'
 export default {
     data(){
         return{
+            custom:{
+                prop:'inventory',
+                order:'descending'
+            },
             skuLoading:false,
             pageSize:50,
             skutotal:0,//总量
@@ -186,7 +197,8 @@ export default {
                 product_no:'',
                 sku_name:'',
                 sku_no:'',
-                sku_status:''
+                sku_status:'',
+                is_delete:''
             },
             skuStatus:-1,//sku商品状态
             firstList:[],//一级类目
@@ -292,6 +304,18 @@ export default {
             this.skuStatus = Number(this.skusearchForm.sku_status)
             this.getskuList()
         },
+        //sku列表库存排序
+        tableSortChange(column) {
+            this.skusearchForm.page = 1
+            if (column.order === 'descending') {
+                this.skusearchForm.col = column.prop
+                this.skusearchForm.sort = 'desc'
+            } else {
+                this.skusearchForm.col = column.prop
+                this.skusearchForm.sort = 'asc'
+            }
+            this.getskuList()
+        },
         //sku列表
         getskuList(){
             this.skuLoading = true
@@ -335,11 +359,18 @@ export default {
         //sku单个上下架
         UpperOrLower(id,status){
             skuGoods({ids:id,status:status}).then((res)=>{
-                this.$message({
-                    message: '操作成功',
-                    type: 'success'
-                });
-                this.getskuList()
+                if(res.data.code == 200){
+                    this.$message({
+                        message: '操作成功',
+                        type: 'success'
+                    });
+                    this.getskuList()
+                }else{
+                    this.$message({
+                        message:res.data.msg,
+                        type: 'error'
+                    });
+                }
             })
         },
         //sku批量上下架
@@ -555,6 +586,7 @@ export default {
 </script>
 <style>
     .skuCenter .el-input{width:200px!important}
+    .skuCenter .el-select .el-input{width:120px!important;}
     .sku{
         display: flex;
         width: 240px;

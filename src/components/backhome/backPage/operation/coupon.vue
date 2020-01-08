@@ -32,7 +32,13 @@
                 </el-form-item>
             </el-form>
             <el-table :data="couponTable" max-height="740px">
-                <el-table-column prop="coupon_name" label="优惠券名称"></el-table-column>
+                <el-table-column label="优惠券名称">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.coupon_name}}</span> &nbsp;&nbsp;&nbsp;
+                        <el-tag type="danger" v-if="scope.row.is_register_send == 1">注册优惠券</el-tag>
+                        <el-tag type="danger" v-if="scope.row.is_subscribe_send == 1">订阅优惠券</el-tag>
+                    </template>
+                </el-table-column>
                 <el-table-column label="创建类型">
                     <template slot-scope="scope">
                         {{couponType[scope.row.coupon_type]}}
@@ -55,11 +61,11 @@
                         <span>{{listStatus[scope.$index]}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="date" label="操作">
+                <el-table-column prop="date" label="操作" width="260px">
                     <template slot-scope="scope">
-                        <!-- <el-button type="primary">查看</el-button> -->
+                        <el-button type="success" v-if="listStatus[scope.$index] != '已结束' && scope.row.coupon_type == 'F'" @click="_setCoupon(scope.row.id,scope.row.coupon_type)">设置为订阅coupon</el-button>
+                        <el-button type="danger" v-if="listStatus[scope.$index] != '已结束' && scope.row.coupon_type == 'N'" @click="_setCoupon(scope.row.id,scope.row.coupon_type)">设置为注册coupon</el-button>
                         <el-button type="primary" v-if="listStatus[scope.$index] == '发放中'" @click="stopList(scope.row.id)">终止</el-button>
-                        <!-- <el-button type="primary" v-else disabled>终止</el-button> -->
                         <el-button type="danger" v-else-if="listStatus[scope.$index] == '待发放'" @click="delList(scope.row.id)">删除</el-button>
                         <el-button type="info" v-else disabled>不可操作</el-button>
                     </template>
@@ -78,7 +84,7 @@
     </div>
 </template>
 <script>
-import {couponList,delCoupon,stopCoupon} from '@/http/coupon.js'
+import {couponList,delCoupon,stopCoupon,setcoupon} from '@/http/coupon.js'
 export default {
     data(){
         return{
@@ -118,6 +124,23 @@ export default {
                 this.couponTable = res.data.data.data.data
                 this.listStatus = res.data.data.status
                 this.total = res.data.data.data.total
+            })
+        },
+        //设置优惠券
+        _setCoupon(id,type){
+            setcoupon({id:id,type:type}).then((res)=>{
+                if(res.data.code == 200){
+                    this.$message({
+                        type: 'success',
+                        message: '设置成功!'
+                    });
+                    this.getList()
+                }else{
+                    this.$message({
+                        type: 'error',
+                        message:res.data.msg
+                    });
+                }
             })
         },
         //查询优惠券列表

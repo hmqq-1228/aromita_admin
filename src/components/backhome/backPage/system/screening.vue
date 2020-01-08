@@ -9,13 +9,13 @@
                     <span>{{attrform.attr_name}}</span>
                 </el-form-item>
                 <el-form-item label="在前台显示：">
-                    <el-radio-group v-model="attrform.search_show" @change="changeAttrShow()">
+                    <el-radio-group v-model="attrform.search_show">
                         <el-radio :label="1" disabled>是</el-radio>
                         <el-radio :label="0">否</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item label="在前台显示顺序：" :required="required">
-                    <el-input v-model="attrform.sort_order" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')" @blur="attrIstrue(attrform.sort_order)"></el-input>                   
+                <el-form-item label="在前台显示顺序：" :required="attrform.search_show == 1?true:false">
+                    <el-input v-model="attrform.sort_order"></el-input>                   
                 </el-form-item>
             </el-form>
             <el-form label-width="140px">
@@ -30,7 +30,7 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="在前台显示顺序：">
-                        <el-input v-model="item.sort_order" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')" @blur="istrue(item.sort_order,index)"></el-input>
+                        <el-input v-model="item.sort_order"></el-input>
                     </el-form-item>
                 </div>
             </el-form>
@@ -64,6 +64,10 @@ export default {
                 if(res.data.code == 200){
                     this.systemList = res.data.data
                     this.attrform = res.data.data.attr
+                    console.log(this.attrform)
+                    if(this.attrform.sort_order == null || this.attrform.sort_order == 0){
+                        this.attrform.sort_order = ''
+                    }
                     this.attrValueList = res.data.data.attr_val
                     var errorList = ['']
                     for(var i=0;i<this.attrValueList.length;i++){
@@ -76,83 +80,102 @@ export default {
                 }
             })
         },
-        //改变属性名显示状态
-        changeAttrShow(){
-            if(this.attrform.search_show == 1){
-                this.required = true
-            }else{
-                this.required = false
-            }
-        },
-        //校验属性名排序值
-        attrIstrue(num){
-            if(!num){
-                this.attrform.sort_order = 1
-            }
-        },
-        istrue(num,index){
-            if(!num){
-                this.attrValueList[index].sort_order = 1
-            }
-        },
-        //验证属性值等
-        // validationRule(obj,str,dex){
-        //     if(this.attrform.search_show == 1 && !this.attrform.sort_order){
-        //         this.$message({
-        //             message:'在前台显示顺序必填',
-        //             type: 'warning'
-        //         });
-        //         this.attrform.sort_order = 1
-        //         return false
-        //     }else{
-        //         let pre={
-        //             attr_id:'',
-        //             attr_search_show:'',
-        //             attr_sort_order:'',
-        //             id:'',
-        //             val_search_show:'',
-        //             val_sort_order:''
-        //         }
-        //         if(str == 'attr'){
-        //             pre.attr_id = obj.id
-        //             pre.attr_search_show = obj.search_show
-        //             pre.attr_sort_order = obj.sort_order
-        //         }else if(str == 'attrvalue'){
-        //             pre.attr_id = this.attrform.id
-        //             pre.attr_search_show = this.attrform.search_show
-        //             pre.attr_sort_order = this.attrform.sort_order
-        //             pre.id = obj.id
-        //             pre.val_search_show = obj.search_show,
-        //             pre.val_sort_order = obj.sort_order
-        //         }
-        //         attrSet(pre).then((res)=>{
-        //             if(res.data.code != 200){
-        //                 this.$message({
-        //                     message:res.data.msg,
-        //                     type: 'error'
-        //                 });
-        //             }
-        //         })
-        //     }
-        // },
         //保存
         saveAttr(){
-            var idAttr = []
-            var search_show = []
-            var sort_order = []
+            var reg = new RegExp('^[1-9][0-9]*$')//匹配正整数
+            var flag1 = false //属性是否满足
+            var flag2 = false //属性值是否满足
+
+            
+            //属性值校验
+            if(this.attrform.search_show == 1 && this.attrform.sort_order != '' && !reg.test(this.attrform.sort_order)){
+                this.$message({
+                    message:'属性在前台显示排序值必填，且为正整数1',
+                    type: 'warning'
+                });
+                return false
+            }else if(this.attrform.search_show == 1 && this.attrform.sort_order == ''){
+                this.attrform.sort_order = 1
+                flag1 = true
+            }
+
+            console.log(this.attrform.sort_order)
+            if(this.attrform.search_show != 1 && this.attrform.sort_order!='' && !reg.test(this.attrform.sort_order)){
+                this.$message({
+                    message:'属性在前台显示排序值必须是正整数',
+                    type: 'warning'
+                });
+                flag1 = false
+            }else if(this.attrform.search_show != 1 && this.attrform.sort_order == ''){
+                flag1 = true
+            }else{
+                flag1 = true
+            }
+
+            var idAttr = []//属性值id
+            var search_show = []//属性值显示
+            var sort_order = []//属性值排序
+            console.log(this.attrValueList)
             for(var i=0;i<this.attrValueList.length;i++){
                 idAttr.push(this.attrValueList[i].id)
                 search_show.push(this.attrValueList[i].search_show)
-                sort_order.push(this.attrValueList[i].sort_order)
+                if(this.attrValueList[i].sort_order != null){
+                    sort_order.push(this.attrValueList[i].sort_order)
+                }else{
+                    sort_order.push('')
+                }
             }
-            let pre={
-                attr_id:this.attrform.id,
-                attr_search_show:this.attrform.search_show,
-                attr_sort_order:this.attrform.sort_order,
-                id:idAttr.join(','),
-                val_search_show:search_show.join(','),
-                val_sort_order:sort_order.join(',')
+
+            //属性值校验
+            if(this.attrform.search_show == 1){
+                for(var i =0;i<search_show.length;i++){
+                    if(search_show[i] == 1 && (sort_order[i] == '' || !reg.test(sort_order[i]))){
+                        this.$message({
+                            message:'属性值在前台显示时，排序值必填，且必须是正整数',
+                            type: 'warning'
+                        });
+                        return false
+                    }else if(search_show[i] != 1 && !reg.test(sort_order[i]) && sort_order[i]!=''){
+                        this.$message({
+                            message:'属性值在前台显示的排序值必须是正整数',
+                            type: 'warning'
+                        });
+                        return false
+                    }else{
+                        flag2 = true
+                    }
+                }
+            }else if(this.attrform.search_show == 0){
+                if(sort_order[0]!=null){
+                    for(var j=0;j<sort_order.length;j++){
+                        if(sort_order[j]!='' && !reg.test(sort_order[j])){
+                            this.$message({
+                                message:'排序值必须是正整数',
+                                type: 'warning'
+                            });
+                            return false
+                        }else{
+                            flag2 = true
+                        }
+                    }   
+                }
+                
             }
+            
+            console.log(flag1,flag2)
+            if( flag1 == true && flag2 == true){
+                let pre={
+                    attr_id:this.attrform.id,
+                    attr_search_show:this.attrform.search_show,
+                    attr_sort_order:this.attrform.sort_order,
+                    id:idAttr.join(','),
+                    val_search_show:search_show.join(','),
+                    val_sort_order:sort_order.join(',')
+                }
+                this.setAttr(pre)
+            }
+        },
+        setAttr(pre){
             attrUpdate(pre).then((res)=>{
                 if(res.data.code == 200){
                     this.$message({

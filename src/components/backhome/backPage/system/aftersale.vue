@@ -5,7 +5,7 @@
         </div>
         <div class="btn">
             <el-button type="primary" @click="addAfterSale(1,'addform')">新建</el-button>
-            <el-button type="danger" @click="bothDeleteAttr()">批量删除</el-button>
+            <!-- <el-button type="danger" @click="bothDeleteAttr()">批量删除</el-button> -->
         </div>
         <el-table :data="saleList" style="width: 100%" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55"></el-table-column>
@@ -13,7 +13,8 @@
             <el-table-column prop="sort_order" label="优先级"></el-table-column>
             <el-table-column label="状态">
                 <template slot-scope="scope">
-                    <span>{{scope.row.status}}</span>
+                    <span v-if="scope.row.status == 1">启用</span>
+                    <span v-if="scope.row.status == 0">关闭</span>
                 </template>
             </el-table-column>
             <el-table-column label="是否上传凭证">
@@ -26,19 +27,20 @@
             <el-table-column label="操作">
                 <template slot-scope="scope">
                     <el-button type="primary" @click="editAttr(scope.row.id,2)">编辑</el-button>
-                    <el-button type="danger" @click="deleteAttr(scope.row.id)">删除</el-button>
+                    <!-- <el-button type="danger" @click="deleteAttr(scope.row.id)">删除</el-button> -->
                 </template>
             </el-table-column>
         </el-table>
         <!-- 新增售后 -->
         <el-dialog
+            v-if="afterVisible"
             title="添加退货原因"
             :visible.sync="afterVisible"
             :show-close="false"
             width="400px">
             <el-form :model="addform" label-width="100px" :rules="rules" ref="addform">
                 <el-form-item label="退货原因：" prop="return_reason">
-                    <el-input v-model="addform.return_reason" placeholder="请输入英文"></el-input>
+                    <el-input v-model="addform.return_reason" placeholder="请输入英文" :disabled="this.type == 1?false:true"></el-input>
                 </el-form-item>
                 <el-form-item label="优先级：">
                     <el-input v-model="addform.sort_order"></el-input>
@@ -154,7 +156,6 @@ export default {
                     var id = this.selectId[i].id
                     idattr.push(id)
                 }
-                console.log(idattr)
                 this.$confirm('确定要删除以下售后列表?', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',

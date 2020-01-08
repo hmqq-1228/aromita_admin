@@ -24,7 +24,7 @@
                 max-height="700px">
                 <el-table-column prop="orders_number" label="订单号"></el-table-column>
                 <el-table-column prop="customer_id" label="客户ID" width="60px"></el-table-column>
-                <el-table-column label="订单状态">
+                <el-table-column label="状态">
                     <template slot-scope="scope">
                         <span>{{order_status[scope.row.status]}}</span>
                     </template>

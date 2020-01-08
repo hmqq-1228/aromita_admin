@@ -2,7 +2,7 @@
     <div 
         class="batchNew" 
         v-loading="loading"
-        element-loading-text="正在解析数据，请耐心等待"
+        :element-loading-text="loadingtxt"
         element-loading-spinner="el-icon-loading">
         <div class="heade">
             <h3>批量新建SKU</h3>
@@ -46,7 +46,10 @@ export default {
                 ]
             },
             exportPre:{},
-            export:null
+            export:null,
+            timer:null,
+            exportStatus:0,
+            loadingtxt:'正在解析数据，请耐心等待，已完成1%'
         }
     },
     mounted() {
@@ -80,7 +83,6 @@ export default {
                     this.errorMsg = ''
                     this.dataMsg = ''
                     if(res.data.code == 200){
-                        this.loading = false
                         this.exportPre={
                             file_id:res.data.data.file_id,
                             count:res.data.data.count
@@ -109,23 +111,35 @@ export default {
         },
         //导入数据
         exportData(){
-            batchgetCount(this.exportPre).then((res)=>{
-                this.loading = true
-                if(res.data.status == 1){
-                    this.loading = false
-                    this.$message({
-                        message:'导入成功',
-                        type:'success'
-                    });
-                    this.$router.push({path:'/commodity'})
-                }
-            }).catch(error => {
-                this.loading = false
-                this.$message({
-                    message:'请求失败，请稍后再试',
-                    type:'error'
-                });
-            })
+            clearInterval(this.timer)
+            if (this.exportStatus == 0) {
+                this.timer = setInterval(() => {
+                    batchgetCount(this.exportPre).then((res)=>{
+                        this.loading = true
+                        if(res.data.status == 1){
+                            this.exportStatus = res.data.status
+                            this.loading = false
+                            this.$message({
+                                message:'导入成功',
+                                type:'success'
+                            });
+                            clearInterval(this.timer)
+                            this.$router.push({path:'/commodity'})
+                        }else{
+                            this.loadingtxt = `正在解析数据，请耐心等待，${res.data.msg}`
+                        }
+                    }).catch(error => {
+                        this.loading = false
+                        clearInterval(this.timer)
+                        this.$message({
+                            message:'请求失败，请稍后再试',
+                            type:'error'
+                        });
+                    })
+                }, 3000)
+            } else {
+                clearInterval(this.timer) // 取消定时器
+            }
         }
     }
 }

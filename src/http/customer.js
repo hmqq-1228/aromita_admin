@@ -8,3 +8,9 @@ export const scoreDetail = params =>post("/backend/customer/score/detail",params
 
 //客户建议列表
 export const suggestions = params =>post("/backend/suggestions/index",params)
+
+//客户建议详情
+export const suggestionsdetail = params =>post("/backend/suggestions/detail",params)
+
+//重置密码
+export const resetpass = params =>post("/backend/customer/resetpass",params)

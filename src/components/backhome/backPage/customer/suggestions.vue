@@ -10,7 +10,8 @@
                     type="datetimerange"
                     range-separator="至"
                     start-placeholder="开始日期"
-                    end-placeholder="结束日期">
+                    end-placeholder="结束日期"
+                    value-format="yyyy-MM-dd HH:mm:ss">
                 </el-date-picker>
             </el-form-item>
             <el-form-item>
@@ -36,7 +37,7 @@
             <el-table-column prop="created_at" label="反馈时间"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button type="primary">查看详情</el-button>
+                    <el-button type="primary" @click="viewdetail(scope.row.id)">查看详情</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -49,16 +50,23 @@
                 @current-change="changePage">
             </el-pagination>
         </div>
+        <!-- 查看详情 -->
+        <el-dialog
+            title="反馈详情"
+            :visible.sync="detailVisible"
+            width="600px">
+            <p>{{this.suggestions}}</p>
+        </el-dialog>
     </div>
 </template>
 <script>
-import {suggestions} from '@/http/customer.js'
+import {suggestions,suggestionsdetail} from '@/http/customer.js'
 export default {
     data(){
         return{
             pageSize:15,
             total:0,
-            time:'',
+            time:[],
             //客户建议搜索
             suggestionsform:{
                 page:1,
@@ -69,6 +77,8 @@ export default {
                 customer_email:''
             },
             suggestionsTable:[],
+            detailVisible:false,
+            suggestions:''
         }
     },
     created(){
@@ -76,16 +86,32 @@ export default {
     },
     methods:{
         getList(){
+            if(this.time && this.time.length!=0){
+                this.suggestionsform.created_at_start = this.time[0]
+                this.suggestionsform.created_at_stop = this.time[1]
+            }else{
+                this.suggestionsform.created_at_start = ''
+                this.suggestionsform.created_at_stop = ''
+            }
             suggestions(this.suggestionsform).then((res)=>{
                 this.suggestionsTable = res.data.data.data
+                this.total = res.data.data.total
             })
         },
-        changePage(){
-
+        changePage(val){
+            this.suggestionsform.page = val
+            this.getList()
         },
         onSubmit(){
             this.suggestionsform.page = 1
             this.getList()
+        },
+        //查看详情
+        viewdetail(id){
+            this.detailVisible = true
+            suggestionsdetail({id:id}).then((res)=>{
+                this.suggestions = res.data.data.customer_suggestions
+            })
         }
     }
 }

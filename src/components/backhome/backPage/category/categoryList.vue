@@ -3,8 +3,6 @@
         <div class="heade">
             <h3>类别管理</h3>
             <el-button type="primary" @click="append(1)"><i class="el-icon-plus"></i> 新增类别 </el-button>
-            <!-- <el-button plain @click="openList()"><i class="el-icon-s-unfold"></i> 展开所有分类 </el-button>
-            <el-button type="primary" plain @click="closeList()"><i class="el-icon-s-fold"></i> 收起所有分类 </el-button> -->
         </div>
         <div class="treebox">
             <el-tree
@@ -36,6 +34,7 @@
             </el-tree>
             <!-- 分类详情/编辑弹框 -->
             <el-dialog
+                v-if="categoryVisible"
                 :title="box_title"
                 :visible.sync="categoryVisible"
                 width="600px">
@@ -282,30 +281,26 @@ export default {
 }
 </script>
 <style scope>
-.heade{
+.categoryList .heade{
     display: flex;
     align-items: center;
 }
-.heade h3{
+.categoryList .heade h3{
     margin-right: 20px;
 }
-.treebox{
+.categoryList .treebox{
     max-height: 740px;
     overflow-y: scroll;
     background: #f7f7f7;
-    /* border:1px solid #e5e5e5; */
 }
-.el-tree-node__content{
-    height: 40px!important;
+.categoryList .custom-tree-node{
+  width: 1200px!important;
 }
-.custom-tree-node{
-    width: 1200px!important;
+.categoryList .node_name{
+  display: inline-block;
+  min-width: 800px;
 }
-.node_name{
-    display: inline-block;
-    min-width: 800px;
-}
-.categoryBox .el-input{
+.categoryList .categoryBox .el-input{
     width: 200px!important;
 }
 </style>
