@@ -76,6 +76,7 @@
               <el-option label="第二列" value="2"></el-option>
               <el-option label="第三列" value="3"></el-option>
               <el-option label="第四列" value="4"></el-option>
+              <el-option label="第五列" value="5"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="是否为主项" prop="isMain">
@@ -167,8 +168,8 @@
             { min: 1, max: 50, message: '名称长度在 1 到 50 个字符', trigger: 'blur' }
           ],
           imageUrl:[
-            { required: true, message: '请填写功能链接', trigger: 'blur' },
-            { type: 'url', required: true, message: '请填写正确的网址', trigger: 'blur' }
+            { message: '请填写功能链接', trigger: 'blur' },
+            { type: 'url', message: '请填写正确的网址', trigger: 'blur' }
           ],
           column: [
             { required: true, message: '请选择功能列数', trigger: 'change' }
