@@ -153,7 +153,7 @@
         rules:{
           name: [
             { required: true, message: '请输入图片名称', trigger: 'blur' },
-            { min: 1, max: 30, message: '名称长度在 1 到 30 个字符', trigger: 'blur' }
+            { min: 5, max: 30, message: '名称长度在 5 到 30 个字符', trigger: 'blur' }
           ],
           imageUrl:[
             { required: true, message: '请上传图片', trigger: 'blur' }

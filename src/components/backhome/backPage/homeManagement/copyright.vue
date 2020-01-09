@@ -111,8 +111,8 @@
         },
         rules:{
           name: [
-            { required: true, message: '请输入图片名称', trigger: 'blur' },
-            { min: 1, max: 100, message: '版权长度在 1 到 100 个字符', trigger: 'blur' }
+            { required: true, message: '请输入版权信息', trigger: 'blur' },
+            { min: 5, max: 100, message: '版权长度在 5 到 100 个字符', trigger: 'blur' }
           ]
         },
         bannerList: []

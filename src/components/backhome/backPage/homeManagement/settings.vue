@@ -165,7 +165,7 @@
         rules:{
           name: [
             { required: true, message: '请输入功能标题', trigger: 'blur' },
-            { min: 1, max: 50, message: '标题长度在 1 到 50 个字符', trigger: 'blur' }
+            { min: 5, max: 50, message: '标题长度在 5 到 50 个字符', trigger: 'blur' }
           ],
           imageUrl:[
             { message: '请填写功能链接', trigger: 'blur' },
