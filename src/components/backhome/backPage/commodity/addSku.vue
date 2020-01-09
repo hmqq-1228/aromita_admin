@@ -131,7 +131,7 @@
                             <el-radio v-model="skuform.inventory_allow_update" :label='1'>是</el-radio>
                             <el-radio v-model="skuform.inventory_allow_update" :label='0'>否</el-radio>
                         </el-form-item>
-                        <el-form-item label="属性和属性值：">
+                        <el-form-item label="属性和属性值（选填）：">
                             <el-checkbox-group v-model="checkList" @change="changeCheckList()">
                                 <div v-for="(item,index) in attrEditionList" :key="index">
                                     <div><el-checkbox :label="item.id" :disabled="disabled">{{item.attr_name}}</el-checkbox></div>
@@ -147,7 +147,7 @@
                             <el-radio v-model="skuform.is_shipping_fee" :label='2'>免运费商品</el-radio>
                             <el-radio v-model="skuform.is_shipping_fee" :label='1'>非免运费商品</el-radio>
                         </el-form-item>
-                        <el-form-item label="商品卖点：">
+                        <el-form-item label="商品卖点（选填）：">
                             <el-input
                                 type="textarea"
                                 :rows="4"
