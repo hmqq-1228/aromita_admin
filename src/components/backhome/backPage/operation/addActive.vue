@@ -5,7 +5,7 @@
         </div>
         <div class="addActiveCenter">
             <el-form label-width="100px" :model="activeform" :rules="rules" ref="activeform">
-                <el-form-item label="活动类型：">
+                <el-form-item label="活动类型：" v-if="activeform.activity_type != 3 && activeform.activity_type != 4">
                     <el-select v-model="activeform.activity_type">
                         <el-option label="一口价活动" :value="1"></el-option>
                         <el-option label="百分比活动" :value="2"></el-option>
@@ -15,9 +15,11 @@
                     <el-input v-model="activeform.name"></el-input>
                 </el-form-item>
                 <el-form-item label="优惠力度：" :prop="'activity_intensity'+activeform.activity_type">
+                    <span v-if="activeform.activity_type == 3"> 满赠门槛  </span> 
+                    <span v-if="activeform.activity_type == 4"> 换购门槛  </span>  
                     <el-input v-model="activeform[`activity_intensity${activeform.activity_type}`]" style="width:80px"></el-input>
                     <span v-if="activeform.activity_type == 2"> % OFF</span>
-                    <span v-if="activeform.activity_type == 1"> $ </span>
+                    <span v-if="activeform.activity_type != 1"> $ </span>
                 </el-form-item>
                 <el-form-item label="活动时间：" prop="active_time">
                     <el-date-picker
@@ -102,7 +104,16 @@ export default {
                 callback()
             }
         }
-        
+        var intensity3 = (rule,value,callback) =>{
+            var reg2 = new RegExp('^[1-9][0-9]*$')//匹配正整数
+            if(!value){
+                callback(new Error('请输入优惠力度'))
+            }else if(value != '' && !reg2.test(Number(value))){
+                callback(new Error('优惠力度只能是正整数'))
+            }else{
+                callback()
+            }
+        }
         return{
             pickerOptionsToday: {
                 disabledDate(time) {
@@ -134,6 +145,12 @@ export default {
                 activity_intensity2:[
                     { validator:intensity2, trigger: 'blur' },
                 ],
+                activity_intensity3:[
+                    { validator:intensity3, trigger: 'blur' },
+                ],
+                activity_intensity4:[
+                    { validator:intensity3, trigger: 'blur' },
+                ],
                 active_time:[
                     { required: true, message: '请选择活动时间', trigger: 'blur' },
                 ],
@@ -149,6 +166,7 @@ export default {
     },
     created(){
         this.activeId = this.$route.query.id
+        this.activeform.activity_type = this.$route.query.type
         if(this.activeId){
             this.getdetail()
         }
@@ -183,7 +201,7 @@ export default {
                 this.activeform.activity_end_time = this.oldform.activity_end_time
                 this.editActive(form)
             }else{
-                this.$message.warning('广告时间必填');
+                this.$message.warning('活动时间必填');
             }
         },
         //编辑活动
@@ -240,17 +258,6 @@ export default {
                     return false;
                 }
             });
-        },
-        //优惠力度校验
-        intensityReg(){
-            var patt1 = new RegExp('^[1-9]\d*$')//匹配正整数
-            var patt2 = new RegExp('^(([1-9]{1}\d*)|(0{1}))(\.\d{0,2})?$')//匹配最多保留两位小数
-            if(!patt1.test(Number(this.activeform.activity_intensity))){
-                this.$message.error("优惠力度必须是整数")
-                this.activeform.activity_intensity = ''
-            }else{
-                console.log(3)
-            }
         },
         //新建取消
         cancelActive(){

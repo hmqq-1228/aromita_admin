@@ -4,6 +4,7 @@
             <h3>类别管理</h3>
             <el-button type="primary" @click="append(1)"><i class="el-icon-plus"></i> 新增类别 </el-button>
         </div>
+        <p class="tip">温馨提示：在关闭一级或二级类别后，如需调整类别对应关系，请前往【类别对应关系设置】模块调整。</p>
         <div class="treebox">
             <el-tree
                 :data="list"
@@ -302,5 +303,10 @@ export default {
 }
 .categoryList .categoryBox .el-input{
     width: 200px!important;
+}
+.tip{
+    font-size: 14px;
+    color: red;
+    font-weight: bolder;
 }
 </style>

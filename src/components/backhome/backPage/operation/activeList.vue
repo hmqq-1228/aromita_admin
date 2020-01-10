@@ -12,12 +12,12 @@
             <div>
                 <h3>赠品活动</h3>
                 <p>单品赠送或满额赠送</p>
-                <el-button type="primary">立即创建</el-button>
+                <el-button type="primary" @click="createdActive(3)">立即创建</el-button>
             </div>
             <div>
                 <h3>换购活动</h3>
                 <p>加N元可换购指定的商品</p>
-                <el-button type="primary">立即创建</el-button>
+                <el-button type="primary" @click="createdActive(4)">立即创建</el-button>
             </div>
         </div>
         <div class="activeHeader">活动管理</div>
@@ -81,7 +81,7 @@
                 </el-table-column>
                 <el-table-column label="操作" width="460px">
                     <template slot-scope="scope">
-                       <el-button type="primary" size="mini" @click="addcommodity(scope.row.id,scope.row.activity_start_time,scope.row.activity_end_time,scope.row.activity_stop_time,scope.row.status)">活动商品</el-button>
+                       <el-button type="primary" size="mini" @click="addcommodity(scope.row.activity_type,scope.row.id,scope.row.activity_start_time,scope.row.activity_end_time,scope.row.activity_stop_time,scope.row.status)">活动商品</el-button>
                        <el-button type="primary" size="mini" v-if="scope.row.status == '未开始'" @click="editList(scope.row.id)">编辑</el-button>
                        <el-button type="danger" size="mini" v-if="scope.row.status != '已结束'" @click="stopList(scope.row.id)">终止</el-button>
                        <el-button type="warning" size="mini" v-if="scope.row.status != '已结束'" @click="handleCopy(scope.row.url,$event)">复制链接</el-button>
@@ -117,7 +117,9 @@ export default {
             },
             activetype:{
                 '1':'一口价',
-                '2':'百分比活动'
+                '2':'百分比活动',
+                '3':'赠品活动',
+                '4':'换购活动'
             }
         }
     },
@@ -186,8 +188,12 @@ export default {
             this.$router.push({path:'/addActive',query:{id:id}})
         },
         //添加商品 
-        addcommodity(id,time1,time2,time3,str){
-            this.$router.push({path:'/setCommodity',query:{id:id,time1:time1,time2:time2,time3:time3,str:str}})
+        addcommodity(active_type,id,time1,time2,time3,str){
+            this.$router.push({path:'/setCommodity',query:{type:active_type,id:id,time1:time1,time2:time2,time3:time3,str:str}})
+        },
+        //创建活动
+        createdActive(type){
+            this.$router.push({path:'/addActive',query:{type:type}})
         }
     }
 }
