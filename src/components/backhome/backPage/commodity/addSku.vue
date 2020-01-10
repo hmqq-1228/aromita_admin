@@ -169,7 +169,7 @@
 </template>
 <script>
 import {uploadUrl,skunoList,skuerp,attrEdition,addNewSku} from '@/http/commodity.js'
-import {categoryList,Classlinkage} from "@/http/category.js"
+import {ClassI,Classlinkage} from "@/http/category.js"
 import qs from 'qs'
 export default {
     data(){
@@ -346,7 +346,7 @@ export default {
         },
         //获取一级分类列表
         getFirstList(){
-            categoryList({first:1}).then((res)=>{
+            ClassI().then((res)=>{
                 this.firstList = res.data.data
             })
         },
