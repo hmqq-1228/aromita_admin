@@ -5,6 +5,14 @@
             <el-button type="danger" v-if="activeStr == '未开始'" @click="bothdel">批量删除商品</el-button>
             <el-button type="danger" v-if="activeStr == '进行中'" @click="bothstop">批量终止商品</el-button>
         </div>
+        <el-form :inline="true">
+            <el-form-item>
+                <el-input v-model="sku_no"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button @click="getAvailableSkuByNo">搜索</el-button>
+            </el-form-item>
+        </el-form>
         <el-table
             :data="listData"
             style="width: 100%"
@@ -87,7 +95,7 @@
                 <el-table-column label="操作">
                     <template slot-scope="scope">
                         <!-- <span v-if="scope.row.isAdd == true">已添加</span> -->
-                        <el-button type="primary" @click="add(scope.row,scope.row.id)">添加</el-button>
+                        <el-button type="primary" @click="add(scope.row)">添加</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column prop="sku_no" label="SKU"></el-table-column>
@@ -116,10 +124,11 @@
     </div>
 </template>
 <script>
-import {activitySku,activitySkuindex,addactiveSku,delactiveSku,batchdelactiveSku,stopactiveSku,batchstopactiveSku} from '@/http/active.js'
+import {activitySku,activitySkuindex,addactiveSku,delactiveSku,batchdelactiveSku,stopactiveSku,batchstopactiveSku,AvailableSkuByNo} from '@/http/active.js'
 export default {
     data(){
         return{
+            activetype:1,//活动类型
             active_stop_time:'',
             active_end_time:'',
             activeStr:'',
@@ -140,6 +149,7 @@ export default {
                 second_cate_id:'',
                 sku_no:''
             },
+            sku_no:'',//赠品编号
             skuid:[],
         }
     },
@@ -156,6 +166,21 @@ export default {
         }
     },
     methods:{
+        //赠品活动
+        getAvailableSkuByNo(){
+            let pre={
+                sku_no:this.sku_no,
+                activity_start_time:this.$route.query.time1,
+                activity_end_time:this.$route.query.time2
+            }
+            var form
+            AvailableSkuByNo(pre).then((res)=>{
+                if(res.data.code == 200){
+                    form = res.data.data
+                    this.add(form)
+                }
+            })
+        },
         selectInit(row,index){
             if(row.sku_status==2){
                 return false  //不可勾选
@@ -163,6 +188,7 @@ export default {
                 return true  //可勾选
             }
         },
+        //列表多选
         handleSelectionChange(val){
             var skuidarr = []
             for(var i=0;i<val.length;i++){
@@ -171,6 +197,7 @@ export default {
             }
             this.skuid = skuidarr
         },
+        //获取商品列表
         getskulist(){
             activitySku({activity_id:this.activity_id,page:this.page}).then((res)=>{
                 this.listData = res.data.data.data
@@ -207,7 +234,7 @@ export default {
             this.getcommodityList()
         },
         //添加商品
-        add(obj,id){
+        add(obj){
             let pre={
                 activity_id:this.activity_id,
                 sku_no:obj.sku_no,

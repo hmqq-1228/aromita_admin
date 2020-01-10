@@ -176,7 +176,7 @@
 </template>
 <script>
 import {skuList,spuList,deleteSkuBatch,deleteSpuBatch,spuGoods,skuGoods,skuSetEnable,skuSetDisable} from '@/http/commodity.js'
-import {categoryList,ClassII} from '@/http/category.js'
+import {ClassI,ClassII} from '@/http/category.js'
 export default {
     data(){
         return{
@@ -273,7 +273,7 @@ export default {
         },
         //获取一级分类列表
         getFirstList(){
-            categoryList({first:1}).then((res)=>{
+            ClassI().then((res)=>{
                 if(res.data.code == 200){
                     this.firstList = res.data.data
                     //tab切换显示页面优化
