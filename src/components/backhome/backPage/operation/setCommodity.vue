@@ -225,6 +225,11 @@ export default {
                             });
                         }
                     })
+                }else{
+                    this.$message({
+                        message:res.data.msg,
+                        type: 'error'
+                    });
                 }
             })
         },

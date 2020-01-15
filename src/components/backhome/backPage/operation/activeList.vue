@@ -48,7 +48,7 @@
             <el-table :data="list" max-height="540px">
                 <el-table-column label="活动名称">
                     <template slot-scope="scope">
-                        <span @click="viewdetail(scope.row.id)" class="active_name">{{scope.row.name}}</span>
+                        <el-tag type="primary" @click="viewdetail(scope.row.id)" class="active_name">{{scope.row.name}}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column label="活动类型">
@@ -68,7 +68,7 @@
                 </el-table-column>
                 <el-table-column label="活动规则">
                     <template slot-scope="scope">
-                        <span>{{scope.row.activity_rule}}</span>
+                        <p class="active_rule">{{scope.row.activity_rule}}</p>
                     </template>
                 </el-table-column>
                 <el-table-column label="活动状态" width="80px">
@@ -245,7 +245,10 @@ export default {
 .active_name{
     cursor: pointer;
 }
-.active_name:hover{
-    color: firebrick;
+.active_rule{
+    width: 140px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
 }
 </style>
