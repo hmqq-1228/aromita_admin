@@ -35,8 +35,10 @@
                 </el-form-item>
                 <el-form-item label="活动类型">
                     <el-select v-model="activeForm.type" clearable>
-                        <el-option label="一口价" :value="1"></el-option>
-                        <el-option label="百分比" :value="2"></el-option>
+                        <el-option label="一口价活动" :value="1"></el-option>
+                        <el-option label="百分比活动" :value="2"></el-option>
+                        <el-option label="赠品活动" :value="3"></el-option>
+                        <el-option label="换购活动" :value="4"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item>

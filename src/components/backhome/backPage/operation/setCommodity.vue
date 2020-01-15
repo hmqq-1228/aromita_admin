@@ -1,24 +1,41 @@
 <template>
     <div class="setCommodity">
-        <div class="btn">
+        <div class="btn" v-if="activetype != 3">
             <el-button type="primary" v-if="activeStr == '未开始'" @click="addCommodity">添加商品</el-button>
             <el-button type="danger" v-if="activeStr == '未开始'" @click="bothdel">批量删除商品</el-button>
             <el-button type="danger" v-if="activeStr == '进行中'" @click="bothstop">批量终止商品</el-button>
         </div>
-        <el-form :inline="true">
+        <el-form :inline="true" v-if="activetype == 3">
             <el-form-item>
-                <el-input v-model="sku_no"></el-input>
+                <el-input v-model="sku_no" placeholder="请输入赠品编号"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button @click="getAvailableSkuByNo">搜索</el-button>
+                <el-button type="primary" @click="getAvailableSkuByNo">确定</el-button>
+            </el-form-item>
+        </el-form>
+        <el-form :inline="true" v-if="activetype == 4">
+            <el-form-item>
+                <el-input v-model="sku_no" placeholder="SKU编号" clearable></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-input v-model="sku_name" placeholder="商品名称" clearable></el-input>
+            </el-form-item>
+            <el-form-item label="价格区间">
+                <el-input v-model="start_price" clearable></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-input v-model="end_price" clearable></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="searchCommodotyList()">搜索</el-button>
             </el-form-item>
         </el-form>
         <el-table
             :data="listData"
             style="width: 100%"
-            max-height="760px"
+            max-height="740px"
             @selection-change="handleSelectionChange">
-            <el-table-column type="selection" width="45" :selectable="selectInit" v-if="activeStr != '已结束'"></el-table-column>
+            <el-table-column type="selection" width="45" :selectable="selectInit" v-if="activeStr != '已结束' && activetype !=3"></el-table-column>
             <el-table-column prop="sku_no" label="SKU编号"></el-table-column>
             <el-table-column prop="sku_name" label="商品名称"></el-table-column>
             <el-table-column label="商品图片">
@@ -31,9 +48,10 @@
                     <span>$ {{scope.row.sku_price}}</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="activity_price" label="活动价">
+            <el-table-column :label="activetype == 4?'加购价（$）':'活动价'" width="120px">
                 <template slot-scope="scope">
-                    <span>$ {{scope.row.activity_price}}</span>
+                    <el-input v-model="scope.row.activity_price" v-if="activetype == 4" @blur="changePrice(scope.row.id,scope.row.activity_price,scope.row.sku_price)"></el-input>
+                    <span v-else>$ {{scope.row.activity_price}}</span>
                 </template>
             </el-table-column>
             <el-table-column label="商品活动状态">
@@ -125,6 +143,7 @@
 </template>
 <script>
 import {activitySku,activitySkuindex,addactiveSku,delactiveSku,batchdelactiveSku,stopactiveSku,batchstopactiveSku,AvailableSkuByNo} from '@/http/active.js'
+import qs from 'qs'
 export default {
     data(){
         return{
@@ -149,7 +168,10 @@ export default {
                 second_cate_id:'',
                 sku_no:''
             },
-            sku_no:'',//赠品编号
+            sku_no:'',//商品编号
+            sku_name:'',//商品名称
+            start_price:'',//价格区间
+            end_price:'',//
             skuid:[],
         }
     },
@@ -161,6 +183,7 @@ export default {
         this.addform.activity_start_time = this.$route.query.time1
         this.addform.activity_end_time = this.$route.query.time2
         this.activeStr = this.$route.query.str
+        this.activetype = this.$route.query.type
         if(this.activity_id){
             this.getskulist()
         }
@@ -177,7 +200,31 @@ export default {
             AvailableSkuByNo(pre).then((res)=>{
                 if(res.data.code == 200){
                     form = res.data.data
-                    this.add(form)
+                    let pre={
+                        activity_id:this.activity_id,
+                        sku_no:form.sku_no,
+                        sku_name:form.sku_name,
+                        sku_price:form.sku_price,
+                        sku_image:form.sku_image,
+                        sku_id:form.id,
+                        activity_start_time:this.$route.query.time1,
+                        activity_end_time:this.$route.query.time2
+                    }
+                    addactiveSku(pre).then((res)=>{
+                        if(res.data.code ==200){
+                            this.$message({
+                                message: '商品已添加',
+                                type: 'success'
+                            });
+                            this.sku_no = ''
+                            this.getskulist()
+                        }else{
+                            this.$message({
+                                message:res.data.msg,
+                                type: 'error'
+                            });
+                        }
+                    })
                 }
             })
         },
@@ -197,9 +244,21 @@ export default {
             }
             this.skuid = skuidarr
         },
+        searchCommodotyList(){
+            this.page = 1
+            this.getskulist()
+        },
         //获取商品列表
         getskulist(){
-            activitySku({activity_id:this.activity_id,page:this.page}).then((res)=>{
+            let pre={
+                activity_id:this.activity_id,
+                page:this.page,
+                sku_no:this.sku_no,//商品编号
+                sku_name:this.sku_name,//商品名称
+                start_price:this.start_price,//价格区间
+                end_price:this.end_price,//
+            }
+            activitySku(pre).then((res)=>{
                 this.listData = res.data.data.data
                 this.total = res.data.data.total
             })
@@ -207,6 +266,21 @@ export default {
         changeListPage(val){
             this.page = val
             this.getskulist()
+        },
+        //修改加购价
+        changePrice(id,price,oldprice){
+            var reg = new RegExp('^[1-9][0-9]*$')//匹配正整数
+            if(!reg.test(Number(price)) || Number(price) > Number(oldprice)){
+                this.$message.error('加购价只能为正整数，且不能大于商品原价')
+                this.getskulist()
+            }else{
+                this.$axios.put(`/backend/activitySku/${id}`,qs.stringify({activity_price:price})).then((res)=>{
+                    if(res.data.code == 200 && res.data.data == 1){
+                        this.$message.success('加购价修改成功')
+                        this.getskulist()
+                    }
+                })
+            }
         },
         //添加商品弹框
         addCommodity(){
@@ -262,7 +336,6 @@ export default {
         },
         //关闭添加商品弹框
         closevisible(){
-            console.log(1)
             this.getskulist()
         },
         //删除商品

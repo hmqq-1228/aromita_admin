@@ -19,7 +19,7 @@
                     <span v-if="activeform.activity_type == 4"> 换购门槛  </span>  
                     <el-input v-model="activeform[`activity_intensity${activeform.activity_type}`]" style="width:80px"></el-input>
                     <span v-if="activeform.activity_type == 2"> % OFF</span>
-                    <span v-if="activeform.activity_type != 1"> $ </span>
+                    <span v-if="activeform.activity_type != 2"> $ </span>
                 </el-form-item>
                 <el-form-item label="活动时间：" prop="active_time">
                     <el-date-picker
@@ -128,6 +128,8 @@ export default {
                 activity_intensity:'',
                 activity_intensity1:'',
                 activity_intensity2:'',
+                activity_intensity3:'',
+                activity_intensity4:'',
                 activity_start_time:'',
                 activity_end_time:'',
                 activity_rule:''
@@ -183,6 +185,8 @@ export default {
                 this.oldform = res.data.data
                 this.$set(this.activeform,'activity_intensity1','')
                 this.$set(this.activeform,'activity_intensity2','')
+                this.$set(this.activeform,'activity_intensity3','')
+                this.$set(this.activeform,'activity_intensity4','')
                 this.activeform[`activity_intensity${this.activeform.activity_type}`] = this.activeform.activity_intensity
                 var activetime = []
                 activetime.push(new Date(this.activeform.activity_start_time))
