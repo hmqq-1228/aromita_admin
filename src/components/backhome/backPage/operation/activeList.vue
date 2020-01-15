@@ -87,7 +87,7 @@
                        <el-button type="primary" size="mini" v-if="scope.row.status == '未开始'" @click="editList(scope.row.id)">编辑</el-button>
                        <el-button type="danger" size="mini" v-if="scope.row.status != '已结束'" @click="stopList(scope.row.id)">终止</el-button>
                        <el-button type="warning" size="mini" v-if="scope.row.status != '已结束'" @click="handleCopy(scope.row.url,$event)">复制链接</el-button>
-                       <el-button type="success" size="mini" @click="setStyle(scope.row.id,scope.row.status)">活动广场</el-button>
+                       <el-button type="success" size="mini" v-if="scope.row.activity_type == 1 || scope.row.activity_type == 2" @click="setStyle(scope.row.id,scope.row.status)">活动广场</el-button>
                     </template>
                 </el-table-column>
             </el-table>
