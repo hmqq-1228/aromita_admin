@@ -25,7 +25,9 @@ export default {
             detail:null,
             activity_type_list:{
                 1:"一口价活动",
-                2:"百分比活动"
+                2:"百分比活动",
+                3:"赠品活动",
+                4:"换购活动"
             }
         }
     },

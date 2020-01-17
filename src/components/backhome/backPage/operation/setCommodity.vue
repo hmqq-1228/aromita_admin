@@ -5,7 +5,7 @@
             <el-button type="danger" v-if="activeStr == '未开始'" @click="bothdel">批量删除商品</el-button>
             <el-button type="danger" v-if="activeStr == '进行中'" @click="bothstop">批量终止商品</el-button>
         </div>
-        <el-form :inline="true" v-if="activetype == 3">
+        <el-form :inline="true" v-if="activetype == 3 && activeStr == '未开始'">
             <el-form-item>
                 <el-input v-model="sku_no" placeholder="请输入赠品编号"></el-input>
             </el-form-item>
@@ -13,7 +13,7 @@
                 <el-button type="primary" @click="getAvailableSkuByNo">确定</el-button>
             </el-form-item>
         </el-form>
-        <el-form :inline="true" v-if="activetype == 4">
+        <el-form :inline="true" v-if="activetype != 3">
             <el-form-item>
                 <el-input v-model="sku_no" placeholder="SKU编号" clearable></el-input>
             </el-form-item>
@@ -33,7 +33,7 @@
         <el-table
             :data="listData"
             style="width: 100%"
-            max-height="740px"
+            max-height="700px"
             @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="45" :selectable="selectInit" v-if="activeStr != '已结束' && activetype !=3"></el-table-column>
             <el-table-column prop="sku_no" label="SKU编号"></el-table-column>
@@ -50,7 +50,7 @@
             </el-table-column>
             <el-table-column :label="activetype == 4?'加购价（$）':'活动价'" width="120px">
                 <template slot-scope="scope">
-                    <el-input v-model="scope.row.activity_price" v-if="activetype == 4" @blur="changePrice(scope.row.id,scope.row.activity_price,scope.row.sku_price)"></el-input>
+                    <el-input v-model="scope.row.activity_price" v-if="activetype == 4 && activeStr == '未开始'" @blur="changePrice(scope.row.id,scope.row.activity_price,scope.row.sku_price)"></el-input>
                     <span v-else>$ {{scope.row.activity_price}}</span>
                 </template>
             </el-table-column>
@@ -274,9 +274,9 @@ export default {
         },
         //修改加购价
         changePrice(id,price,oldprice){
-            var reg = new RegExp('^[1-9][0-9]*$')//匹配正整数
+            var reg = new RegExp('^(([0-9]+|0)\.([0-9]{1,2})$)|^([^0][0-9]+|0)$')
             if(!reg.test(Number(price)) || Number(price) > Number(oldprice)){
-                this.$message.error('加购价只能为正整数，且不能大于商品原价')
+                this.$message.error('加购价最多保留两位小数，且不能大于商品原价')
                 this.getskulist()
             }else{
                 this.$axios.put(`/backend/activitySku/${id}`,qs.stringify({activity_price:price})).then((res)=>{

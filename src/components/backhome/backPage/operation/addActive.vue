@@ -23,6 +23,7 @@
                 </el-form-item>
                 <el-form-item label="活动时间：" prop="active_time">
                     <el-date-picker
+                        :editable="false"
                         v-model="activeform.active_time"
                         type="datetimerange"
                         range-separator="至"
@@ -53,7 +54,7 @@
         <el-dialog
             title="提示"
             :visible.sync="activeskuvisible"
-            width="500px">
+            width="700px">
             <h3 style="color:red;font-size:12px;">以下商品在该活动时间内有参加其他活动，请手动删除后再调整活动时间</h3>
             <div class="sku_box">
                 <span v-for="(item,index) in sku_no_list" :key="index">
@@ -275,11 +276,13 @@ export default {
     width: 500px;
 }
 .sku_box{
-    width: 460px;
+    width: 680px;
+    height: 500px;
+    overflow-y: scroll;
 }
 .sku_box span{
     display: inline-block;
-    width:105px;
-    margin:0 5px;
+    width:145px;
+    margin:10px 10px;
 }
 </style>
