@@ -5,6 +5,7 @@
             <el-button type="danger" v-if="activeStr == '未开始'" @click="bothdel">批量删除商品</el-button>
             <el-button type="danger" v-if="activeStr == '进行中'" @click="bothstop">批量终止商品</el-button>
         </div>
+        <h3 v-if="activetype == 3 && activeStr != '未开始'">赠品</h3>
         <el-form :inline="true" v-if="activetype == 3 && activeStr == '未开始'">
             <el-form-item>
                 <el-input v-model="sku_no" placeholder="请输入赠品编号"></el-input>
@@ -20,11 +21,14 @@
             <el-form-item>
                 <el-input v-model="sku_name" placeholder="商品名称" clearable></el-input>
             </el-form-item>
-            <el-form-item label="价格区间">
-                <el-input v-model="start_price" clearable></el-input>
+            <el-form-item label="活动价格区间">
+                <el-input v-model="start_price" clearable style="width:100px"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-input v-model="end_price" clearable></el-input>
+                至
+            </el-form-item>
+            <el-form-item>
+                <el-input v-model="end_price" clearable style="width:100px"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="searchCommodotyList()">搜索</el-button>
@@ -274,17 +278,17 @@ export default {
         },
         //修改加购价
         changePrice(id,price,oldprice){
-            var reg = new RegExp('^(([0-9]+|0)\.([0-9]{1,2})$)|^([^0][0-9]+|0)$')
-            if(!reg.test(Number(price)) || Number(price) > Number(oldprice)){
-                this.$message.error('加购价最多保留两位小数，且不能大于商品原价')
-                this.getskulist()
-            }else{
+            var reg1 = new RegExp('^(([0-9]+|0)\.([0-9]{1,2})$)|^[0-9][0-9]*$')//匹配最多保留两位小数
+            if(reg1.test(Number(price)) && Number(price) < Number(oldprice)){
                 this.$axios.put(`/backend/activitySku/${id}`,qs.stringify({activity_price:price})).then((res)=>{
                     if(res.data.code == 200 && res.data.data == 1){
                         this.$message.success('加购价修改成功')
                         this.getskulist()
                     }
                 })
+            }else{
+                this.$message.error('加购价最多保留两位小数，且不能大于商品原价')
+                this.getskulist()
             }
         },
         //添加商品弹框
