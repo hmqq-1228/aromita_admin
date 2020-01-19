@@ -56,6 +56,18 @@
                         <span>{{activetype[scope.row.activity_type]}}</span>
                     </template>
                 </el-table-column>
+                <el-table-column label="优惠力度">
+                    <template slot-scope="scope">
+                        <p>
+                            <span>优惠力度：</span>
+                            <span v-if="scope.row.activity_type == 3">满赠门槛</span> 
+                            <span v-if="scope.row.activity_type == 4">换购门槛</span> 
+                            <span>{{scope.row.activity_intensity}} </span>
+                            <span v-if="scope.row.activity_type == 2">（% OFF）</span> 
+                            <span v-if="scope.row.activity_type != 2">（$）</span> 
+                        </p>
+                    </template>
+                </el-table-column>
                 <el-table-column label="开始时间">
                     <template slot-scope="scope">
                         <span>{{scope.row.activity_start_time}}</span>
@@ -74,11 +86,6 @@
                 <el-table-column label="活动状态" width="80px">
                     <template slot-scope="scope">
                         <span>{{scope.row.status}}</span>
-                    </template>
-                </el-table-column>
-                <el-table-column label="活动链接">
-                    <template slot-scope="scope">
-                        <p class="activelink">{{scope.row.url}}</p>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="460px">
