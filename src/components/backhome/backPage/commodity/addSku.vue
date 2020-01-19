@@ -229,7 +229,7 @@ export default {
                     var urlList = []
                     if(thumbnail_images!= null){
                         for(var i=0;i<thumbnail_images.length;i++){
-                            var urlStr ={"url":thumbnail_images[i]}
+                            var urlStr ={'name':i,'uid':i,'url':thumbnail_images[i]}
                             urlList.push(urlStr)
                         }
                     }
@@ -311,7 +311,7 @@ export default {
                     var urlList = []
                     if(thumbnail_images !=null){
                         for(var i=0;i<thumbnail_images.length;i++){
-                            var urlStr ={"url":thumbnail_images[i]}
+                            var urlStr ={"name":i,"url":thumbnail_images[i]}
                             urlList.push(urlStr)
                         }
                     }
@@ -574,10 +574,10 @@ export default {
             }).then(() => {
                 return file;
             }, () => {
-                _this.$message.error('商品图片宽高必须是1024*1024!');
+                this.$message.error('商品图片宽高必须是1024*1024!');
                 return false
             });
-            return isSize && isLt2M;
+            return isLt2M && isSize;
         },
         //商品副图移除
         handleRemove(file, fileList) {
@@ -598,7 +598,7 @@ export default {
         //商品副图上传成功
         thumbnailSuccess(res,file,fileList){
             if(res.code == 200){
-                this.skuform.thumbnail_images.push({"url":res.data[0]})
+                this.skuform.thumbnail_images.push({'name':file.name,'uid':file.uid,'url':res.data[0]})
             }else{
                 this.skuform.thumbnail_images = JSON.parse(JSON.stringify(this.skuform.thumbnail_images))
                 return false
