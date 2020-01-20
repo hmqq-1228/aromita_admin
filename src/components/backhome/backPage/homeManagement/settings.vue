@@ -1,7 +1,7 @@
 <template>
   <div class="banner">
     <div class="header">
-      <div>底部功能设置(每列最多添加9个)</div>
+      <div>底部功能设置(前四列最多添加9个，第五列最多添加2个)</div>
       <el-button type="primary" icon="el-icon-plus" @click="addNew()">新增</el-button>
     </div>
     <el-table
