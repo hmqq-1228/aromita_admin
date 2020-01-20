@@ -7,9 +7,12 @@
             <p><span>活动类型：</span>{{activity_type_list[detail.activity_type]}}</p>
             <p><span>活动名称：</span>{{detail.name}}</p>
             <p>
-                <span>优惠力度：</span>{{detail.activity_intensity}} 
+                <span>优惠力度：</span>
+                <span v-if="detail.activity_type == 3">满赠门槛</span> 
+                <span v-if="detail.activity_type == 4">换购门槛</span> 
+                <span>{{detail.activity_intensity}} </span>
                 <span v-if="detail.activity_type == 2">（% OFF）</span> 
-                <span v-if="detail.activity_type == 1">（$）</span> 
+                <span v-if="detail.activity_type != 2">（$）</span> 
             </p>
             <p><span>活动时间：</span>{{detail.activity_start_time}} -- {{detail.activity_end_time}}</p>
             <p><span>活动规则：</span><span v-if="detail.activity_rule != null">{{detail.activity_rule}}</span><span v-else>暂 无</span></p>
@@ -25,7 +28,9 @@ export default {
             detail:null,
             activity_type_list:{
                 1:"一口价活动",
-                2:"百分比活动"
+                2:"百分比活动",
+                3:"赠品活动",
+                4:"换购活动"
             }
         }
     },

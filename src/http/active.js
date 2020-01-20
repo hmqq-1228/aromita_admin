@@ -45,3 +45,5 @@ export const saveActiveStyle = params =>post("/backend/activity/square",params)
 //编辑活动广场获取详情
 export const detailStyle = params =>get("/backend//activity/squareEdit",params)
 
+//赠品添加商品
+export const AvailableSkuByNo = params =>post("/backend/activitySku/getAvailableSkuByNo",params)

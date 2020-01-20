@@ -189,9 +189,6 @@ export default {
                     tagnamearr.push(tagname)
                 } 
             }
-            console.log(tagarr)
-            console.log(tagnamearr)
-
             var nos = this.foo(this.addspuform.sku_nos)
             let pre={
                 sku_nos:nos,
@@ -202,7 +199,7 @@ export default {
             
             if(this.type == 0){
                 addSpuList(pre).then((res)=>{
-                    if(res.data.code == 200){
+                    if(res.data.code == 200 && res.data.msg == ''){
                         this.$message({
                             message: '新建SPU成功',
                             type: 'success'
@@ -217,12 +214,22 @@ export default {
                 })
             }else{
                 this.$axios.put(`/backend/product/${this.editSpuId}`,qs.stringify(pre)).then((res)=>{
-                    if(res.data.code == 200){
+                    if(res.data.code == 200 && res.data.msg == ''){
                         this.$message({
                             message: '编辑SPU成功',
                             type: 'success'
                         });
                         this.$router.go(-1)
+                    }else if(res.data.code == 200 && res.data.msg != ''){
+                        this.$confirm(`${res.data.msg}`, '提示', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            type: 'warning'
+                        }).then(() => {
+                            this.$router.go(-1)
+                        }).catch(() => {
+                                     
+                        });
                     }else{
                         this.$message({
                             message: res.data.msg,

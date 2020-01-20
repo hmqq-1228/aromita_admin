@@ -12,12 +12,12 @@
             <div>
                 <h3>赠品活动</h3>
                 <p>单品赠送或满额赠送</p>
-                <el-button type="primary">立即创建</el-button>
+                <el-button type="primary" @click="createdActive(3)">立即创建</el-button>
             </div>
             <div>
                 <h3>换购活动</h3>
                 <p>加N元可换购指定的商品</p>
-                <el-button type="primary">立即创建</el-button>
+                <el-button type="primary" @click="createdActive(4)">立即创建</el-button>
             </div>
         </div>
         <div class="activeHeader">活动管理</div>
@@ -35,8 +35,10 @@
                 </el-form-item>
                 <el-form-item label="活动类型">
                     <el-select v-model="activeForm.type" clearable>
-                        <el-option label="一口价" :value="1"></el-option>
-                        <el-option label="百分比" :value="2"></el-option>
+                        <el-option label="一口价活动" :value="1"></el-option>
+                        <el-option label="百分比活动" :value="2"></el-option>
+                        <el-option label="赠品活动" :value="3"></el-option>
+                        <el-option label="换购活动" :value="4"></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item>
@@ -46,12 +48,24 @@
             <el-table :data="list" max-height="540px">
                 <el-table-column label="活动名称">
                     <template slot-scope="scope">
-                        <span @click="viewdetail(scope.row.id)" class="active_name">{{scope.row.name}}</span>
+                        <el-tag type="primary" @click="viewdetail(scope.row.id)" class="active_name">{{scope.row.name}}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column label="活动类型">
                     <template slot-scope="scope">
                         <span>{{activetype[scope.row.activity_type]}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="优惠力度">
+                    <template slot-scope="scope">
+                        <p>
+                            <span>优惠力度：</span>
+                            <span v-if="scope.row.activity_type == 3">满赠门槛</span> 
+                            <span v-if="scope.row.activity_type == 4">换购门槛</span> 
+                            <span>{{scope.row.activity_intensity}} </span>
+                            <span v-if="scope.row.activity_type == 2">（% OFF）</span> 
+                            <span v-if="scope.row.activity_type != 2">（$）</span> 
+                        </p>
                     </template>
                 </el-table-column>
                 <el-table-column label="开始时间">
@@ -66,7 +80,7 @@
                 </el-table-column>
                 <el-table-column label="活动规则">
                     <template slot-scope="scope">
-                        <span>{{scope.row.activity_rule}}</span>
+                        <p class="active_rule">{{scope.row.activity_rule}}</p>
                     </template>
                 </el-table-column>
                 <el-table-column label="活动状态" width="80px">
@@ -74,18 +88,13 @@
                         <span>{{scope.row.status}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column label="活动链接">
-                    <template slot-scope="scope">
-                        <p class="activelink">{{scope.row.url}}</p>
-                    </template>
-                </el-table-column>
                 <el-table-column label="操作" width="460px">
                     <template slot-scope="scope">
-                       <el-button type="primary" size="mini" @click="addcommodity(scope.row.id,scope.row.activity_start_time,scope.row.activity_end_time,scope.row.activity_stop_time,scope.row.status)">活动商品</el-button>
+                       <el-button type="primary" size="mini" @click="addcommodity(scope.row.activity_type,scope.row.id,scope.row.activity_start_time,scope.row.activity_end_time,scope.row.activity_stop_time,scope.row.status)">活动商品</el-button>
                        <el-button type="primary" size="mini" v-if="scope.row.status == '未开始'" @click="editList(scope.row.id)">编辑</el-button>
                        <el-button type="danger" size="mini" v-if="scope.row.status != '已结束'" @click="stopList(scope.row.id)">终止</el-button>
                        <el-button type="warning" size="mini" v-if="scope.row.status != '已结束'" @click="handleCopy(scope.row.url,$event)">复制链接</el-button>
-                       <el-button type="success" size="mini" @click="setStyle(scope.row.id,scope.row.status)">活动广场</el-button>
+                       <el-button type="success" size="mini" v-if="scope.row.activity_type == 1 || scope.row.activity_type == 2" @click="setStyle(scope.row.id,scope.row.status)">活动广场</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -117,7 +126,9 @@ export default {
             },
             activetype:{
                 '1':'一口价',
-                '2':'百分比活动'
+                '2':'百分比活动',
+                '3':'赠品活动',
+                '4':'换购活动'
             }
         }
     },
@@ -186,8 +197,12 @@ export default {
             this.$router.push({path:'/addActive',query:{id:id}})
         },
         //添加商品 
-        addcommodity(id,time1,time2,time3,str){
-            this.$router.push({path:'/setCommodity',query:{id:id,time1:time1,time2:time2,time3:time3,str:str}})
+        addcommodity(active_type,id,time1,time2,time3,str){
+            this.$router.push({path:'/setCommodity',query:{type:active_type,id:id,time1:time1,time2:time2,time3:time3,str:str}})
+        },
+        //创建活动
+        createdActive(type){
+            this.$router.push({path:'/addActive',query:{type:type}})
         }
     }
 }
@@ -237,7 +252,10 @@ export default {
 .active_name{
     cursor: pointer;
 }
-.active_name:hover{
-    color: firebrick;
+.active_rule{
+    width: 140px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
 }
 </style>
